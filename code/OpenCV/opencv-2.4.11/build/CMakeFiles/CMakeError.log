@@ -1,0 +1,249 @@
+Determining if the system is big endian passed with the following output:
+Change Dir: /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3024364871/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3024364871.dir/build.make CMakeFiles/cmTryCompileExec3024364871.dir/build
+make[1]: Entering directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3024364871.dir/TestEndianess.c.o
+/usr/bin/cc   -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wno-narrowing -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections  -O3 -DNDEBUG   -o CMakeFiles/cmTryCompileExec3024364871.dir/TestEndianess.c.o   -c /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/TestEndianess.c
+Linking C executable cmTryCompileExec3024364871
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3024364871.dir/link.txt --verbose=1
+/usr/bin/cc     -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wno-narrowing -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections  -O3 -DNDEBUG    CMakeFiles/cmTryCompileExec3024364871.dir/TestEndianess.c.o  -o cmTryCompileExec3024364871 -rdynamic 
+make[1]: Leaving directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+
+TestEndianess.c:
+/* A 16 bit integer is required. */
+typedef unsigned short cmakeint16;
+
+/* On a little endian machine, these 16bit ints will give "THIS IS LITTLE ENDIAN."
+   On a big endian machine the characters will be exchanged pairwise. */
+const cmakeint16 info_little[] =  {0x4854, 0x5349, 0x4920, 0x2053, 0x494c, 0x5454, 0x454c, 0x4520, 0x444e, 0x4149, 0x2e4e, 0x0000};
+
+/* on a big endian machine, these 16bit ints will give "THIS IS BIG ENDIAN."
+   On a little endian machine the characters will be exchanged pairwise. */
+const cmakeint16 info_big[] =     {0x5448, 0x4953, 0x2049, 0x5320, 0x4249, 0x4720, 0x454e, 0x4449, 0x414e, 0x2e2e, 0x0000};
+
+#ifdef __CLASSIC_C__
+int main(argc, argv) int argc; char *argv[];
+#else
+int main(int argc, char *argv[])
+#endif
+{
+  int require = 0;
+  require += info_little[argc];
+  require += info_big[argc];
+  (void)argv;
+  return require;
+}
+
+
+Determining if the include file io.h exists failed with the following output:
+Change Dir: /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec364866777/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec364866777.dir/build.make CMakeFiles/cmTryCompileExec364866777.dir/build
+make[1]: Entering directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec364866777.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wno-narrowing -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections  -O3 -DNDEBUG   -o CMakeFiles/cmTryCompileExec364866777.dir/CheckIncludeFile.c.o   -c /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:16: fatal error: io.h: No such file or directory
+ #include <io.h>
+                ^
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTryCompileExec364866777.dir/CheckIncludeFile.c.o] Error 1
+make[1]: Leaving directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec364866777/fast] Error 2
+
+
+Determining if the function jbg_newlen exists failed with the following output:
+Change Dir: /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec1482883766/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1482883766.dir/build.make CMakeFiles/cmTryCompileExec1482883766.dir/build
+make[1]: Entering directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1482883766.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wno-narrowing -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections -DCHECK_FUNCTION_EXISTS=jbg_newlen -O3 -DNDEBUG   -o CMakeFiles/cmTryCompileExec1482883766.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+/usr/share/cmake-2.8/Modules/CheckFunctionExists.c:3:1: warning: function declaration isn’t a prototype [-Wstrict-prototypes]
+ char CHECK_FUNCTION_EXISTS();
+ ^
+Linking C executable cmTryCompileExec1482883766
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1482883766.dir/link.txt --verbose=1
+/usr/bin/cc     -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wno-narrowing -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections -DCHECK_FUNCTION_EXISTS=jbg_newlen -O3 -DNDEBUG    CMakeFiles/cmTryCompileExec1482883766.dir/CheckFunctionExists.c.o  -o cmTryCompileExec1482883766 -rdynamic 
+CMakeFiles/cmTryCompileExec1482883766.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text.startup.main+0xe): undefined reference to `jbg_newlen'
+collect2: error: ld returned 1 exit status
+make[1]: *** [cmTryCompileExec1482883766] Error 1
+make[1]: Leaving directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec1482883766/fast] Error 2
+
+
+Determining if the Q_WS_WIN exist failed with the following output:
+Change Dir: /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec447709140/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec447709140.dir/build.make CMakeFiles/cmTryCompileExec447709140.dir/build
+make[1]: Entering directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec447709140.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections  -O3 -DNDEBUG -I/usr/include/qt4    -o CMakeFiles/cmTryCompileExec447709140.dir/CheckSymbolExists.cxx.o -c /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_WIN’ was not declared in this scope
+   return ((int*)(&Q_WS_WIN))[argc];
+                   ^
+make[1]: *** [CMakeFiles/cmTryCompileExec447709140.dir/CheckSymbolExists.cxx.o] Error 1
+make[1]: Leaving directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec447709140/fast] Error 2
+
+File /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_WIN
+  return ((int*)(&Q_WS_WIN))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_QWS exist failed with the following output:
+Change Dir: /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec355567168/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec355567168.dir/build.make CMakeFiles/cmTryCompileExec355567168.dir/build
+make[1]: Entering directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec355567168.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections  -O3 -DNDEBUG -I/usr/include/qt4    -o CMakeFiles/cmTryCompileExec355567168.dir/CheckSymbolExists.cxx.o -c /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_QWS’ was not declared in this scope
+   return ((int*)(&Q_WS_QWS))[argc];
+                   ^
+make[1]: *** [CMakeFiles/cmTryCompileExec355567168.dir/CheckSymbolExists.cxx.o] Error 1
+make[1]: Leaving directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec355567168/fast] Error 2
+
+File /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_QWS
+  return ((int*)(&Q_WS_QWS))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the Q_WS_MAC exist failed with the following output:
+Change Dir: /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3944341365/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3944341365.dir/build.make CMakeFiles/cmTryCompileExec3944341365.dir/build
+make[1]: Entering directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3944341365.dir/CheckSymbolExists.cxx.o
+/usr/bin/c++    -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections  -O3 -DNDEBUG -I/usr/include/qt4    -o CMakeFiles/cmTryCompileExec3944341365.dir/CheckSymbolExists.cxx.o -c /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx: In function ‘int main(int, char**)’:
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:8:19: error: ‘Q_WS_MAC’ was not declared in this scope
+   return ((int*)(&Q_WS_MAC))[argc];
+                   ^
+make[1]: *** [CMakeFiles/cmTryCompileExec3944341365.dir/CheckSymbolExists.cxx.o] Error 1
+make[1]: Leaving directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec3944341365/fast] Error 2
+
+File /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckSymbolExists.cxx:
+/* */
+#include <QtCore/qglobal.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef Q_WS_MAC
+  return ((int*)(&Q_WS_MAC))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the include file linux/videodev.h exists failed with the following output:
+Change Dir: /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec1288365503/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1288365503.dir/build.make CMakeFiles/cmTryCompileExec1288365503.dir/build
+make[1]: Entering directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1288365503.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wno-narrowing -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections  -O3 -DNDEBUG   -o CMakeFiles/cmTryCompileExec1288365503.dir/CheckIncludeFile.c.o   -c /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:28: fatal error: linux/videodev.h: No such file or directory
+ #include <linux/videodev.h>
+                            ^
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTryCompileExec1288365503.dir/CheckIncludeFile.c.o] Error 1
+make[1]: Leaving directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec1288365503/fast] Error 2
+
+
+Determining if the include file sys/videoio.h exists failed with the following output:
+Change Dir: /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec1994975788/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1994975788.dir/build.make CMakeFiles/cmTryCompileExec1994975788.dir/build
+make[1]: Entering directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1994975788.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wno-narrowing -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections  -O3 -DNDEBUG   -o CMakeFiles/cmTryCompileExec1994975788.dir/CheckIncludeFile.c.o   -c /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:25: fatal error: sys/videoio.h: No such file or directory
+ #include <sys/videoio.h>
+                         ^
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTryCompileExec1994975788.dir/CheckIncludeFile.c.o] Error 1
+make[1]: Leaving directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec1994975788/fast] Error 2
+
+
+Determining if the include file libavformat/avformat.h exists failed with the following output:
+Change Dir: /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3393199530/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3393199530.dir/build.make CMakeFiles/cmTryCompileExec3393199530.dir/build
+make[1]: Entering directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3393199530.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wno-narrowing -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections  -O3 -DNDEBUG   -o CMakeFiles/cmTryCompileExec3393199530.dir/CheckIncludeFile.c.o   -c /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:34: fatal error: libavformat/avformat.h: No such file or directory
+ #include <libavformat/avformat.h>
+                                  ^
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTryCompileExec3393199530.dir/CheckIncludeFile.c.o] Error 1
+make[1]: Leaving directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec3393199530/fast] Error 2
+
+
+Determining if the include file ffmpeg/avformat.h exists failed with the following output:
+Change Dir: /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec234641447/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec234641447.dir/build.make CMakeFiles/cmTryCompileExec234641447.dir/build
+make[1]: Entering directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec234641447.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fsigned-char -W -Wall -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wno-narrowing -fdiagnostics-show-option -Wno-long-long -pthread -fomit-frame-pointer -msse -msse2 -msse3 -ffunction-sections  -O3 -DNDEBUG   -o CMakeFiles/cmTryCompileExec234641447.dir/CheckIncludeFile.c.o   -c /home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c:1:29: fatal error: ffmpeg/avformat.h: No such file or directory
+ #include <ffmpeg/avformat.h>
+                             ^
+compilation terminated.
+make[1]: *** [CMakeFiles/cmTryCompileExec234641447.dir/CheckIncludeFile.c.o] Error 1
+make[1]: Leaving directory `/home/terence/finalyear/IndividualProject/code/OpenCV/opencv-2.4.11/build/CMakeFiles/CMakeTmp'
+make: *** [cmTryCompileExec234641447/fast] Error 2
+
+

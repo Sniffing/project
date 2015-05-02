@@ -1,0 +1,56 @@
+\begin{thebibliography}{1}
+
+\bibitem{AmonFuhrmann14}
+Clemens Amon and Ferdinand Fuhrmann.
+\newblock Evaluation of the spatial resolution accuracy of the face tracking
+  system for kinect for windows v1 and v2.
+\newblock volume 6th Congress. Alps-Adria Acoustics Assosiation, 2014.
+
+\bibitem{Azuma97}
+Ronald~T. Azuma.
+\newblock A {S}urvey {O}f {A}ugmented {R}eality.
+\newblock Technical report, Hughes Research Laboratories, August 1997.
+
+\bibitem{Bassily14}
+D.~Bassily, C.~Georgoulas, J.~Guettler, T.~Linner, and T.~Bock.
+\newblock Intuitive and adaptive robotic arm manipulation using the leap motion
+  controller.
+\newblock In {\em ISR/Robotik 2014}, volume Proceedings of 41st International
+  Symposium on Robotics, pages 1 -- 7. VDE, June 2014.
+
+\bibitem{Canny86}
+John Canny.
+\newblock A computational approach to edge detection.
+\newblock {\em IEEE Trans. on Pattern Analysis and Machine Intelligence},
+  Pami-8(6):679--698, November 1986.
+
+\bibitem{Weichert13}
+Bartholomäus~Rudak Frank~Weichert, Daniel~Bachmann and Denis Fisseler.
+\newblock Analysis of the accuracy and robustness of the leap motion
+  controller.
+\newblock Technical report, Department of Computer Science VII, Technical
+  University Dortmund, May 2013.
+
+\bibitem{Mackay}
+Wendy~E. Mackay.
+\newblock Augmented reality: linking real and virtual worlds: a new paradigm
+  for interacting with computers.
+\newblock Technical report, Department of Computer Science, Université de
+  Paris-Sud.
+
+\bibitem{Reed14}
+S.~Reed, O.~Kreylos, S.~Hsi, L.~Kellogg, G.~Schladow, M.B. Yikilmaz, H.~Segale,
+  J.~Silverman, S.~Yalowitz, and E.~Sato.
+\newblock Shaping watersheds exhibit: An interactive, augmented reality sandbox
+  for advancing earth science education.
+\newblock University of California, Davis and American Geophysical Union (AGU)
+  Fall Meeting 2014, 2014.
+
+\bibitem{Shriv12}
+G.~T Shrivakshan and Dr.~C Chandrasekar.
+\newblock A comparison of various edge detection techniques used in image
+  processing.
+\newblock {\em IJCSI International Journal of Computer Science Issues},
+  9(5):269--276, September 2012.
+
+\end{thebibliography}
