@@ -372,52 +372,149 @@ photographed images or video feed as will be done within this project.
 For these operators, let us assume there is a binary image, with pixels 
 holding values of either 0 or 1. In correspondence to a typical colour image,
 1 indicates white, a brighter area, of the image and 0 corresponds to a
-black pixel. 
-
+black pixel. In the erosion and dilation operators, we have this binary
+image as input. We also have a corresponding kernel which we will convolute
+with the image. This kernel, sometimes referred to as a structuring element,
+usually takes the shape of a circle, a 3x3 square or a cross. To achieve
+different results from these operators the kernels can be changed, for example
+to a 10x10 square hich will cause a more drastic shrink or growth of bright 
+areas. For the purpose of explanation, I will assume we are using a 3x3 kernel.
 
 \subsubsection*{Erosion}
 \begin{center}
 Erosion causes bright areas of images to shrink.
 \end{center}
 
+Having the 3x3 kernel anchored at its centre square/pixel, we place align
+the kernel with every single pixel on the binary image by superimposing
+the kernel's anchor over it. Within the other kernel pixels (a 3x3 neighbourhood
+of the pixel in question), we set the pixel under the anchor to the minimum 
+value in this neighbourhood. Thus, the only way a pixel can remain white in
+a binary image is if it starts off as white and all of its neighbours with 
+regard to the kernel shape, are white too. If this is not the case and even 1
+is 0 in its neighbourhood, the pixel considered is set to 0. The effect
+of this can be seen in Figure \ref{fig:ErosionExample}. As you can see from 
+the result, the original shapes have become much thinner and there are now
+3 shapes instead of 2. When combined with dilation, it is clear how some contours
+can be "opened" as erosion comes as the last step. The result shown in
+Figure \ref{fig:ErosionExample} shows how what could be the constituent pixels
+of a contour being broken down into 2 separate objects of interest, thus 
+\textit{opening} the contour. In addition, erosion can be used to remove
+small, likely unimportant, parts of images, such as noise, since any noise
+that isn't large enough to be a problem, would be fizzled out by the kernel, 
+whose size can be changed to affect noise sensitivity.\\
+
 \begin{figure}[ht]
 	\centering
 	\begin{subfigure}{.45\textwidth}
 		\centering
-		\includegraphics[scale=0.45]{pics/morphologyexample.png}
+		\includegraphics[scale=0.4]{pics/morphologyexample.png}
 		\caption{Original Binary Image}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{.45\textwidth}
 		\centering
-		\includegraphics[scale=0.45]{pics/morphologyexample_e.png}
+		\includegraphics[scale=0.4]{pics/morphologyexample_e.png}
 		\caption{Eroded Image}
 	\end{subfigure}
 	\label{fig:ErosionExample}
+	\caption{Erosion}
 \end{figure}
 
 \subsubsection*{Dilation}
 \begin{center}
 	Dilation causes bright areas of image to expand.
 \end{center}
+
+Dilation performs the opposite of what erosion would do. We still perform 
+convolution with our 3x3 kernel but instead we set the pixel below the
+kernel anchor to be the \textit{maximum} value within the 3x3 neighbourhood.
+As a result, if there is even a single white pixel in the neighbourhood, the
+current pixel will turn white. The only case this will not happen is if the 
+pixel started off with a pixel value of 0 and all of its neighbours also had
+a value of 0. Figure \ref{fig:DilationExample} shows the result of dilation with
+the same original image as shown in the Erosion section above. 
+\\
+It can be observed from the result above that a dilation greatly increases
+the size of the bright area. In addition, if bright areas are suitably close
+to one another, it can cause the areas to join into one through the dilation.
+This is how contours with small gaps are able to be closed and will aid in the
+contour detection process. Again, the kernel size and shape may be changed to
+cover a larger area (thus join bright areas further apart) or otherwise 
+depending on how sensitive you want the operation to be.
+
 \begin{figure}
 	\centering
 	\begin{subfigure}{.45\textwidth}
 		\centering
-		\includegraphics[scale=0.45]{pics/morphologyexample.png}
+		\includegraphics[scale=0.4]{pics/morphologyexample.png}
 		\caption{Original Binary Image}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{.45\textwidth}
 		\centering
-		\includegraphics[scale=0.45]{pics/morphologyexample_d.png}
+		\includegraphics[scale=0.4]{pics/morphologyexample_d.png}
 		\caption{Dilated Image}
 	\end{subfigure}
+	\caption{Dilation}
 	\label{fig:DilationExample}
 \end{figure}
 
 
 \subsubsection*{Closing}
+\begin{center}
+Closing is Dilation followed by Erosion.
+\end{center}
+Closing is very similar to dilation but it aims to preserve more information.
+The Closing operation is no different to erosion or dilation in that we
+provide a kernel with which to onvolute the given image with. To perform Closing,
+the image first has a dilation operation applied to it with the given kernel. 
+After this, erosion is done with the same kernel on this dilated image. \\
+By just performing dilation, we do manage to close small gaps in the image, 
+however, every pixel is equally distorted by the kernel and so the resulting
+image will look quite different to the original shapes, as can be seen
+in Figure \ref{fig:DilationExample} above. In order to reduce as much
+of this distortion as possible, erosion is used. The overall affect of this is
+to make the resulting image be as similar as possible to the outline of the
+provided original image. Closing is idempotent, after one pass the resulting
+image will not change from further Closings with the same kernel. The effect 
+of closing is illustrated in Figure \ref{fig:closing}.\\
+The original images starts off with some holes within the image. If we
+take this to be a contour discovered by an edge detector, then we can show
+how we can close it with \textit{Closing}. After the Dilation stage, the
+small holes within the original image have been closed, in addition, the 
+boundaries of the bright parts of the picture have been joined due to their
+proximity and the kernel shape. However, as seen in Figure \ref{fig:closing} (b),
+the shape has changed a little from the original picture. After applying
+eroision, seen in Figure \ref{fig:closing} (c), the final result is much closer
+in shape to the original picture, except it has its holes filled and the 
+bright areas have joined. This would have closed the contour, if it were one,
+in one of the best ways possible, preserving most of the original shape and not
+losing too much fine detail through enlarging the bright area!
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[scale=0.27]{pics/closing_o}
+		\caption{Original Picture}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[scale=0.27]{pics/closing_d}
+		\caption{Dilation stage}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.32\textwidth}
+		\centering
+		\includegraphics[scale=0.27]{pics/closing_e}
+		\caption{Erosion stage}
+	\end{subfigure}
+	\caption{Closing operator step by step}
+	\label{fig:closing}
+\end{figure}
+
 
 
 \subsubsection*{Image Registration}

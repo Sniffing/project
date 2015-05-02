@@ -8,6 +8,7 @@
 GLfloat xRotated, yRotated, zRotated;;
 GLdouble size = 1;
 
+
 void display(void)
 {
 
@@ -32,11 +33,10 @@ void display(void)
     glScalef(1.0,1.0,1.0);
     // built-in (glut library) function , draw you a Teapot.
     glutSolidTeapot(size);
-    // Flush buffers to screen
-     
+    // Flush buffers to screen     
     glFlush();        
-    // sawp buffers called because we are using double buffering 
-   // glutSwapBuffers();
+    // swap buffers called because we are using double buffering 
+    // glutSwapBuffers();
 }
 
 void reshapeFunc(int x, int y)

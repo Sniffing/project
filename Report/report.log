@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.17)  29 APR 2015 12:01
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.17)  2 MAY 2015 21:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -203,57 +203,81 @@ Package footmisc Info: Declaring symbol style lamport* on input line 903.
 Package footmisc Info: Declaring symbol style lamport*-robust on input line 924
 .
 )
+(/usr/share/texlive/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 57.
+\captionmargin=\dimen110
+\captionmargin@=\dimen111
+\captionwidth=\dimen112
+\caption@tempdima=\dimen113
+\caption@indent=\dimen114
+\caption@parindent=\dimen115
+\caption@hangindent=\dimen116
+)
+\c@ContinuedFloat=\count102
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+)
+\c@subfigure=\count103
+\c@subtable=\count104
+)
 (/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2010/09/12 v5.6 Page Geometry
-\Gm@cnth=\count102
-\Gm@cntv=\count103
-\c@Gm@tempcnt=\count104
-\Gm@bindingoffset=\dimen110
-\Gm@wd@mp=\dimen111
-\Gm@odd@mp=\dimen112
-\Gm@even@mp=\dimen113
-\Gm@layoutwidth=\dimen114
-\Gm@layoutheight=\dimen115
-\Gm@layouthoffset=\dimen116
-\Gm@layoutvoffset=\dimen117
+\Gm@cnth=\count105
+\Gm@cntv=\count106
+\c@Gm@tempcnt=\count107
+\Gm@bindingoffset=\dimen117
+\Gm@wd@mp=\dimen118
+\Gm@odd@mp=\dimen119
+\Gm@even@mp=\dimen120
+\Gm@layoutwidth=\dimen121
+\Gm@layoutheight=\dimen122
+\Gm@layouthoffset=\dimen123
+\Gm@layoutvoffset=\dimen124
 \Gm@dimlist=\toks19
 ) (./report.aux)
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             http://www.ctan.org/tex-archive/ 
 (lastpage)             macros/latex/contrib/pageslts/ 
 (lastpage)             or
 (lastpage)             http://www.ctan.org/tex-archive/ 
 (lastpage)             install/macros/latex/contrib/pageslts.tds.zip
-(lastpage)             ! on input line 19.
+(lastpage)             ! on input line 20.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count105
-\scratchdimen=\dimen118
+\scratchcounter=\count108
+\scratchdimen=\dimen125
 \scratchbox=\box28
-\nofMPsegments=\count106
-\nofMParguments=\count107
+\nofMPsegments=\count109
+\nofMParguments=\count110
 \everyMPshowfont=\toks20
-\MPscratchCnt=\count108
-\MPscratchDim=\dimen119
-\MPnumerator=\count109
-\makeMPintoPDFobject=\count110
+\MPscratchCnt=\count111
+\MPscratchDim=\dimen126
+\MPnumerator=\count112
+\makeMPintoPDFobject=\count113
 \everyMPtoPDFconversion=\toks21
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
@@ -271,7 +295,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 \AtBeginShipoutBox=\box29
-Package hyperref Info: Link coloring OFF on input line 19.
+Package hyperref Info: Link coloring OFF on input line 20.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -279,16 +303,18 @@ Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count111
+\c@section@level=\count114
 )
-LaTeX Info: Redefining \ref on input line 19.
-LaTeX Info: Redefining \pageref on input line 19.
-LaTeX Info: Redefining \nameref on input line 19.
+LaTeX Info: Redefining \ref on input line 20.
+LaTeX Info: Redefining \pageref on input line 20.
+LaTeX Info: Redefining \nameref on input line 20.
 
 (./report.out) (./report.out)
 \@outlinefile=\write3
 \openout3 = `report.out'.
 
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -325,11 +351,11 @@ LaTeX Info: Redefining \nameref on input line 19.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 26.
+(Font)              <12> on input line 27.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 26.
+(Font)              <8> on input line 27.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 26.
+(Font)              <6> on input line 27.
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]pdfTeX warning (ext4): dest
@@ -337,355 +363,447 @@ ination with the same identifier (name{page.1}) has been already used, duplicat
 e ignored
 <to be read again> 
                    \relax 
-l.32 \newpage
+l.33 \newpage
               [1]
-Underfull \hbox (badness 10000) in paragraph at lines 39--118
+Underfull \hbox (badness 10000) in paragraph at lines 40--119
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--118
+Underfull \hbox (badness 10000) in paragraph at lines 40--119
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--118
+Underfull \hbox (badness 10000) in paragraph at lines 40--119
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--118
+Underfull \hbox (badness 10000) in paragraph at lines 40--119
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--118
+Underfull \hbox (badness 10000) in paragraph at lines 40--119
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--118
+Underfull \hbox (badness 10000) in paragraph at lines 40--119
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--118
+Underfull \hbox (badness 10000) in paragraph at lines 40--119
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 39--118
+Underfull \hbox (badness 10000) in paragraph at lines 40--119
 
  []
 
 [2] [3]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 134.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 135.
 
  (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 134.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 135.
  [4]
-Underfull \hbox (badness 10000) in paragraph at lines 155--159
+Underfull \hbox (badness 10000) in paragraph at lines 156--160
 
  []
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 181.
+(Font)              <10.95> on input line 182.
 
-Underfull \hbox (badness 10000) in paragraph at lines 181--193
+Underfull \hbox (badness 10000) in paragraph at lines 182--194
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 194--201
+Underfull \hbox (badness 10000) in paragraph at lines 195--202
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 202--210
+Underfull \hbox (badness 10000) in paragraph at lines 203--211
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 211--218
+Underfull \hbox (badness 10000) in paragraph at lines 212--219
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 219--223
+Underfull \hbox (badness 10000) in paragraph at lines 220--224
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 224--234
+Underfull \hbox (badness 10000) in paragraph at lines 225--235
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--243
+Underfull \hbox (badness 10000) in paragraph at lines 236--244
 
  []
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 248--253
+
+LaTeX Warning: Citation `Ding00' on page 7 undefined on input line 272.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 284--292
 
  []
 
-[7]
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 316.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 316.
+<pics/closedloop1.png, id=59, 401.5pt x 401.5pt>
+File: pics/closedloop1.png Graphic file (type png)
+ <use pics/closedloop1.png>
+Package pdftex.def Info: pics/closedloop1.png used on input line 297.
+(pdftex.def)             Requested size: 120.45091pt x 120.45091pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--334
+<pics/closedloop2.png, id=60, 401.5pt x 401.5pt>
+File: pics/closedloop2.png Graphic file (type png)
+ <use pics/closedloop2.png>
+Package pdftex.def Info: pics/closedloop2.png used on input line 303.
+(pdftex.def)             Requested size: 120.45091pt x 120.45091pt.
+
+Underfull \hbox (badness 1354) in paragraph at lines 304--304
+[]\OT1/cmr/m/n/10 (b) |Con-tour is closed, but
+ []
+
+<pics/closedloop3.png, id=62, 401.5pt x 401.5pt>
+File: pics/closedloop3.png Graphic file (type png)
+ <use pics/closedloop3.png>
+Package pdftex.def Info: pics/closedloop3.png used on input line 309.
+(pdftex.def)             Requested size: 120.45091pt x 120.45091pt.
+
+<pics/openloop1.png, id=63, 401.5pt x 401.5pt>
+File: pics/openloop1.png Graphic file (type png)
+ <use pics/openloop1.png>
+Package pdftex.def Info: pics/openloop1.png used on input line 320.
+(pdftex.def)             Requested size: 120.45091pt x 120.45091pt.
+
+<pics/openloop2.png, id=64, 401.5pt x 401.5pt>
+File: pics/openloop2.png Graphic file (type png)
+ <use pics/openloop2.png>
+Package pdftex.def Info: pics/openloop2.png used on input line 326.
+(pdftex.def)             Requested size: 120.45091pt x 120.45091pt.
+
+<pics/openloop3.png, id=65, 401.5pt x 401.5pt>
+File: pics/openloop3.png Graphic file (type png)
+ <use pics/openloop3.png>
+Package pdftex.def Info: pics/openloop3.png used on input line 332.
+(pdftex.def)             Requested size: 120.45091pt x 120.45091pt.
+
+[7] [8 <./pics/closedloop1.png (PNG copy)> <./pics/closedloop2.png> <./pics/clo
+sedloop3.png> <./pics/openloop1.png> <./pics/openloop2.png> <./pics/openloop3.p
+ng>]
+
+Package caption Warning: \label without proper \caption on input line 420.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:ErosionExample' on page 9 undefined on input line
+ 396.
+
+
+Package caption Warning: \label without proper \caption on input line 420.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:ErosionExample' on page 9 undefined on input line
+ 400.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 388--406
 
  []
 
-<pics/leapmotioninternal.jpg, id=74, 240.9pt x 160.6803pt>
+[9] <pics/morphologyexample.png, id=98, 501.875pt x 422.57875pt>
+File: pics/morphologyexample.png Graphic file (type png)
+
+<use pics/morphologyexample.png>
+Package pdftex.def Info: pics/morphologyexample.png used on input line 411.
+(pdftex.def)             Requested size: 225.84166pt x 190.15868pt.
+
+Overfull \hbox (30.71399pt too wide) in paragraph at lines 411--412
+ [][] 
+ []
+
+<pics/morphologyexample_e.png, id=99, 501.875pt x 425.59pt>
+File: pics/morphologyexample_e.png Graphic file (type png)
+
+<use pics/morphologyexample_e.png>
+Package pdftex.def Info: pics/morphologyexample_e.png used on input line 417.
+(pdftex.def)             Requested size: 225.84166pt x 191.51372pt.
+
+Overfull \hbox (30.71399pt too wide) in paragraph at lines 417--418
+ [][] 
+ []
+
+File: pics/morphologyexample.png Graphic file (type png)
+<use pics/morphologyexample.png>
+Package pdftex.def Info: pics/morphologyexample.png used on input line 450.
+(pdftex.def)             Requested size: 225.84166pt x 190.15868pt.
+
+Overfull \hbox (30.71399pt too wide) in paragraph at lines 450--451
+ [][] 
+ []
+
+<pics/morphologyexample_d.png, id=101, 501.875pt x 423.5825pt>
+File: pics/morphologyexample_d.png Graphic file (type png)
+
+<use pics/morphologyexample_d.png>
+Package pdftex.def Info: pics/morphologyexample_d.png used on input line 456.
+(pdftex.def)             Requested size: 225.84166pt x 190.61037pt.
+
+Overfull \hbox (30.71399pt too wide) in paragraph at lines 456--457
+ [][] 
+ []
+
+[10 <./pics/morphologyexample.png (PNG copy)> <./pics/morphologyexample_e.png (
+PNG copy)>] [11 <./pics/morphologyexample_d.png (PNG copy)>]
+<pics/closing_o.png, id=118, 501.875pt x 418.56375pt>
+File: pics/closing_o.png Graphic file (type png)
+ <use pics/closing_o.png>
+Package pdftex.def Info: pics/closing_o.png used on input line 499.
+(pdftex.def)             Requested size: 135.50806pt x 113.01372pt.
+
+<pics/closing_d.png, id=119, 501.875pt x 430.60875pt>
+File: pics/closing_d.png Graphic file (type png)
+ <use pics/closing_d.png>
+Package pdftex.def Info: pics/closing_d.png used on input line 505.
+(pdftex.def)             Requested size: 135.50806pt x 116.2659pt.
+
+<pics/closing_e.png, id=120, 501.875pt x 423.5825pt>
+File: pics/closing_e.png Graphic file (type png)
+ <use pics/closing_e.png>
+Package pdftex.def Info: pics/closing_e.png used on input line 511.
+(pdftex.def)             Requested size: 135.50806pt x 114.3688pt.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 559.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 559.
+
+Underfull \hbox (badness 10000) in paragraph at lines 552--577
+
+ []
+
+[12 <./pics/closing_o.png (PNG copy)> <./pics/closing_d.png (PNG copy)> <./pics
+/closing_e.png (PNG copy)>]
+<pics/leapmotioninternal.jpg, id=133, 240.9pt x 160.6803pt>
 File: pics/leapmotioninternal.jpg Graphic file (type jpg)
 
 <use pics/leapmotioninternal.jpg>
-Package pdftex.def Info: pics/leapmotioninternal.jpg used on input line 338.
+Package pdftex.def Info: pics/leapmotioninternal.jpg used on input line 581.
 (pdftex.def)             Requested size: 192.72025pt x 128.5444pt.
- [8]
-<pics/leapmotioninteractionarea.png, id=88, 1027.84pt x 682.55pt>
+
+<pics/leapmotioninteractionarea.png, id=134, 1027.84pt x 682.55pt>
 File: pics/leapmotioninteractionarea.png Graphic file (type png)
 
 <use pics/leapmotioninteractionarea.png>
 Package pdftex.def Info: pics/leapmotioninteractionarea.png used on input line 
-348.
+591.
 (pdftex.def)             Requested size: 339.18825pt x 225.24219pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 355--422
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 355--422
+ [13 <./pics/leapmotioninternal.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 598--665
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 355--422
+Underfull \hbox (badness 10000) in paragraph at lines 598--665
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 355--422
+Underfull \hbox (badness 10000) in paragraph at lines 598--665
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 355--422
+Underfull \hbox (badness 10000) in paragraph at lines 598--665
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 355--422
+Underfull \hbox (badness 10000) in paragraph at lines 598--665
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 355--422
+Underfull \hbox (badness 10000) in paragraph at lines 598--665
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 355--422
+Underfull \hbox (badness 10000) in paragraph at lines 598--665
 
  []
 
-[9pdfTeX warning (ext4): destination with the same identifier (name{figure.0.1}
-) has been already used, duplicate ignored
 
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.422 \begin{center}
-                    pdfTeX warning (ext4): destination with the same identifier
- (name{figure.0.2}) has been already used, duplicate ignored
+Underfull \hbox (badness 10000) in paragraph at lines 598--665
 
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.422 \begin{center}
-                     <./pics/leapmotioninternal.jpg> <./pics/leapmotioninteract
-ionarea.png>] [10] <pics/LeapMotion1.png, id=110, 433.62pt x 368.1253pt>
+ []
+
+[14 <./pics/leapmotioninteractionarea.png>] [15]
+<pics/LeapMotion1.png, id=169, 433.62pt x 368.1253pt>
 File: pics/LeapMotion1.png Graphic file (type png)
 
 <use pics/LeapMotion1.png>
-Package pdftex.def Info: pics/LeapMotion1.png used on input line 425.
+Package pdftex.def Info: pics/LeapMotion1.png used on input line 668.
 (pdftex.def)             Requested size: 195.1272pt x 165.65485pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 432--454
+Underfull \hbox (badness 10000) in paragraph at lines 675--697
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 432--454
+Underfull \hbox (badness 10000) in paragraph at lines 675--697
 
  []
 
-[11pdfTeX warning (ext4): destination with the same identifier (name{figure.0.3
-}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.454 
-       <./pics/LeapMotion1.png (PNG copy)>]
-<pics/LeapMotion2.png, id=117, 304.13625pt x 289.08pt>
+<pics/LeapMotion2.png, id=171, 304.13625pt x 289.08pt>
 File: pics/LeapMotion2.png Graphic file (type png)
 
 <use pics/LeapMotion2.png>
-Package pdftex.def Info: pics/LeapMotion2.png used on input line 458.
+Package pdftex.def Info: pics/LeapMotion2.png used on input line 701.
 (pdftex.def)             Requested size: 167.27545pt x 158.99448pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 465--511
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 465--511
+ [16 <./pics/LeapMotion1.png (PNG copy)>]
+Underfull \hbox (badness 10000) in paragraph at lines 708--754
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 465--511
-
- []
-
-[12pdfTeX warning (ext4): destination with the same identifier (name{figure.0.4
-}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.511 
-       <./pics/LeapMotion2.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 513--545
+Underfull \hbox (badness 10000) in paragraph at lines 708--754
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 513--545
+Underfull \hbox (badness 10000) in paragraph at lines 708--754
+
+ []
+
+[17 <./pics/LeapMotion2.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 756--788
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 513--545
+Underfull \hbox (badness 10000) in paragraph at lines 756--788
 
  []
 
-[13] <pics/kinectinternal.jpg, id=139, 553.06625pt x 278.03876pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 756--788
+
+ []
+
+[18] <pics/kinectinternal.jpg, id=199, 553.06625pt x 278.03876pt>
 File: pics/kinectinternal.jpg Graphic file (type jpg)
 
 <use pics/kinectinternal.jpg>
-Package pdftex.def Info: pics/kinectinternal.jpg used on input line 548.
+Package pdftex.def Info: pics/kinectinternal.jpg used on input line 791.
 (pdftex.def)             Requested size: 276.53244pt x 139.01903pt.
 
-Overfull \hbox (76.21136pt too wide) in paragraph at lines 560--560
+Overfull \hbox (76.21136pt too wide) in paragraph at lines 803--803
 [][]\OT1/cmr/m/n/9 http://www.gamasutra.com/blogs/DanielLau/20131127/205820/The
 []Science[]Behind[]Kinects[]or[]Kinect[]10[]versus[]20.php| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 555--588
+Underfull \hbox (badness 10000) in paragraph at lines 798--831
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 555--588
+Underfull \hbox (badness 10000) in paragraph at lines 798--831
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 555--588
+Underfull \hbox (badness 10000) in paragraph at lines 798--831
 
  []
 
-[14pdfTeX warning (ext4): destination with the same identifier (name{figure.0.5
-}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.588 \begin{center}
-                     <./pics/kinectinternal.jpg>]
-<pics/KinectDepth.png, id=150, 366.61969pt x 483.30562pt>
+[19 <./pics/kinectinternal.jpg>]
+<pics/KinectDepth.png, id=208, 366.61969pt x 483.30562pt>
 File: pics/KinectDepth.png Graphic file (type png)
 
 <use pics/KinectDepth.png>
-Package pdftex.def Info: pics/KinectDepth.png used on input line 591.
+Package pdftex.def Info: pics/KinectDepth.png used on input line 834.
 (pdftex.def)             Requested size: 183.30939pt x 241.65222pt.
- [15]
-<pics/KinectColor.png, id=157, 421.575pt x 309.40594pt>
+
+<pics/KinectColor.png, id=210, 421.575pt x 309.40594pt>
 File: pics/KinectColor.png Graphic file (type png)
 
 <use pics/KinectColor.png>
-Package pdftex.def Info: pics/KinectColor.png used on input line 608.
+Package pdftex.def Info: pics/KinectColor.png used on input line 851.
 (pdftex.def)             Requested size: 210.78697pt x 154.70259pt.
+ [20 <./pics/KinectDepth.png (PNG copy)>]
 Missing character: There is no Â in font cmr10!
 Missing character: There is no £ in font cmr10!
 Missing character: There is no Â in font cmr10!
 Missing character: There is no £ in font cmr10!
 
-Underfull \hbox (badness 10000) in paragraph at lines 615--639
+Underfull \hbox (badness 10000) in paragraph at lines 858--882
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 615--639
+Underfull \hbox (badness 10000) in paragraph at lines 858--882
 
  []
 
-[16pdfTeX warning (ext4): destination with the same identifier (name{figure.0.6
-}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.639 
-      pdfTeX warning (ext4): destination with the same identifier (name{figure.
-0.7}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.639 
-       <./pics/KinectDepth.png (PNG copy)> <./pics/KinectColor.png (PNG copy)>]
-[17]
-Underfull \hbox (badness 10000) in paragraph at lines 643--669
+[21 <./pics/KinectColor.png (PNG copy)>]
+Underfull \hbox (badness 10000) in paragraph at lines 886--912
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 643--669
+Underfull \hbox (badness 10000) in paragraph at lines 886--912
 
  []
 
-[18] [19] [20] [21] (./report.bbl [22]
+[22] [23] [24] [25] (./report.bbl [26]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ¤ in font cmr10!
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no © in font cmr10!
 ) 
 AED: lastpage setting LastPage
-[23
+[27
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 799.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 799.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1042.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1042.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 799.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 799.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1042.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1042.
+
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 799.
+
+
+LaTeX Warning: There were undefined references.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1042.
  ) 
 Here is how much of TeX's memory you used:
- 6067 strings out of 494985
- 89602 string characters out of 6180355
- 270997 words of memory out of 5000000
- 9146 multiletter control sequences out of 15000+600000
+ 7200 strings out of 494985
+ 110560 string characters out of 6180355
+ 290910 words of memory out of 5000000
+ 10244 multiletter control sequences out of 15000+600000
  10843 words of font info for 38 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 29i,8n,31p,301b,374s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,8n,40p,301b,460s stack positions out of 5000i,500n,10000p,200000b,80000s
 pdfTeX warning (dest): name{Hfootnote.11} has been referenced but does not ex
 ist, replaced by a fixed one
 
@@ -730,10 +848,10 @@ nts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type
 s/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.
 pfb>
-Output written on report.pdf (24 pages, 1646578 bytes).
+Output written on report.pdf (28 pages, 2798503 bytes).
 PDF statistics:
- 263 PDF objects out of 1000 (max. 8388607)
- 215 compressed objects within 3 object streams
- 81 named destinations out of 1000 (max. 500000)
- 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 318 PDF objects out of 1000 (max. 8388607)
+ 249 compressed objects within 3 object streams
+ 95 named destinations out of 1000 (max. 500000)
+ 96 words of extra memory for PDF output out of 10000 (max. 10000000)
 

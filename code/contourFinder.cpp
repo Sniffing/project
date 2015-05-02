@@ -71,7 +71,7 @@ static Mat* findAndDrawContours( Mat* image )
      //if (i == 150) {color = Scalar(0,255,0); cout << "works" <<endl;} 
      //if (i == 175) {color = Scalar(0,0,255);} 
      //if (i == 180) {color = Scalar(255,255,255);}
-    drawContours( *drawing, contours, i, color, 0.5, 8, hierarchy, 0, Point() );
+    drawContours( *drawing, contours, i, color, CV_FILLED, 8, hierarchy, 0, Point() );
     //  tempContours.push_back(contours[i][j]);
     //}
   }
@@ -113,16 +113,16 @@ int main(int argc, char** argv)
     }
     dilatedImage = scaledImage;
     
-    //imshow(wndname,finalImage);
+    imshow(wndname,finalImage);
     //imshow("erosion",erodedImage);
     //imshow("erosiontodilation",dilatedImage);
     
     Mat closedFinal = *(findAndDrawContours(&dilatedImage));
-    //imshow("MORPHEDLINES",closedFinal);
+    imshow("MORPHEDLINES",closedFinal);
     String number = String(argv[2]);
     imwrite("testpics/MorphedLine" + number + ".jpg",closedFinal);
   
-    //int c = waitKey();
+    int c = waitKey();
     
   }
   return 0;

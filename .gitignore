@@ -4,3 +4,8 @@
 *.jpg
 *.o
 *~
+OpenCV
+*.aux
+*.log
+*.pdf
+*.gz
