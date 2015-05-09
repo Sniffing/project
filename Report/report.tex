@@ -243,40 +243,126 @@ Reed from the University of California lead the authoring of the persentation
 about this piece of tehnology\cite{Reed14}.\\
 
 
-
-
 \subsection*{Computer Vision and Image Processing}
 A key part of this project is the Computer Vision aspect. The field of
 Computer Vision involves the understanding of data from images and pictures.
-Understanding is a broad term that encompasses many ways of manipulating or
+"Understanding" is a broad term that encompasses many ways of manipulating or
 processing images in order to extract features or points of interest that
 can be then used by the computer.
 
 \subsubsection*{Edge Detection}
 % Detecting lines and edges of paper, for registration
+
+\begin{center}
+	In an image, an edge if a set of pixels that separates to disjoint
+	regions.
+\end{center}
+
 A key part of Computer Vision is line and edge detection. Edge detection is
 the very beginning of how we can start to identify different objects 
 within an image. In addition, by stripping an image down to its comprising
 edges, we greatly decrease the amount of information in the image whilst
-preserving the important parts which we want to operate on.
+preserving the important parts which we want to operate on. 
 As a result, how edges are detected have a large contribution
-to what we can do with certain images. There have been 
-numerous methods of detecting edges put forward, some Gradient-based and
-Laplacian based edge detection methods are outlined in 
-\textit{A Comparison of various Edge Detection Techniques used in Image Processing}
-\cite{Shriv12}. The edge detector used by the Computer Vision Library, 
-openCV, is the Canny Edge detector, put forward by John Canny in his paper
-\textit{A Computational Appraoch to Edge Detection}\cite{Canny86}. The paper
-dicusses a methematical approach to edge and ridge detection which is then
-analysed on in Ding and Goshtasby's paper, 
-\textit{On the Canny Edge Detector}\cite{Ding00}.
+to what we can do with certain images.  
 
+Edge detection tries to find the set of pixels that separate two 
+disjoint areas of an image by analysing sets of neighbouring pixels and 
+looking for discontinuities in intensity or texture. A variety of factors
+can cause these (local) discontinuities:
+\begin{enumerate}
+	\item Object colour and texture. If the object has any change in colour or
+		  texture, then where the change occurs, an edge will be detected.
+	\item A change of surface normal. In the real world, we have 3D objects,
+		  as a result, there will be a surface normal change when we consider,
+		  say, the top face of a box against the side face. There is an edge
+		  between the two and this is partly also due to the next factor.
+	\item Illumination. A change of illumination or simply due to some
+		  part of the obejct in question casting a shadow will cause some regions
+		  of the image to be darker or lighter in intensity, even if said
+		  regions are part of the same object. Edges will be detected in this
+		  instance.
+	\item Two objects. This a large part of why we even do edge detection, to
+		  detect objects. If there are two objects, then, likely, there will be
+		  a difference in colour and intensities of their constituant pixels.
+		  However, this is not always the case and also as can be reasoned from
+		  above, these regions may belong to the same multi-coloured object.
+\end{enumerate}
 
+When it comes to 
 
+We can distinguish edge detectors into two sets, the Laplacian of Gaussain detectors
+and the Gradient-based detectors.
+
+\subsubsection*{Gradient-based detectors}
+Gradient edge detectors look for changes of gradient (first-order) of 
+neighbouring pixels. Some common gradient-based detectors are Sobel,
+Prewitt, Canny and Robert. Each of these detectors starts off with an image
+and an x and y kernel. The kernels help determine the gradient change
+and y directions of the image, different kernels (size and values) are what
+separate the different Gaussian-based detectors. The final gradient magnitude
+for a given pixel is then the square root of the sum of these: 
+
+\begin{equation}
+	|G| &= \sqrt{\Delta x^2 + \Delta y^2} 
+\end{equation}
+
+Users can then set a threshold value for which any pixel with a final
+gradient that is above that threshold will be treated and marked as an edge,
+the others will be discarded.
+
+\subsubsection*{Laplacian (of Gaussian)-based detectors}
+Laplacian based detectors are similar to Gradient-based ones except that 
+instead of taking the first derivative, they consider the second derivative.
+Their goal is to look for zero-crossings, i.e. local maxima in 
+gradient changes (i.e. looking for when gradient starts going negative). The
+change of gradient sign, which occurs when second order derivative is 0,
+indicates that the intensity of the observed pixels begins changing also. This
+method can be coupled with a Gaussian kernel which serves to de-noise the
+image by smoothing out the pixel intensities. 
 
 
 \subsubsection*{Canny Edge Detector}
 % Detecting Contours for landscaping
+
+There have been numerous methods of detecting edges put forward,
+some Gradient-based and Laplacian based edge detection methods are 
+outlined in 
+\textit{A Comparison of various Edge Detection Techniques used in Image Processing}
+\cite{Shriv12}. However, the most popular edge detector out there is the
+Canny Edge detector, put forward by John Canny in his paper
+\textit{A Computational Appraoch to Edge Detection}\cite{Canny86}. The paper
+dicusses a methematical approach to edge and ridge detection which is then
+analysed on in Ding and Goshtasby's paper, 
+\textit{On the Canny Edge Detector}\cite{Ding00}. Rashmi's paper,
+\textit{Algorithm and Technique on various Edge Detection: A Survey}
+\cite{Rashmi13} compares various edge detection algorithms and finds that 
+the Canny edge detector comes out on top, with Maini's paper 
+\textit{Study and Comparison of Various Image Edge Detection Techniques} 
+\cite{Maini} showing the same result.
+
+The Canny Edge detector falls within the Gaussian-based Edge detectors and
+can be described algorithmically below:
+\begin{itemize}
+	\item Apply a Gaussian filter over the image to remove noise by smoothing
+	\item Take the Gradient of the image pixels over each direction, just as
+		  would be done in a normal Gaussian-based detector.
+	\item Apply non-maximum suppression 
+		  such that only local maxima are marked as edges (the pixel 
+		  has a greater gradient magnitude than all
+		  of its neighbours) resulting in a thin edge. The thinning of found
+		  edges is to remove some affect of the blur. After this, perform
+		  double thresholding, those higher than the threshold are "strong" edges
+		  and those under are weak edges.
+	\item Another round of removing edges is applied by using hysteresis.
+		  This involves identifying "strong" edges,and then removing 
+		  all edges that are not connected directly to these strong edges.
+\end{itemize}
+
+The steps are more fully explained in the paper by 09gr820, 
+\textit{Canny Edge Detection}\citep{09gr820}.
+
+
 
 
 
@@ -524,7 +610,10 @@ losing too much fine detail through enlarging the bright area!
 
 
 
+\subsection*{Existing Projects}
 
+\subsubsection*{LandscapAR}
+\subsubsection*{The AR Sandbox}
 
 
 

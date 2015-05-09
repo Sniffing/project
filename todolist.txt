@@ -1,0 +1,21 @@
+Code
+- make contours a single line, not a double line
+- use matchTemplate to see how it performs (matchShapes)
+- Find out an appropriate distance measure
+- Look up motion detection algorithms
+- Devise a way to have store a "backgound" or base image for comparison
+- make a new drawing and add a typical contours in to estimate a threshold
+- take a picture of table and find out if contours can be found
+
+Report
+- Write about LandscapAR and its pitfalls
+- write about the augmented sandbox
+- Consider Thinning and Hit and Miss Morpphology
+
+
+Running tests on amount of closing operations
+(Proved futile because closing is idempotent)
+
+Runnin tests on structuring element, 5 seems to be best, 7 is too wide
+and joins stuff it shouldn't. 3 works best on Normal lines, 5 can still
+work it just doenst capture the double boundary on a drawn line
