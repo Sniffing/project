@@ -8,6 +8,7 @@ Code
 - take a picture of table and find out if contours can be found
 
 Report
+- Write about background differencing
 - Write about LandscapAR and its pitfalls
 - write about the augmented sandbox
 - Consider Thinning and Hit and Miss Morpphology

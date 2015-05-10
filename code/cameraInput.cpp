@@ -23,6 +23,7 @@ static void grabFrame(char* filename, VideoCapture* cam){
   
 }
 
+
 int main(int argc, char** argv)
 {
 
@@ -48,9 +49,16 @@ int main(int argc, char** argv)
     //Grab original frame
     cam.read(baseFrame);
     cvtColor(baseFrame,baseFrame,CV_BGR2GRAY); 
+    imwrite("original.jpg", baseFrame);
 
     int frameCounter = 0;
     int fps;
+
+    int stableCounter = 0;
+    Mat tempBase;
+    cam >> tempBase;
+    cvtColor(tempBase,tempBase,CV_BGR2GRAY); 
+
     while( cam.isOpened() )    // check if we succeeded
     {
         
@@ -65,8 +73,8 @@ int main(int argc, char** argv)
 	cvtColor(thisFrame,thisFrame,CV_BGR2GRAY);
 	differenceFrame = new Mat(baseFrame.rows, baseFrame.cols,DataType<float>::type);
         imshow("camera",thisFrame);
-	absdiff(baseFrame,thisFrame, *differenceFrame);
-	imshow("difference", *differenceFrame);
+	//absdiff(baseFrame,thisFrame, *differenceFrame);
+	
 	
 	//Sort out FPS reading
 	time(&end);
@@ -76,16 +84,51 @@ int main(int argc, char** argv)
 	globalFPS += fps;
 	globalFPS = (floor(globalFPS) == 0) ? 0 : globalFPS / 2;
 
-	cout << "calculated fps = " << fps << ", Global fps: " << to_string(globalFPS) << endl;
+	
+	
+	Mat nextFrame, diffFrame;
+	  
+	cam >> nextFrame;
 
-        int k = waitKey(33);
+	int thresh = 50;
+	int max = 255;
+	  
+	int randomThresh = 75;
+
+       
+	
+ 	imshow("nextFrame", nextFrame);
+	cvtColor(nextFrame,nextFrame,CV_BGR2GRAY); 
+	absdiff(tempBase, nextFrame, diffFrame);
+	
+	threshold(diffFrame, diffFrame, thresh, max, THRESH_BINARY);
+	imshow("DIFF FRAME", diffFrame);
+
+	int changed = countNonZero(diffFrame > 0);
+
+	if (changed > randomThresh) {
+	  stableCounter = 0;
+	  cout << "BG changed" <<endl;
+	  tempBase = nextFrame;
+	} else {
+	  stableCounter++;
+	}	
+
+	if (stableCounter > 20) {
+	  cout << "image stablised" << endl;
+	}
+	
+	  
+	
+
+	int k = waitKey(10);
         if ( k==27 ) { // if escape
 	  cam.release();
           break;
 	}
  
 	if ( k==32 ) {
-	  if(argc < 2) { cout << "enter a filename and extension" << endl; break;}
+	  //if(argc < 2) { cout << "enter a filename and extension" << endl; break;}
 
 	  // imwrite("testpics/baseFrame.jpg", baseFrame);
 	  // imwrite("testpics/thisFrame.jpg", thisFrame);
@@ -94,6 +137,13 @@ int main(int argc, char** argv)
 	  // imwrite(argv[1],*differenceFrame);
 	  // int c = waitKey();
 	  //grabFrame(argv[1],&cam);
+	 
+	  //shows absolute diference between first frame and taken frame
+	  cvtColor(thisFrame,thisFrame,CV_BGR2GRAY);
+	  absdiff(baseFrame, thisFrame, *differenceFrame);
+	  pow(*differenceFrame, 2, *differenceFrame);
+	  imshow("Difference", *differenceFrame);
+	  imwrite("changed.jpg", *differenceFrame);
 	}
     }
     return 0;
