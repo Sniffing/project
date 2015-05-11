@@ -1,7 +1,10 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{Ding00}
-
+\bibitem{09gr820}
+09ggr820.
+\newblock Canny edge detection.
+\newblock Indian Institute of Technology Delhi, Department of Computer Science
+  and Engineeering, March 2009.
 
 \bibitem{AmonFuhrmann14}
 Clemens Amon and Ferdinand Fuhrmann.
@@ -27,6 +30,11 @@ John Canny.
 \newblock {\em IEEE Trans. on Pattern Analysis and Machine Intelligence},
   Pami-8(6):679--698, November 1986.
 
+\bibitem{Ding00}
+Lijun Ding and Ardeshir Goshtasby.
+\newblock On the canny edge detector.
+\newblock {\em Pattern Recognition}, 34:721--725, 2001.
+
 \bibitem{Weichert13}
 Bartholomäus~Rudak Frank~Weichert, Daniel~Bachmann and Denis Fisseler.
 \newblock Analysis of the accuracy and robustness of the leap motion
@@ -41,6 +49,22 @@ Wendy~E. Mackay.
 \newblock Technical report, Department of Computer Science, Université de
   Paris-Sud.
 
+\bibitem{Maini}
+Raman Maini and Dr.~Himanshu Aggarwal.
+\newblock Study and comparison of various image edge detection techniques.
+\newblock {\em International Journal of Image Processing (IJIP)}, 3(1):1--12.
+
+\bibitem{Radke04}
+R.~J. Radke, S.~Andra, O.~Al-Kofahi, and B.~Roysam.
+\newblock Image change detection algorithms: A systematic survey.
+\newblock Technical report, Rensselaer Polytechnic Institute.
+
+\bibitem{Rashmi13}
+Rashmi, Muhesh Kumar, and Rohini Saxena.
+\newblock Algorithm and technique on various edge detection: A survey.
+\newblock {\em Signal and Image Processing: An International Journal},
+  4(3):65--75, June 2013.
+
 \bibitem{Reed14}
 S.~Reed, O.~Kreylos, S.~Hsi, L.~Kellogg, G.~Schladow, M.B. Yikilmaz, H.~Segale,
   J.~Silverman, S.~Yalowitz, and E.~Sato.
@@ -48,6 +72,11 @@ S.~Reed, O.~Kreylos, S.~Hsi, L.~Kellogg, G.~Schladow, M.B. Yikilmaz, H.~Segale,
   for advancing earth science education.
 \newblock University of California, Davis and American Geophysical Union (AGU)
   Fall Meeting 2014, 2014.
+
+\bibitem{Rosin}
+Paul~L. Rosin.
+\newblock Thresholding for change detection.
+\newblock Technical report, Brunel University.
 
 \bibitem{Shriv12}
 G.~T Shrivakshan and Dr.~C Chandrasekar.

@@ -11,6 +11,7 @@
 \usepackage{float}
 \usepackage[bottom]{footmisc}
 \usepackage{subcaption}
+\usepackage{amsmath}
 
 \linespread{1.1} % Line spacing
 \usepackage[total={6in, 8in}]{geometry}
@@ -25,11 +26,11 @@ through Augmented Reality: Interim Report}
 		Second Marker: Abhijeet Ghosh}
 \maketitle
 \newpage
-
+\tableofcontents
 \newpage
 
 \section*{Abstract}
-
+Oh
 \newpage
 
 \section*{Introduction}
@@ -37,8 +38,9 @@ through Augmented Reality: Interim Report}
 \textit{I want to create the world.}
 \end{center}
 
-Augmented Reality(AR) has come into the limelight once again with the recent release
-of the Google Glass. AR has been around for a while now, most of the time being
+Augmented Reality(AR) has come into the limelight once
+again with the recent release of the Google Glass. AR has 
+been around for a while now, most of the time being
 thought of the future of technology but with applications ending up with 
 limited use, less than satisfying performance and being gimmicky, it has been
 hanging around in the background for a while.
@@ -304,7 +306,7 @@ separate the different Gaussian-based detectors. The final gradient magnitude
 for a given pixel is then the square root of the sum of these: 
 
 \begin{equation}
-	|G| &= \sqrt{\Delta x^2 + \Delta y^2} 
+	G = \sqrt{\Delta x^2 + \Delta y^2} 
 \end{equation}
 
 Users can then set a threshold value for which any pixel with a final
@@ -360,11 +362,7 @@ can be described algorithmically below:
 \end{itemize}
 
 The steps are more fully explained in the paper by 09gr820, 
-\textit{Canny Edge Detection}\citep{09gr820}.
-
-
-
-
+\textit{Canny Edge Detection}\cite{09gr820}.
 
 \subsubsection*{Open and Closed contours}
 We understand a closed contour to be a loop. By this we mean that if we had
@@ -605,10 +603,110 @@ losing too much fine detail through enlarging the bright area!
 
 \subsubsection*{Image Registration}
 % Lining up the AR to the paper
-\subsubsection*{Feature Abstraction}
+\subsubsection*{Feature Extraction}
 % Possibly extracting known feature points like a house indicator
 
+\subsubsection*{Image Differencing}
+For users to be able to draw their own landscapes, there has to be some way
+of recognising when there has been a change, physically, on paper. To 
+automate this process will enable the program to decide for itself when
+there has been an update to a drawing, rather than a user having to confirm each
+time there is an update. Image differencing is the primary way of 
+achieving this kind of detection. There are many different ways of actually
+working out whether there is a "difference" between two images and some will
+be further explained below. The general method for image differencing from
+a video feed is taking two frames, at time $t_s$ and a time in the future
+$t_{s+c}$ and compare the two.
 
+\subsubsection*{Simple Intensity Differencing}
+The simplest form of finding the difference between two images is comparing 
+their pixel intensities. 
+\begin{align}
+	\begin{split}
+		A \text{ is Image at time } t_{s} \\
+		B \text{ is Image at time } t_{s+c} \\
+		D \text{ is the difference Image } \\
+		I(pixel) \text{ is the Intensity of the supplied pixel} \\
+		\\
+		D_{i,j} = | I(A_{i,j}) - I(B_{i,j}) | 	
+	\end{split}
+\end{align} 
+
+Once the Difference Image has been computed, you can then perform a 
+sum over all the pixels to get an indication into how much "change"
+there was. Depending on if the image is grayscale, binary or RGB will
+give different ranges of numbers, the higher the range, the less
+this final sum will be able to tell you about the change in the image.
+\\
+A popular way to deal with this problem is to perform thresholding on
+the Difference Image and is explained in Rosin's Paper
+\textit{Thresholding for Change Detection}\cite{Rosin}. 
+Again, there are different type of thresholding
+such as Truncation, to-Zero, Binary and all of their inversions. 
+For the purposes of this project, we will only look at Binary 
+thresholding. \\
+
+Binary thresholding takes a threshold value, $\tau$, which is 
+acquired either through statistical or empirical methods. With
+the threshold, any pixel value in the Difference Image that is below
+the threshold is effectively ignored and set to 0. The pixels above
+the threshold preserve their values. This method is very quick,
+especially when considering grayscale images where the range of
+pixel values is between the value 0 to 255. It begins a bit harder
+to use Binary thresholding with images with more colour channels.
+
+\begin{equation}
+	D_{i,j} = 
+	\begin{cases}
+	0, & \text{ if $D_{i,j}$ $\leq$ $\tau$}. \\
+	D_{i,j}, & \text{ otherwise}.
+	\end{cases}
+\end{equation}
+
+By summing over these obtained values, the result may make more
+sense as it is a representation of how many pixels in the image have
+changed such that their change is significant. Of course this
+"significance" is determined by the user and the chosen $\tau$.\\
+\\
+It is obvious that this is avery simple way of calculating difference
+between images. To ensure accurate results, the camera has to stay
+very still otherwise, potentially, every pixel could experience a 
+change in intensity. This can be somewhwat countered by choosing
+and appropriate $\tau$. However, if looking for finer changes, the
+chosen $\tau$ could remove some of these changes, disabling detection.\\
+\\
+In addition, if the images are taken in different lighting environments
+then that will cause inaccurate indications of difference. Take two
+potential scenes, exactly the same and untouchedd camera fixed. In
+the day time, the image captured will have a much higher intensity
+than an image taken in the evening. This coud cause the whole image
+to be above the threshold of changed but actually tell us nothing 
+about changes in the scene, if any. The problem with dealing with
+illumination changes becomes more prominent in surveillance literature.
+A way to reduce the illumination effect is to perform a normalisation
+of the pixels based on average intensities and variance. This shall
+not be explained further but details of it and other detection 
+techniques are highlighted it Radke's paper\cite{Radke04}.
+
+\subsubsection*{Image Ratioing}
+Image Ratioing is another method to compare images. The general concept
+is explained (along with other change detection techniques) in Singh's
+paper \textit{Review Article Digital change detection techniques 
+using remotely-sensed data}\cite{Singh88}. Again we have our two images,
+from before, taken at different times. From here, the pixels' intensities
+are compared to obtain a ratio:
+
+\begin{equation}
+	R_{i,j} = \frac{A_{i,j}}{B_{i,j}}
+\end{equation}
+
+The closer this $R_{i,j}$ values is to 1, the more similar the two 
+pixels are in terms of intensity. Thus, if $R_{i,j}$ is quite far from 
+1, it is a good indicator that there has been change within the image.
+Again, thresholding can be applied to ths Ratio Image, $R$, which will 
+leave only those with a significant ratio to be considered. The same steps
+as image differencing can then be utilised to gain a representation of the
+overall change in the image.
 
 \subsection*{Existing Projects}
 

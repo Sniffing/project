@@ -2,13 +2,10 @@ Code
 - make contours a single line, not a double line
 - use matchTemplate to see how it performs (matchShapes)
 - Find out an appropriate distance measure
-- Look up motion detection algorithms
-- Devise a way to have store a "backgound" or base image for comparison
 - make a new drawing and add a typical contours in to estimate a threshold
 - take a picture of table and find out if contours can be found
 
 Report
-- Write about background differencing
 - Write about LandscapAR and its pitfalls
 - write about the augmented sandbox
 - Consider Thinning and Hit and Miss Morpphology
