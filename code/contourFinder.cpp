@@ -2,6 +2,8 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
+#include "contourFinder.hpp"
+
 #include <iostream>
 #include <math.h>
 #include <string.h>
@@ -20,25 +22,7 @@ using namespace std;
 
 vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> >* joinedList);
 void printContours(vector<vector<Point> >* contours);
-//Breadth First Hierarchy Search
-// static vector<vector<Point> >* BFHS(vector<vector<Point> >* contours, vector<Vec4i>* hierarchy)
-// {
-//   //bitmap keeps track of next contour level
-//   boolean bitmap[hierarchy.size()] = {0};
-  
-//   vector<vector<Point> > joinedLayers = new vector<vector<Point> >();
-//   for(vector<Vec4i>::const_iterator it = hierarchy.begin(); it != hierarchy.end(); it++)
-//     {
-//       //[Next, Previous, First Child, Parent] format for Vec4i
-//       int seenContours = 0;
-//       while(seenContours != hierarchy.size())
-// 	{
-// 	  if(hierarchy
-// 	}
-//     }
-
-//   return &joinedLayers;
-// }
+void printHierarchy(vector<Vec4i>* hierarchy);
 
 static bool adjacent(Point a, Point b)
 {
@@ -49,6 +33,8 @@ static bool adjacent(Point a, Point b)
     return false;
   }
 }
+
+
 
 
 static Mat* findAndDrawContours( Mat* image, bool debug, bool join ) 
@@ -68,21 +54,14 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
     cout << "joining contours" << endl;
     cout << "original number of contours is " << contours.size() << endl;
     
-    naiveContourJoin(&contours,&joinedContours);
-    
+    naiveContourJoin(&contours,&joinedContours,&hierarchy);
     cout << "contours reduced to " << joinedContours.size() << endl;
   }
  
   if (debug) {
     cout << "hierarchy has size: " << hierarchy.size() << endl;
+    printHierarchy(&hierarchy);
     cout << "Number of contours: " << contours.size() <<endl;
-
-    // Prints hierarchy
-    // for (vector<Vec4i>::const_iterator it = hierarchy.begin(); it != hierarchy.end() ; it++)
-    //  {
-    //    cout << *it << endl;
-    //  }
-    //printContours(&contours);
   }  
  
   /// Draw contours
@@ -95,9 +74,6 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
   {
     Scalar color = Scalar(0,(70) + (i*5),0 );
    
-    //if (hierarchy[i][0] == -1) {color = Scalar(255,0,0);} //BLUE = Lowest hierarchy
-    //if (hierarchy[i][2] == -1) {color = Scalar(0,0,255);} //Red = No child
- 
     if(JOIN_FLAG) {
       
       drawContours( *drawing, joinedContours, i, color, 1, 8, hierarchy, 0, Point() );
@@ -123,11 +99,6 @@ void printContours(vector<vector<Point> >* contours) {
     Point start = it->front();
     Point end = it->back();
   
-  // if(adjacent(start,end)){
-  //   cout << "CLOSED CONTOUR" << endl;
-  //   goto closed;
-  // }
-
     for (vector<Point>::const_iterator itp = it->begin(); itp != it->end(); itp++) {
       cout << "Point("+to_string(itp->x)+","+to_string(itp->y)+") ";
     }
@@ -137,13 +108,23 @@ void printContours(vector<vector<Point> >* contours) {
   }
 }
 
+void printHierarchy(vector<Vec4i>* hierarchy){
+  int count = 0;
+  for(vector<Vec4i>::const_iterator it = hierarchy->begin(); it != hierarchy->end();it++){
+    cout << count << "). Next:" << (*it)[0] << ", Prev:" << (*it)[1] << ", Child:" << (*it)[2] << ", Parent:" << (*it)[3] << endl;
+    count++ ;
+  }
+}
+
 //HOLY SHIT IT WORKS
-vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> >* joinedList){
+vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> >* joinedList, vector<Vec4i>* hierarchy){
   Point currFront, currBack, nextFront, nextBack;
   vector<Point> currContour;
   vector<Point> nextContour;
   int i = 0;
-  
+
+  vector<Vec4i> newHierarchy = new vector<Vec4i>();
+
   currContour = contourList->at(i); 
   currFront = currContour.front();
   currBack = currContour.back();
@@ -162,7 +143,9 @@ vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vect
       currFront = nextFront;
       currBack = nextBack;
       currContour.insert(currContour.end(), nextContour.begin(), nextContour.end());
+
     } else {
+      
       joinedList->push_back(currContour);
       currContour = nextContour;
       currFront = nextFront;
@@ -172,7 +155,6 @@ vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vect
   }
   joinedList->push_back(currContour);
 }
-
 
 int main(int argc, char* argv[])
 {
@@ -208,20 +190,10 @@ int main(int argc, char* argv[])
     //erosion then dilation since we want the darker (pen) regions to close
     erode(scaledImage,erodedImage,element);
     dilate(erodedImage,dilatedImage,element);
-        
-    //imshow(wndname,finalImage);
-    //imshow("erosion",erodedImage);
-    //imshow("erosiontodilation",dilatedImage);
-    
-    Mat closedFinal = *(findAndDrawContours(&dilatedImage,false,JOIN_FLAG));
+            
+    Mat closedFinal = *(findAndDrawContours(&dilatedImage,true,JOIN_FLAG));
     imshow("MORPHEDLINES",closedFinal);
 
-
-    // String number = String(argv[2]);
-    // String upperThreshold = to_string(upperthresh);
-    // String lowerThreshold = to_string(lowerthresh);
-    // imwrite("testpics/Upper" + upperThreshold + "lower"+ lowerThreshold+"kernel"+to_string(NEIGHBOURHOOD)+".png",closedFinal);
-  
     int c = waitKey();
     
   }
