@@ -1,110 +1,214 @@
-class Tree {
-public:
-  Tree(vector<Vec4i>*);
-  TreeNode* getRoot();
-  void makeAndInsertNode(int,Vec4i*);
-private:
-  std::unordered_map<int,TreeNode*> allNodes; 
-  void insertNode(int,TreeNode*);
-};
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/core/core.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include <iostream>
+#include <time.h>
+#include <math.h>
+#include <GL/glew.h>
+#include <GL/glut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glext.h>
+#include <GL/freeglut.h>
+#include <unordered_map>
 
-Tree::Tree(vector<Vec4i>* hierarchy){
-  allNodes = new unordered_map<int,TreeNode*>();
-  int  count = 0;
-  
-  //Create nodes
-  for(vector<Vec4i>::const_iterator it = hierarchy->begin(); it != hierarchy->end(); it++){
-    TreeNode* node = new TreeNode();
-    node->setID(count);
-    allNodes.emplace(count,node);
-    count++;
-  }
-
-  //Fill Nodes
-  for(vector<Vec4i>::const_iterator it = hierarchy->begin(); it != hierarchy->end(); it++){
-    Vec4i data = *it;
-    TreeNode* next = (data[0] == -1) ? NULL : allNodes->at(data[0]); 
-    TreeNode* prev = (data[1] == -1) ? NULL : allNodes->at(data[1]);
-    TreeNode* parent = (data[3] == -1) ? NULL : allNodes->at(data[3]);
-
-    node.setNext(next);
-    node.setPrev(prev);
-    node.setParent(parent);
-    
-    //only add child id one exists
-    if(data[2] != -1 )
-      node.addChild(allNodes->at(data[2]));
-  }
-
-}
-
-TreeNode* Tree:getRoot(){
-  if(allNodes.size() > 1)
-    return allNodes->at(0);
-  else
-    return new TreeNode(Vec4i(-1,-1,-1,-1));
-}
-
-void Tree::makeAndInsertNode(int id, Vec4i* data){
-  TreeNode* node = TreeNode(data);
-  insertNode(id,node);
-}
-
-void Tree::insertNode(int id,TreeNode* node){
-  allNodes.emplace(id,node);
-}
+using namespace std;
+using namespace cv;
 
 class TreeNode {
 public:
-  TreeNode(Vec4i data);
-  treeNode getParent();
-  treeNode getNext();
-  treeNode getPrev();
-  vector<TreeNode*> getChildren();
-  treeNode getChild(int);
+  TreeNode();
+  TreeNode(Vec4i data, unordered_map<int,TreeNode*>*, vector<Vec4i>*,int);
+  TreeNode* getParent();
+  TreeNode* getNext();
+  TreeNode* getPrev();
+  int getID();
+  vector<TreeNode*>* getChildren();
+  TreeNode* getChild(int);
   void setParent(TreeNode*);
   void setNext(TreeNode*);
   void setPrev(TreeNode*);
   void addChild(TreeNode*);
+  void setChildren(vector<TreeNode*>*);
   void setID(int);
+  int getLevel();
 private:
+  int level;
   TreeNode* parent;
-  vector<TreeNode*> children;
+  vector<TreeNode*>* children;
   TreeNode* next;
   TreeNode* prev;
   int nodeID;
 };
 
-TreeNode:TreeNode(Vec4i data){  
+TreeNode::TreeNode(){
+  this->setNext(NULL);
+  this->setPrev(NULL);
+  this->setParent(NULL);
+}
+
+TreeNode::TreeNode(Vec4i data, unordered_map<int,TreeNode*>* allNodes,
+		   vector<Vec4i>* hierarchy, int id){  
+  children = new vector<TreeNode*>();
+  
   TreeNode* next = (data[0] == -1) ? NULL : allNodes->at(data[0]); 
   TreeNode* prev = (data[1] == -1) ? NULL : allNodes->at(data[1]);
-  TreeNode* parent = (data[3] == -1) ? NULL : allNodes->at(data[3]);
+  TreeNode* parent;
+  if(data[3] == -1) {
+    parent = NULL;
+    this->level = 0;
+  } else {
+    parent = allNodes->at(data[3]);
+  }
+  
+  this->setNext(next);
+  this->setPrev(prev);
+  this->setParent(parent);
+  this->nodeID = id;
 
-  node.setNext(next);
-  node.setPrev(prev);
-  node.setParent(parent);
-    
   //only add child id one exists
-  if(data[2] != -1 )
-    node.addChild(allNodes->at(data[2]));
+  if(data[2] != -1 ) {
+    int nextChildIndex = data[2];
+    while(nextChildIndex != -1) {
+      this->addChild(allNodes->at(nextChildIndex));
+      nextChildIndex = (hierarchy->at(nextChildIndex))[2];
+    } 
+  }
+
 }
 
 void TreeNode::setID(int i){
   nodeID = i;
 }
 
-TreeNode TreeNode::getParent(){
+void TreeNode::setParent(TreeNode* node){
+  parent = node;
+}
+
+void TreeNode::setNext(TreeNode* node){
+  next = node;
+}
+
+void TreeNode::setPrev(TreeNode* node){
+  prev = node;
+}
+
+void TreeNode::setChildren(vector<TreeNode*>* childrenList) {
+  children = childrenList;
+}
+
+void TreeNode::addChild(TreeNode* child){
+  children->push_back(child);
+}
+
+int TreeNode::getLevel(){
+  return level;
+}
+
+int TreeNode::getID(){
+  return nodeID;
+}
+
+TreeNode* TreeNode::getParent(){
   return parent;
 }
 
-TreeNode TreeNode::getNext(){
+TreeNode* TreeNode::getNext(){
   return next;
 }
 
-TreeNode TreeNode::getPrev(){
+TreeNode* TreeNode::getPrev(){
   return prev;
 }
 
-vector<TreeNode> TreeNode::getChildren(){
+TreeNode* TreeNode::getChild(int index){
+  return children->at(index);
+}
+
+vector<TreeNode*>* TreeNode::getChildren(){
   return children;
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+class Tree {
+public:
+  Tree(vector<Vec4i>*);
+  TreeNode* getRoot();
+  void makeAndInsertNode(int,Vec4i*,unordered_map<int,TreeNode*>*,vector<Vec4i>*);
+  void printTree();
+  int getSize();
+private:
+  int size;
+  std::unordered_map<int,TreeNode*>* allNodes; 
+  void insertNode(int,TreeNode*);
+};
+
+void printVector(vector<TreeNode*>* children){
+  if (children->empty()){cout<<"No children"; return;}
+
+  for(vector<TreeNode*>::const_iterator it = children->begin(); it != children->end(); it++){
+    TreeNode* node = (*it);
+    cout << node->getID();
+    cout << ", ";
+  }
+};
+
+void Tree::printTree(){
+  for(int i = 0; i < allNodes->size(); i++){
+    cout << "Contour: " << to_string(i)  << " Children: [";
+    TreeNode* node = allNodes->at(i);
+    vector<TreeNode*>* children = node->getChildren();
+    printVector(children);
+    cout << "]" << endl;
+  }
+}
+
+int Tree::getSize(){
+  return size;
+}
+
+Tree::Tree(vector<Vec4i>* hierarchy){
+  
+  int count = 0;
+  allNodes = new unordered_map<int,TreeNode*>();
+  //Create nodes
+  for(vector<Vec4i>::const_iterator it = hierarchy->begin(); it != hierarchy->end(); it++){
+    TreeNode* node = new TreeNode(); 
+    node->setID(count);
+    allNodes->emplace(count,node);
+    count++;
+  }
+
+  size = count;
+
+  //Fill Nodes
+  count = 0;
+  for(vector<Vec4i>::const_iterator it = hierarchy->begin(); it != hierarchy->end(); it++){
+    TreeNode newNode(*it,allNodes,hierarchy,count);
+
+    TreeNode* node = allNodes->at(count);
+
+    node->setPrev(newNode.getPrev());
+    node->setNext(newNode.getNext());
+    node->setParent(newNode.getParent());
+    node->setChildren(newNode.getChildren());
+    count++;
+  }
+}
+
+TreeNode* Tree::getRoot(){
+  if(allNodes->size() > 1)
+    return allNodes->at(0);
+  else
+    return new TreeNode();
+}
+
+void Tree::makeAndInsertNode(int id, Vec4i* data, unordered_map<int,TreeNode*>* allNodes, vector<Vec4i>* hierarchy){
+  TreeNode* node = new TreeNode(*data,allNodes,hierarchy,id);
+  insertNode(id,node);
+}
+
+void Tree::insertNode(int id,TreeNode* node){
+  allNodes->emplace(id,node);
 }

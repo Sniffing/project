@@ -17,10 +17,9 @@ int lowerthresh = 900;
 int NEIGHBOURHOOD = 5;
 
 const char* wndname = "Contour detector";
-using namespace cv;
-using namespace std;
+Tree* HIERARCHY_TREE;
 
-vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> >* joinedList);
+vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> >* joinedList, vector<Vec4i>* hierarchy);
 void printContours(vector<vector<Point> >* contours);
 void printHierarchy(vector<Vec4i>* hierarchy);
 
@@ -35,7 +34,10 @@ static bool adjacent(Point a, Point b)
 }
 
 
-
+Tree* createHierarchyTree(vector<Vec4i>* hierarchy){
+  Tree* hierarchyTree = new Tree(hierarchy);
+  return hierarchyTree;
+}
 
 static Mat* findAndDrawContours( Mat* image, bool debug, bool join ) 
 {
@@ -49,6 +51,8 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
   Canny( *image,contourImage,lowerthresh,upperthresh,5);
   findContours( contourImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_NONE, Point(0, 0) );
 
+  HIERARCHY_TREE = createHierarchyTree(&hierarchy);
+  HIERARCHY_TREE->printTree();
 
   if (join) {
     cout << "joining contours" << endl;
@@ -72,7 +76,7 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
   vector<Point> tempContours;
   for( int i = 0; i< joinedContours.size(); i++ )
   {
-    Scalar color = Scalar(0,(70) + (i*5),0 );
+    Scalar color = Scalar((i % 2)*20 , (i%3)*20,i*20 );
    
     if(JOIN_FLAG) {
       
@@ -123,7 +127,7 @@ vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vect
   vector<Point> nextContour;
   int i = 0;
 
-  vector<Vec4i> newHierarchy = new vector<Vec4i>();
+  vector<Vec4i> newHierarchy;// = new vector<Vec4i>();
 
   currContour = contourList->at(i); 
   currFront = currContour.front();
@@ -162,8 +166,6 @@ int main(int argc, char* argv[])
   cout << "Please enter the image that you want to find contours in" << endl;
   } else {
     namedWindow( wndname, 1 );
-
-    vector<vector<Point> > squares;
     
     // For testing purposes
     // lowerthresh = atoi(argv[2]);
@@ -176,6 +178,7 @@ int main(int argc, char* argv[])
 
     Mat scaledImage(512,512, DataType<float>::type);
     resize(image,scaledImage,scaledImage.size(),0,0,INTER_LINEAR);
+ 
     Mat finalImage;
     finalImage = *(findAndDrawContours(&scaledImage,DEBUG_FLAG,false));
     

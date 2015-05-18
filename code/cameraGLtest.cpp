@@ -50,7 +50,7 @@ using namespace std;
 
 VideoCapture cam = VideoCapture(0);
 //////////////////////////////////////////////////////////
-
+void drawBackground(GLuint temp_texture);
 
 GLuint makeBackground(Mat* image){
 
@@ -89,9 +89,14 @@ void init(void)
 void getBackgroundFromCamera(VideoCapture* cam){
   Mat frame;
   *cam >> frame;
-  
+  //frame = imread("testpics/simple.jpg",CV_LOAD_IMAGE_COLOR);
+
   GLuint temp_texture = makeBackground(&frame);
+  drawBackground(temp_texture);
   
+}
+
+void drawBackground(GLuint temp_texture){
   glMatrixMode(GL_PROJECTION);
 
   glLoadIdentity();
@@ -112,6 +117,7 @@ void getBackgroundFromCamera(VideoCapture* cam){
 
 }
 
+
 void drawMap(void)
 {
 
@@ -120,7 +126,8 @@ void drawMap(void)
 
   //Background Render  
   glColor3f(1.0f,1.0f,1.0f);
-  getBackgroundFromCamera(&cam);
+  //getBackgroundFromCamera(&cam);
+  drawBackground(BG_TEXTURE);
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
@@ -136,7 +143,6 @@ void drawMap(void)
   glRotatef(rotate_x, 1.0, 0.0, 0.0);
   glRotatef(rotate_y, 0.0, 1.0, 0.0);
   // gluLookAt(0.0f,6.0f,15.0f,0.0,0.0,0.0f,0.0f,1.0f,0.0f);
-  
 
   //glColor3f(0.0f,0.0f,1.0f);    // Color Blue  
   //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -213,9 +219,11 @@ int main(int argc, char** argv){
   glutInitWindowPosition(200, 200);
   glutCreateWindow(argv[0]);
   init();
-  //cam = VideoCapture(0);
-  //testImage = imread("original.jpg",CV_LOAD_IMAGE_COLOR);
+
   
+  Mat frame = imread("testpics/simple.jpg",CV_LOAD_IMAGE_COLOR);
+  BG_TEXTURE = makeBackground(&frame);
+
   glutMouseFunc(mouseButton);
   glutMotionFunc(mouseMove);
   glutDisplayFunc(drawMap); 
