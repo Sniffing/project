@@ -1,0 +1,49 @@
+joining contours
+original number of contours is 32
+1 was joined with 2
+3 was joined with 4
+7 was joined with 8
+9 was joined with 10
+11 was joined with 12
+15 was joined with 16
+17 was joined with 18
+19 was joined with 20
+21 was joined with 22
+25 was joined with 26
+27 was joined with 28
+29 was joined with 30
+contours reduced to 20
+hierarchy has size: 32
+0). Next:1, Prev:-1, Child:-1, Parent:-1
+1). Next:5, Prev:0, Child:2, Parent:-1
+2). Next:-1, Prev:-1, Child:3, Parent:1
+3). Next:-1, Prev:-1, Child:4, Parent:2
+4). Next:-1, Prev:-1, Child:-1, Parent:3
+5). Next:17, Prev:1, Child:6, Parent:-1
+6). Next:-1, Prev:-1, Child:7, Parent:5
+7). Next:-1, Prev:-1, Child:8, Parent:6
+8). Next:-1, Prev:-1, Child:9, Parent:7
+9). Next:13, Prev:-1, Child:10, Parent:8
+10). Next:-1, Prev:-1, Child:11, Parent:9
+11). Next:-1, Prev:-1, Child:12, Parent:10
+12). Next:-1, Prev:-1, Child:-1, Parent:11
+13). Next:-1, Prev:9, Child:14, Parent:8
+14). Next:-1, Prev:-1, Child:15, Parent:13
+15). Next:-1, Prev:-1, Child:16, Parent:14
+16). Next:-1, Prev:-1, Child:-1, Parent:15
+17). Next:21, Prev:5, Child:18, Parent:-1
+18). Next:-1, Prev:-1, Child:19, Parent:17
+19). Next:-1, Prev:-1, Child:20, Parent:18
+20). Next:-1, Prev:-1, Child:-1, Parent:19
+21). Next:31, Prev:17, Child:22, Parent:-1
+22). Next:-1, Prev:-1, Child:23, Parent:21
+23). Next:24, Prev:-1, Child:-1, Parent:22
+24). Next:25, Prev:23, Child:-1, Parent:22
+25). Next:27, Prev:24, Child:26, Parent:22
+26). Next:-1, Prev:-1, Child:-1, Parent:25
+27). Next:29, Prev:25, Child:28, Parent:22
+28). Next:-1, Prev:-1, Child:-1, Parent:27
+29). Next:-1, Prev:27, Child:30, Parent:22
+30). Next:-1, Prev:-1, Child:-1, Parent:29
+31). Next:-1, Prev:21, Child:-1, Parent:-1
+Number of contours: 32

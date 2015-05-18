@@ -1,0 +1,20 @@
+README for openvrml-0.16.3-bin-macosx.
+======================================
+
+This archive contains OpenVRML-0.16.3 (http://www.openvrml.org) in binary form, compiled for the Mac OS X 10.4.9 platform.
+
+OpenVRML is GPL-licensed. The full openvrml source can be obtained from http://www.openvrml.org/.
+
+This archive contains the openvrml header files, the necessary dynamic libraries in universal binary format (i.e. containing libraries for both ppc and i386 architectures), plus the openvrml-sdl-viewer binary.
+
+The install name of the libraries has been altered so that they are correctly dynamically linked when installed in the same folder of whichever executable links to them. (i.e. the install name of the x.dylib is @executable_path/x.dylib).
+
+At present, Javascript embedded in VRML is not supported in the i386 architecture of the enclosed libraries.
+
+Users who wish to rebuild openvrml for themselves are highly recommended to use the Fink package manager system (http://fink.sourceforge.net).
+
+Philip Lamb
+philip_lamb at users dot sourceforge dot net.
+2007-05-03
+--
+EOF
