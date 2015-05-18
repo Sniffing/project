@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.17)  11 MAY 2015 15:08
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.10.17)  17 MAY 2015 12:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -660,141 +660,157 @@ Underfull \hbox (badness 10000) in paragraph at lines 666--690
 LaTeX Warning: Citation `Singh88' on page 16 undefined on input line 695.
 
 [16]
-Underfull \hbox (badness 10000) in paragraph at lines 739--764
+Underfull \hbox (badness 10000) in paragraph at lines 714--741
 
  []
 
-[17] <pics/leapmotioninternal.jpg, id=191, 240.9pt x 160.6803pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 714--741
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 714--741
+
+ []
+
+[17]
+Underfull \hbox (badness 10000) in paragraph at lines 766--791
+
+ []
+
+<pics/leapmotioninternal.jpg, id=186, 240.9pt x 160.6803pt>
 File: pics/leapmotioninternal.jpg Graphic file (type jpg)
 
 <use pics/leapmotioninternal.jpg>
-Package pdftex.def Info: pics/leapmotioninternal.jpg used on input line 768.
+Package pdftex.def Info: pics/leapmotioninternal.jpg used on input line 795.
 (pdftex.def)             Requested size: 192.72025pt x 128.5444pt.
-
-<pics/leapmotioninteractionarea.png, id=192, 1027.84pt x 682.55pt>
+ [18]
+<pics/leapmotioninteractionarea.png, id=200, 1027.84pt x 682.55pt>
 File: pics/leapmotioninteractionarea.png Graphic file (type png)
 
 <use pics/leapmotioninteractionarea.png>
 Package pdftex.def Info: pics/leapmotioninteractionarea.png used on input line 
-778.
+805.
 (pdftex.def)             Requested size: 339.18825pt x 225.24219pt.
- [18 <./pics/leapmotioninternal.jpg>]
-Underfull \hbox (badness 10000) in paragraph at lines 785--852
+
+Underfull \hbox (badness 10000) in paragraph at lines 812--879
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 785--852
+Underfull \hbox (badness 10000) in paragraph at lines 812--879
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 785--852
+Underfull \hbox (badness 10000) in paragraph at lines 812--879
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 785--852
+Underfull \hbox (badness 10000) in paragraph at lines 812--879
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 785--852
+Underfull \hbox (badness 10000) in paragraph at lines 812--879
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 785--852
+Underfull \hbox (badness 10000) in paragraph at lines 812--879
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 785--852
+Underfull \hbox (badness 10000) in paragraph at lines 812--879
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 785--852
+Underfull \hbox (badness 10000) in paragraph at lines 812--879
 
  []
 
-[19 <./pics/leapmotioninteractionarea.png>] [20]
-<pics/LeapMotion1.png, id=222, 433.62pt x 368.1253pt>
+[19 <./pics/leapmotioninternal.jpg> <./pics/leapmotioninteractionarea.png>]
+[20] <pics/LeapMotion1.png, id=221, 433.62pt x 368.1253pt>
 File: pics/LeapMotion1.png Graphic file (type png)
 
 <use pics/LeapMotion1.png>
-Package pdftex.def Info: pics/LeapMotion1.png used on input line 855.
+Package pdftex.def Info: pics/LeapMotion1.png used on input line 882.
 (pdftex.def)             Requested size: 195.1272pt x 165.65485pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 862--884
+Underfull \hbox (badness 10000) in paragraph at lines 889--911
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 862--884
+Underfull \hbox (badness 10000) in paragraph at lines 889--911
 
  []
 
-<pics/LeapMotion2.png, id=224, 304.13625pt x 289.08pt>
+[21 <./pics/LeapMotion1.png (PNG copy)>]
+<pics/LeapMotion2.png, id=228, 304.13625pt x 289.08pt>
 File: pics/LeapMotion2.png Graphic file (type png)
 
 <use pics/LeapMotion2.png>
-Package pdftex.def Info: pics/LeapMotion2.png used on input line 888.
+Package pdftex.def Info: pics/LeapMotion2.png used on input line 915.
 (pdftex.def)             Requested size: 167.27545pt x 158.99448pt.
- [21 <./pics/LeapMotion1.png (PNG copy)>]
-Underfull \hbox (badness 10000) in paragraph at lines 895--941
+
+Underfull \hbox (badness 10000) in paragraph at lines 922--968
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 895--941
+Underfull \hbox (badness 10000) in paragraph at lines 922--968
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 895--941
+Underfull \hbox (badness 10000) in paragraph at lines 922--968
 
  []
 
 [22 <./pics/LeapMotion2.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 943--975
+Underfull \hbox (badness 10000) in paragraph at lines 970--1002
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 943--975
+Underfull \hbox (badness 10000) in paragraph at lines 970--1002
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 943--975
+Underfull \hbox (badness 10000) in paragraph at lines 970--1002
 
  []
 
-[23] <pics/kinectinternal.jpg, id=251, 553.06625pt x 278.03876pt>
+[23] <pics/kinectinternal.jpg, id=249, 553.06625pt x 278.03876pt>
 File: pics/kinectinternal.jpg Graphic file (type jpg)
 
 <use pics/kinectinternal.jpg>
-Package pdftex.def Info: pics/kinectinternal.jpg used on input line 978.
+Package pdftex.def Info: pics/kinectinternal.jpg used on input line 1005.
 (pdftex.def)             Requested size: 276.53244pt x 139.01903pt.
 
-Overfull \hbox (76.21136pt too wide) in paragraph at lines 990--990
+Overfull \hbox (76.21136pt too wide) in paragraph at lines 1017--1017
 [][]\OT1/cmr/m/n/9 http://www.gamasutra.com/blogs/DanielLau/20131127/205820/The
 []Science[]Behind[]Kinects[]or[]Kinect[]10[]versus[]20.php| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 985--1018
+Underfull \hbox (badness 10000) in paragraph at lines 1012--1045
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 985--1018
+Underfull \hbox (badness 10000) in paragraph at lines 1012--1045
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 985--1018
+Underfull \hbox (badness 10000) in paragraph at lines 1012--1045
 
  []
 
@@ -803,55 +819,54 @@ Underfull \hbox (badness 10000) in paragraph at lines 985--1018
 File: pics/KinectDepth.png Graphic file (type png)
 
 <use pics/KinectDepth.png>
-Package pdftex.def Info: pics/KinectDepth.png used on input line 1021.
+Package pdftex.def Info: pics/KinectDepth.png used on input line 1048.
 (pdftex.def)             Requested size: 183.30939pt x 241.65222pt.
-
-<pics/KinectColor.png, id=263, 421.575pt x 309.40594pt>
+ [25 <./pics/KinectDepth.png (PNG copy)>]
+<pics/KinectColor.png, id=268, 421.575pt x 309.40594pt>
 File: pics/KinectColor.png Graphic file (type png)
 
 <use pics/KinectColor.png>
-Package pdftex.def Info: pics/KinectColor.png used on input line 1038.
+Package pdftex.def Info: pics/KinectColor.png used on input line 1065.
 (pdftex.def)             Requested size: 210.78697pt x 154.70259pt.
- [25 <./pics/KinectDepth.png (PNG copy)>]
 Missing character: There is no Â in font cmr10!
 Missing character: There is no £ in font cmr10!
 Missing character: There is no Â in font cmr10!
 Missing character: There is no £ in font cmr10!
 
-Underfull \hbox (badness 10000) in paragraph at lines 1045--1069
+Underfull \hbox (badness 10000) in paragraph at lines 1072--1096
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1045--1069
+Underfull \hbox (badness 10000) in paragraph at lines 1072--1096
 
  []
 
-[26 <./pics/KinectColor.png (PNG copy)>]
-Underfull \hbox (badness 10000) in paragraph at lines 1073--1099
+[26 <./pics/KinectColor.png (PNG copy)>] [27]
+Underfull \hbox (badness 10000) in paragraph at lines 1100--1126
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1073--1099
+Underfull \hbox (badness 10000) in paragraph at lines 1100--1126
 
  []
 
-[27] [28] [29] [30] (./report.bbl [31]
+[28] [29] [30] [31] (./report.bbl [32]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ¤ in font cmr10!
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no © in font cmr10!
- [32
+ [33
 
 ]) 
 AED: lastpage setting LastPage
-[33]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1229.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1229.
+[34]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1256.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1256.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1229.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1229.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1256.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1256.
 
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
@@ -859,11 +874,11 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1229.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1256.
  ) 
 Here is how much of TeX's memory you used:
- 7821 strings out of 494985
- 117502 string characters out of 6180355
+ 7822 strings out of 494985
+ 117509 string characters out of 6180355
  301396 words of memory out of 5000000
  10814 multiletter control sequences out of 15000+600000
  12193 words of font info for 44 fonts, out of 8000000 for 9000
@@ -915,10 +930,10 @@ m/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.p
 fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></u
 sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on report.pdf (34 pages, 2838976 bytes).
+Output written on report.pdf (35 pages, 2840700 bytes).
 PDF statistics:
- 391 PDF objects out of 1000 (max. 8388607)
- 312 compressed objects within 4 object streams
- 124 named destinations out of 1000 (max. 500000)
+ 395 PDF objects out of 1000 (max. 8388607)
+ 315 compressed objects within 4 object streams
+ 125 named destinations out of 1000 (max. 500000)
  96 words of extra memory for PDF output out of 10000 (max. 10000000)
 

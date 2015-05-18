@@ -4,9 +4,10 @@ Code
 - Find out an appropriate distance measure
 - make a new drawing and add a typical contours in to estimate a threshold
 - take a picture of table and find out if contours can be found
+- alignment of webcam and openGL camera
 
 Report
-- Write about LandscapAR and its pitfalls
+- Add images about LandscapAR
 - write about the augmented sandbox
 - Consider Thinning and Hit and Miss Morpphology
 

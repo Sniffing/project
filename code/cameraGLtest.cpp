@@ -11,7 +11,6 @@
 #include <GL/glext.h>
 #include <GL/freeglut.h>
 
-
 int heightMap[20][20] = { {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 			  {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
 			  {0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
@@ -49,10 +48,11 @@ int globalFPS;
 using namespace cv;
 using namespace std;
 
+VideoCapture cam = VideoCapture(0);
 //////////////////////////////////////////////////////////
 
 
-void makeBackground(Mat* image){
+GLuint makeBackground(Mat* image){
 
   if (image->empty()){cout <<"Frame not ready" << endl;}
   
@@ -73,34 +73,33 @@ void makeBackground(Mat* image){
 	       image->cols,          
 	       image->rows, 
 	       0,           
-	       GL_RGB, // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
+	       GL_BGR, // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
 	       GL_UNSIGNED_BYTE,  // Image data type
 	       image->ptr());        // The actual image data itself
 
+  return BG_TEXTURE;
 }
 
 
 void init(void)
 {
   glClearColor(0,0,0,0);
- 
 }
 
-void drawMap(void)
-{
-
-  // clear the drawing buffer
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  //Background Render
-
+void getBackgroundFromCamera(VideoCapture* cam){
+  Mat frame;
+  *cam >> frame;
+  
+  GLuint temp_texture = makeBackground(&frame);
   
   glMatrixMode(GL_PROJECTION);
+
   glLoadIdentity();
   //Background being drawn at depth z=0 so anything +ve clips it
   glOrtho(-30.0f,30.0f,-30.0f,30.0f,0.0f,30.0f);
   glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D,BG_TEXTURE);
-
+  glBindTexture(GL_TEXTURE_2D,temp_texture);
+ 
   //glDepthMask(GL_FALSE);
   glPushMatrix();
   glBegin( GL_QUADS ); 
@@ -110,7 +109,19 @@ void drawMap(void)
     glTexCoord2f( 1.0f, 0.0f );glVertex2f( 20.0f, -20.0f );
   glEnd();
   glPopMatrix();
-  
+
+}
+
+void drawMap(void)
+{
+
+  // clear the drawing buffer
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  //Background Render  
+  glColor3f(1.0f,1.0f,1.0f);
+  getBackgroundFromCamera(&cam);
+
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   // Coordinates are <-x  and (-ve x)->
@@ -124,7 +135,7 @@ void drawMap(void)
   glTranslatef(move_x, move_y, 0.0);
   glRotatef(rotate_x, 1.0, 0.0, 0.0);
   glRotatef(rotate_y, 0.0, 1.0, 0.0);
-  gluLookAt(0.0f,6.0f,20.0f,0.0,0.0,0.0f,0.0f,1.0f,0.0f);
+  // gluLookAt(0.0f,6.0f,15.0f,0.0,0.0,0.0f,0.0f,1.0f,0.0f);
   
 
   //glColor3f(0.0f,0.0f,1.0f);    // Color Blue  
@@ -141,8 +152,8 @@ void drawMap(void)
         glEnd();
       }
     }
-  glPopMatrix();
   
+  glPopMatrix();
 
   glFlush();
   glutSwapBuffers();
@@ -202,18 +213,9 @@ int main(int argc, char** argv){
   glutInitWindowPosition(200, 200);
   glutCreateWindow(argv[0]);
   init();
-
-
-
-  Mat testImage;
-  testImage = imread("original.jpg",CV_LOAD_IMAGE_COLOR);
-  if(!testImage.empty()){
-    cout << "image found" << endl;
-    makeBackground(&testImage);
-  }
-  else
-    cout << "No image found" << endl;
-
+  //cam = VideoCapture(0);
+  //testImage = imread("original.jpg",CV_LOAD_IMAGE_COLOR);
+  
   glutMouseFunc(mouseButton);
   glutMotionFunc(mouseMove);
   glutDisplayFunc(drawMap); 
@@ -223,7 +225,13 @@ int main(int argc, char** argv){
   //glutIdleFunc(animation);
 
   glutMainLoop();
-  
+
+  // while(cam.isOpened()){
+  //   if(!testImage.empty()){
+  //     makeBackground(&testImage);
+  //   }
+  // }
+    
   
   
   // time_t start,end;

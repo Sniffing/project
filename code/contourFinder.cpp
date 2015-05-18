@@ -186,8 +186,8 @@ int main(int argc, char* argv[])
                                        Size( NEIGHBOURHOOD, NEIGHBOURHOOD ),
 				       Point( ceil(NEIGHBOURHOOD/2.0), ceil(NEIGHBOURHOOD/2.0) ) );
 
-
-    //erosion then dilation since we want the darker (pen) regions to close
+ 
+   //erosion then dilation since we want the darker (pen) regions to close
     erode(scaledImage,erodedImage,element);
     dilate(erodedImage,dilatedImage,element);
             
