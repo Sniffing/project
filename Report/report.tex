@@ -744,8 +744,6 @@ of time and effort on their part.
 \\
 \subsubsection*{The AR Sandbox}
 
-
-
 %History
 %What it can do
 
@@ -760,215 +758,6 @@ Augmented Reality (AR) sometime before applying for my M.Eng Computing degree
 at Imperial College London. This original interest provided most of the 
 motivation for taking up this project.
 
-\subsection*{Investigating Hardware}
-The rest of my motivation for this project came from the investigation into 
-the current touchless devices and advanced displays on the market and 
-available to developers and consumers alike to play around with. I looked 
-into several of these hardware devices of which I now outline my findings.
- 
-\subsubsection*{LeapMotion}
-\underline{Background \& History} \\ 
-The Leap Motion company has been around since 2010, the release of their 
-touchless control/ input device, the Leap Motion, was in 2013 meaning it
-is a relatively new entrant into the market. However, it has generated a 
-lot interest in this area of software development. The Leap Motion is one 
-of the better performing touchless controls on the market and has a 
-growing community of developers. The Leap Motion has an online app 
-store\footnote{https://apps.leapmotion.com/} that features various games, 
-apps as well as tools and utilities produced by developers and available 
-for other Leap Motion owners to purchase and play with.
-\\ \\
-\underline{How it works} \\ 
-The Leap motion comprises of 2 infrared cameras and 3 infrared LEDs,
-these can be seen in figure \ref{leapmotioninteral}. After being 
-placed flat on a surface, the Leap Motion emits infrared light and 
-captures it back once it is reflected off surfaces, namely your hands.
-The Leap Motion tracks near field infrared, making the captured images 
-grayscale and able to be shown in the development kit.
-The device boasts 10 finger, simultaneous tracking within a range
-of around 8 cubic feet. The capture range is in a hemispherical shape
-as can be observed in figure \ref{leapmotioninteractionarea}. This 
-proves to be a more than suitable capture range if you are using the
-device within the proximity of your computer or laptop. The Leap Motion
-blog has a very good guide explaining how it operates 
-\footnote{http://blog.leapmotion.com/hardware-to-software-how-does-the-leap-motion-controller-work/}.
-
-\begin{center}
-	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[scale=0.8]{pics/leapmotioninternal}
-			\caption{A look inside the Leap Motion sensor}
-			\label{leapmotioninteral}
-		\end{center}
-	\end{figure}
-\end{center}
-
-\begin{center}
-	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[scale=0.33]{pics/leapmotioninteractionarea}
-			\caption{The reported range of detection of Leap Motion}
-			\label{leapmotioninteractionarea}
-		\end{center}
-	\end{figure}
-\end{center}
-
-We can interact with the Leap Motion by placing our hands within its
-capture range. If we were to move our hand past the plane on which the
-infrared cameras are placed, the device registers that as a selection
-by the user, equivalent to a mouse click. Any activity behind the plane,
-i.e. closer to the user, will allow the user to navigate the controls.
-\\ \\
-\underline {My Investigations} \\
-I had the chance to play around with the Leap Motion as part of my 
-investigations and background research. There is a moderate community
-of developers for the Leap Motion at the moment, applications are 
-obtained by purchasing them on their the Leap Motion online store. 
-\\ \\
-There are currently 219 applications for Leap Motion as of January 
-2015\footnote{https://apps.leapmotion.com/categories/all}, available
-on the store. Of these, 136 are classed under \textit{Games}, 8 as 
-\textit{Virtual Reality} and 42 classed as \textit{Music/Entertainment} 
-(these categories are not mutually exclusive). We can take this as a 
-representation of what exactly the Leap Motion is currently capable of 
-doing well. Over half of the applications were aames, even more could 
-technically be considered a game. 
-\\ \\
-The other categories of application included Education,Computer Controls,
-Utilities and Creative Tools. These do not come anywhere near as close as 
-the number of Game apps, Utilities was the closest with 30 apps under its
-category on the store. Existing technologies and conventional methods of 
-input such as webcams, mice, touch screen and keyboard are probably 
-still the much faster alternative than navigating with a touchless display
-for these areas of applications. Using the Leap Motion for these particular 
-uses would probably be much slower and less efficient (and most of the time more 
-infuriating as I have experienced first hand!) than conventional input methods.  
-\\ \\
-There have been a numerous amount of reviews for the Leap Motion, 
-\textit{Tested}, a popular tech youtube channel, had a review concerning the
-device \footnote{https://www.youtube.com/watch?v=ZK5FRPwIWVE} where they
-stated the Leap Motion was "Not a mainstream device", "...just a bag
-of crap; set it on fire". However, \textit{Tekzilla}, another popular Youtube 
-channel which promotes new technologies offered a much better review, 
-albeit, bringing in someone from the company to demo the 
-device \footnote{https://www.youtube.com/watch?v=gOtAhU3DIv0}.
-\\ \\
-Leap Motion has also paired up with the company Oculus
-\footnote{https://www.oculus.com/} to release their 2nd 
-development kit. Oculus is a company specialising in the production of head
-mounted devices which are used for virtual reality applications. 
-The two have worked closely to allow the Leap Motion to be mounted
-onto the Oculus Rift VR headpiece \footnote{https://developer.leapmotion.com/vr}.
-This has opened up the possibility for a new, wide range of 
-Virtual Reality Games with touchless interaction. There are already examples
-of such games on the Leap Motion store. I shall not investigate further into the
-Oculus as my project does not deal with virtual reality.
-\\ \\
-\underline{Limitations and pitfalls} \\
-When using the Leap Motion, there were several things I noticed. Although the 
-visuals and applications are very pretty and nice, it does not matter when the
-Leap Motion decides not to work. As this company and its 
-device are the best, small, double-hand motion and image capture currently out
-there, there is definitely scope to manipulate what this piece of hardware offers.
-\\ \\
-Due to the sensors using infrared light and cameras collecting the reflected, 
-emitted light, there are some very clear limitations of the Leap Motion. Infrared
-light travels in straight lines, as a result, if you occlude your fingers behind
-one finger, say by arranging your hand such that your thumb faces the ceiling and 
-place this directly above the Leap Motion, it'll be unable to tell what your 
-fingers are doing, bar the one that it can actually see. We can see evidence of
-this in figure \ref{LeapMotion1} where my hand circled in red is clenched but the
-Leap Motion momentarily still believes it has a finger sticking out.
-\\
-\begin{center}
-	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[scale=0.45]{pics/LeapMotion1}
-			\caption{What cameras see vs skeletal hand mapping}
-			\label{LeapMotion1}
-		\end{center}
-	\end{figure}
-\end{center}
-
-One way to try tackle this apparent problem is to use historical data, i.e.
-the movement of points of the fingers over the past 3 seconds to help estimate
-the position of any occluded fingers, though if this was implemented is not
-at an acceptable level yet, especially if time critical, responsive 
-applications require your hands to be in the positions of self occlusion. 
-\\ \\
-In fact,on the Leap Motion website they state that the device software will
-"...interpret the 3D data and infer the positions of occluded objects. Filtering 
-techniques are applied to ensure smooth temporal coherence of the data.". So infact
-already do some kind of inference on the likely positions of the fingers and joints
-in according to what they have managed to captured. Though it does take a few seconds,
-the Leap Motion can quite accurately, under what I have managed to explore hands on with
-the device, correct the input to what it actually is in real life.
-\\ \\
-Another noticeable limitation of the Leap Motion is its precision and ability to
-deal with movements which require more finesse. Firstly, you cannot even think about
-clenching or clasping your hands together as the sensor will no longer detect any hands.
-In addition, it was even apparent through the demo games that the Leap Motion takes a lot
-of getting used to as trying to perform small actions such as plucking a single petal,
-as seen in figure \ref{leap2}, was very difficult to get right, at least in my case
-and many of my friends' cases. It seems minute and delicate gesture inputs aren't captured 
-and expressed very well by the Leap Motion and its current apps.
-
-\begin{center}
-	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[scale=0.55]{pics/LeapMotion2}
-				\caption{The Demo game for Leap Motion}
-			\label{leap2}
-		\end{center}
-	\end{figure}
-\end{center}
-
-To use the device effectively, you have to place your hands in a constant 
-state of being parallel to the Leap Motion such that each of your 10 fingers
-can be captured by the infrared cameras. In addition, when you bring your fingers 
-too close together, the sensor becomes less and less able to distinguish it 
-as 2 fingers or 1, fat, finger, providing further loss of information and 
-inaccurate representation of input, requiring you to be conscious of the placement
-of your hands and fingers in relation the other hand or fingers.
-\\ \\
-Another problem arising from the infrared LED cameras is that they can absorb any
-infrared light, thus in an environment where there may be external sources of 
-infrared such as in the outdoors, the Leap Motion becomes less responsive and
-finding it hard to properly track the fingers as the light collecting in the
-camera may first be more than emitted and also will affect different parts of 
-the sensor creating a grayscale image with possibly large white areas. In addition
-to this problem, when indoors and your Leap Motion is pointing upwards onto a
-particularly reflective ceiling or one that has an infrared light source, the same
-inaccuracy happens. A very neat trick, however, is that the Leap Motion is able
-to detect some discrepancies in the capture of the hands that it can suggest
-to us when we might want to clean the device from finger smudges.
-\\ \\
-I gained further insight into the performance of the Leap Motion through the
-paper \textit{Analysis of the Accuracy and Robustness of the Leap Motion 
-Controller}\cite{Weichert13} which looks 
-into the accuracy of the preliminary Leap Motion (release version should 
-perform at least this well) and assesses its accuracy. The guys at Leap Motion 
-claimed finger and movement racking to be accurate within 0.01mm. Subjecting the 
-Leap Motion to average conditions, the paper concluded that although this 
-claim was not likely achievable, a decent 0.7mm accuracy could still be
-achieved.
-\\ \\
-In addition there have been a few interesting use case proposals for the
-Leap Motion. One such piece is explored in the paper 
-\textit{Intuitive and Adaptive Robotic Arm Manipulation using the Leap Motion Controller}
-\cite{Bassily14}.
-It puts forward the idea of creating a human interface with the elderly
-such that they can carry out "Activities of Daily Living (ADLs)".
-With the Leap Motion as input to control robotic arms, humans
-actions can be mimicked by the users such that if they would otherwise not 
-have the strength or coordination to perform an action, they will be able to control
-the robotic arm very easily by just performing the action over the sensor. 
-Those suffering from Alzheimer's or significant limb/muscle
-weakness will benefit from this and the paper also talks about correcting hand
-tremors and shakes from the input to provide a smooth output. 
-Being only \texttt{\$80} per piece of Leap Motion device, it is 
-also cheap alternative, in today's standards, to specialised sensors as well 
-as its size advantage, being smaller than gyroscopes and accelerometers.  
 
 \subsubsection*{Microsoft Kinect V2}
 \underline{Background \& History}\\
@@ -1100,160 +889,206 @@ pitfall and cause minor hindrance to the progression of the project.
 
 \newpage
 
-\subsection*{Anticipated End State}
-With this hard deadline in mind, I need to set a state of the project which I think
-I would have reached by the deadline. Past this I do not aim to make any significant
-changes bar running tests for evaluations, which means that my code has to be 
-pretty much bug proof by this date.
-\\ \\
-Of course I would have hoped to finished all of the objectives I set out in the 
-beginning of this report. However, if things do not progress as quickly as you
-would like them on any project. I will put more focus into the Augmented Reality
-part of the project. Integrating the Leap Motion and the touchless manipulation
-of the created landscape is not necessary for the project to offer a novel gaming
-experience. The game can lie within the creation of the landscape from a user
-drawn 2D landscape and have that come to life by using the Kinect. 
-\\ \\
-I would definitely like to reach the point in the project where a someone can
-create a 3D AR landscape. I expect the bulk of the work will lie within this 
-part of the project as there is a lot to do with image processing to complete
-this step. The creation of the landscape may also take some time as I am still
-unfamiliar with what I should use to create this for the user. 
-The next major milestone will be extending this point to provide the created 
-landscape with an illumination model that is equivalent to the scene it is being
-portrayed within. I expect this also to take up a fair time, however, since
-I am learning about it within a module of my course right now, hopefully I 
-will be able to grasp its concepts faster than without. Making amendments to the
-illumination should take a bit of time. Past this point I shall consider as 
-extensions to the project that would be great to implement. Though the 
-investigation and project will concentrate on the two points above.
+\section*{Implementation}
+In this section I will briefly outline the main steps I took to in
+the creation of this project to tackle various problems.
+\subsection*{Setting up the Camera and Environment}
+\subsubsection*{Camera Calibration and Setup}
+\subsubsection*{OpenCV}
+\subsubsection*{OpenGL}
+\subsection*{Capturing the Landscape map}
+\subsubsection*{Drawing the map}
+\subsubsection*{Detecting Contours}
+\subsubsection*{Genearting the Hierarchy Tree}
+\subsection*{Generating the 3D scene}
+\subsubsection*{View Point alignment}
+\subsubsection*{Using the Hierarchy Tree}
+\subsubsection*{Terrain Generation}
+\subsection*{Detecting change in the scene}
+\subsubsection*{Generating the Base image}
+\subsubsection*{Introducting change}
+\subsubsection*{Determining Stabilisation}
+\subsection*{Restructure and regenerating the 3D scene}
+\subsubsection*{Generating a Difference Image}
+\subsubsection*{Determining new contours}
+\subsubsection*{Updating the the Hierarchy Tree}
+\subsubsection*{Adding in the environment change}
 
-\subsection*{Extensions}
-I have two planned extensions for this project immediately on completion. 
-The first of which is that after the render of the first Augmented
-Reality scene, the user can choose to fix that in place (though rotation and
-translation of the scene can still take place) and then introduce 
-modifications to the scene in real life. For example, placing in a pencil case,
-a water bottle or even a scrunched up piece of paper. This will then reflect 
-upon the AR scene. Imagine it as you being a Giant, playing around with the
-AR world that you have created. The scene should change with the introduction
-of this new object, this will include occlusions, different shading and light to
-name the main challenges.
+\section*{Evaluation}
+\subsection*{Test Measures}
+\subsection*{Indicators of Success}
+\subsection*{User Testing}
+\subsubsection*{Responsiveness}
+\subsubsection*{Aesthetics}
+\subsection*{Results}
+\subsection*{Overall Evaluation}
 
-The next extension would be to allow you to interact with the landscape using
-the touchless input device, Leap Motion. What exactly this will entail has not
-yet been set in stone but some ideas I have are the following:
-\begin{itemize}
-	\item Allowing the user to add accessories or other landforms onto the
-		  scene by selection and direct placement. Imagine it as the Sims or
-		  any other simulation game where you can choose to build a house, etc.
-		  on the scene.
-	\item Introducing randomly generated content such as miniature people, 
-		  avatars, objects etc. to traverse the landscape which can then be
-		  manipulated and moved around. 
-	\item Allowing the user to use view their hands in the scene, kind of like
-		  they were playing God, allowing them to interact with the scene, for
-		  example if they spread their hands, it could cause rain on the scene.
-\end{itemize}
+\section*{Extensions}
+Having implemented an environment for dynamic creative Augmented Reality,
+content, there are many obvious improvements that can be made to transform 
+this project into a much larger and better application. \\
+\\
+The original idea for this project was the concept of having an environment
+for individuals to create their own 3D, responsive landscapes that can react
+to changes in the real world scene and reflect them within the AR scene. Indeed
+this has been done to a certain extent, changes in the landscape drawing cause
+the AR scene to change as a result, without need for user interaction with the
+program. Currently this only works with contour to landscape conversion. This
+will be of little use to individuals who wish to create something more than just
+land. In this section shall highlight some of the more immediate extensions
+and then go on to explore other extensions which have been lingering in the 
+background of my vision for what this project could have become.
 
-One other extension which is pretty ambitious would be to track the original 
-feature drawing you provide to generate the first AR image. After that, if the
-user deforms this image, the scene will deform alongside. This means that
-extending past drawing on more features, if the user scrunches up the paper,
-tears it in half or transforms it in some way, allow the scene to change such 
-that it reflects the difference in between the before and after of the feature
-drawing. For example, tearing the drawing will cause a rip to form in the 
-generated landscape. Deforming the drawing will deform the landscape. In
-essence, this will be taking feature points of a feature drawing!
+\subsection*{Immediate Extensions}
+There are numerous extensions that can be added to this project due to the 
+vast amounts of things that could be brought to life by Augmented Reality.
+These are the extensions I would have implemented had I more time to commit
+to this project.
+
+\subsubsection*{Coloured Contours}
+Currently the program works by taking frames from the camera and then   
+processing them with various operations, such as perform morphological
+closing and blurring by the Canny Edge detector. One additional thing 
+which can be done is to allow and detect coloured contours. Right now,
+if three sets of contours drawn in different colours were presented to
+the program, they would all behave the same way and create a terrain
+with a green shade. If we were to introduce new colours, we could also
+introduce new terrain! For example, brown tinted colours could represent
+rock or mountainous landscape; green can be used to represent something like
+everything within is a cluster of trees i.e. a forest! Blue can signify
+the enclosed area is a lake or a body of water. The things different
+colours can represent are endless and will add an extra amount of creativity
+(and enjoyment) to the application! One use for this is creating a 
+landscape for a battlefield or any other kind of more detailed environments.
+These in turn can be used to protoype landscapes for games!\\
+\\
+To implement this wouldn't require much extension to the program. Just a simple
+reading of the contour points' RGB values and from there making a distance 
+measure which will allow classification of the considered pixels to the 
+closest colour. From there, generation of the 3D scene will be a switch case 
+between different terrains base on the result of the classification.
+
+\subsubsection*{Other markers}
+A marker is something on the paper or creative environment that will be 
+detected and understood by the program. Right now, the only markers we have
+at the user's disposal are contour lines which are converted into land with
+different elevation levels. While it is very easy to add special computer
+generated markers
+ 						it removes from the creative experience of the application
+as there is less interaction with pen and paper. \\
+\\
+To have other markers which represent other objects would greatly enhance the
+creative power of the user. Some examples of these are converting crosses ("X")
+into trees, drawn stars into houses or buildings, we can even add in animals 
+or people with more markers and have them traverse the scene. Other than this
+last point, the other marker ideas require little extra logic to implement.
+By having a lookup table of shapes used as markers and what they represent, we
+can easily perform a template matching algorithm. OpenCV offers a matching
+algorithm which compares two images. We can extract markers drawn onto the
+surface and compare them against stored markers by passing the stored marker
+over the image as some kind of mask for convolution. A difference measure is run
+across the two images (taking into account rotation and affine transformation).
+If this is smaller than a threshold then it can be said within some statiscal
+region, that the detected area was intended to be that marker. From there placing
+the object over the mid point (with regard to surface normal) will suffice.
+
+\subsubsection*{Photorealistic lighting environment}
+Augmented Reality comes under the fields of Computer Graphics and Computer
+Vision, and as a result it means that for it to be good, it has to look good.
+The potential user of this program can range from professional land/environment
+planner all the way to a 3 year old child with a bunch of pens at their 
+disposal. If it does not appealing, it will not appeal to the professional
+and the sustained interest of the 3 year old cannot be guaranteed by 
+sub-standard graphics. A very easy way to quickly improve a scene and make it
+realistic, as Augmented Reality should be, is to add illumination equivalent 
+to the local scene. \\
+\\
+Implementing this also shouldn't require too much extra logic and is something
+I wanted to be able to add into the project; unfortunately I had not
+enough time due to unexpected road blocks within other areas of the project.
+By using a light probe placed within view of the camera, global illumination
+can be achieved without much intereference to the scene. A single frame can be
+enough to get the lighting for the environment. In addition, this can change 
+with time as the environment can be update every so often wither by frame count
+or program run time, where another frame will be taken and the environment 
+recalculated in the background. As a result, when lighting conditions change
+over time, it will cause no problem to the user and require no extra interaction.\\
+\\
+Another point to think about is shadowing and self occlusion which should 
+cause shadows to form upon the landscape creataed by other parts of the landscape
+itself. This would be included once the global illumination has been captured.
+
+\subsection*{Future Extensions}
+I shall now highlight some of the other ideas I had while going into this 
+project although some were a bit too broad and not realted enough to the main
+goals and contributions of this project. These extensions are more of what
+can be done to grow this project into a fully functions piece of software that
+could potnetially be used commercially, or indeed lay groundwork for future
+work in Augmented Reality. There are also ideas here that could be implemented
+when the technology for its realisation becomes available.
+
+\subsubsection*{The Leap Motion}
+Before coming into this project I had a great interest and desire to work with
+some of the newer technologies such as touchless controls, Virtual Reality 
+head pieces and Augmented Reality. While investigating these, I ran into the
+Leap Motion, an infrared hand tracker which allows you to use your hands as
+an input device. I really loved the idea of using your own hands to interact
+with things in a generated environment as opposed to touchless control of a device.
+However, the leap motion still has a number of bugs and is not as seamless and 
+hand tracking as one would like it to be. It is still one of the better and 
+cheaper hand tracking devices out there, with advances in its development I think
+it could prove very useful to users of the AR program created from this project.\\
+\\
+The basic idea for integrating this piece of hardware into the project is to,
+after creating the scene, the user is also able to \textit{manipulate} the
+scene they had just created! This adds another dimension onto the creative
+ability of the the application and really promotes the basic idea I have when
+conducting this project. Using your hands to create things! \\
+\\
+On top of this basic idea, there were a variety of potential pieces of 
+functionality that could be implemented with this new medium of interaction, some
+of which I shall list:
+
+\begin{enumerate}
+	\item \textit{Allow the user to scale the environment using their hands.} \\
+		  By registering a pinch action, if the user pinches edges of the
+		  generated scene, or by pinching the highest point and pulling 
+		  outward/upward, the user can scale the generated scene to their 
+		  desired size! Will require alignment of Leap Motion hand point 
+		  coordinate space to the 3D scene coordinate space to work.
+	\item \textit{Adding content by drag and drop.}
+		  This functionality is inspired by games much like \textit{The Sims}.
+		  The user can choose to either add in content through the computer and
+		  literally drop it into the scene by moving their hands around. This
+		  could possibly be achieves by pinch and release as aforementioned. 
+		  If the extension of adding in animals/people or other moving object
+		  that traverse the scene were to implemented, the user could also
+		  pick these up and move them around the scene at will. This will 
+		  introduce more of a game aspect into the project and will definitely
+		  appeal to the younger set of users while adding functionality for
+		  those who could be using this for professional work.
+	\item \textit{Introduce "God Mode"}
+		  Again inspired by some games and similar to the above point. Allow
+		  the user to view hands in the scene, as if you were playing the
+		  role of God. This is purely to enchance the program as more of a game
+		  instead of a creative environment. God mode would allow the user to
+		  make various changes to the environment, for example spreading the hand
+		  could represent rainfall on the area below the convex hull of the hand
+		  points! Another idea is if the user start  pressing on the landscape, the
+		  landscape itself can change, e.g. decreasing in height, cause cracks in
+		  the scene etc. This is one of the more ambitious extensions.
+\end{enumerate}
+
+\subsubsection*{No Calibration Marker}
+
+
+\subsubsection*{Continued testing and experimentation} 
+Some shit here \\
+\\
+\\
+\\
+
 \newpage
-\section*{Evaluation Plan}
-The below shall outline my evaluation plan of this project. It is important my 
-evaluation is rigorous and solid so that it proves that what I would've produced at
-the end is something others can use and build upon. This is because if I am to 
-provide any kind of advances in this field, then what I produce must be proven to 
-be sound. I will be basing my Evaluation plan over the points I outlined in my
-anticipated end state in my project plan.
-
-\subsection*{Indicators of Success/Benchmarks}
-\subsubsection*{Functionality}
-At the end of this project, I hope that I am able to quickly draw
-up a feature drawing on a piece of paper within 3 minutes (5 minutes if they
-want to be interesting and have a nice landscape!). I should then be able to 
-place this in front of the Kinect device and have my created piece of 
-software read the image and produce Augmented Reality landscape within some
-acceptable time, for example within 1 minute the Landscape should have been
-created and displayed. This is important because for AR to be effective and
-even useful in any real life application, it has to be fast and responsive,
-being close to real time as possible. In addition, since the main motivator
-of this project is that current AR applications do not look realistic enough.
-I hope that by the end of this project I can produce a landscape that looks
-realistic, at least in terms of illumination.
-
-\subsubsection*{User Testing}
-For any game to be considered anywhere near success, user testing needs to 
-take place. I intend to test the software on a range of people, from those not
-technically inclined to the younger generation, including children! Hopefully
-I can then ascertain the age groups to which this can be marketed to. If the
-feature drawings require a relatively high amount of detail, then young children
-are likely to find troubles with getting what they want out of the software.
-Hopefully through user testing I can also discover faults, possible extensions,
-improvements and edge cases. I'd like to set the number of test subjects as at
-least 20 individuals, of which multiple testing will occur.
-
-\subsubsection*{Responsiveness}
-To further enforce what I mentioned in Functionality, there will be a whole 
-other set of evaluation criteria I set out to assess the success of my project.
-The first of which is responsiveness of software, which is what I mentioned 
-above. The software should generate the illuminated 3D landscape within a 
-minute of being presented the feature drawing. An even better turnover would
-be ideal, hopefully within the range of 15 seconds as even a minute is long to
-wait for an Augmented Reality game.
-
-The software should also be able to detect rotation of the feature drawing
-and also rotate the landscape as appropriate. This would ideally be a lot more
-responsive than the target above, within the 2 second range. Any more and the
-movement would look choppy and will not represent an accurate rotation. However,
-as the illumination model is a lot more advanced, this may or may not be 
-possible, considering some very basic Augmented Reality applications don't even
-react this fast in the presence of rotation. This rotation should also reflect in 
-the shadows of the landscape.
-
-\subsection*{Testing}
-\subsubsection*{Functionality}
-To give qualitative and quantitative results to the evaluation criteria I have 
-proposed above, first it is very easy to just measure the time it takes for the
-software to generate the 3D landscape and then see how long it takes from
-the moment the user presents their feature drawing to the Kinect. How close the
-performance is to the time boundaries I have outlined above will determine how
-well the software and project can be deemed a success. However, the rate of
-success will have an exponential relation to deviance from the set boundary.
-This is because if it gets too slow, it would cause much anger and frustration 
-to the users of the software because as I have mentioned already within this 
-report, AR and its growth and success heavily depends on being next to real time.
-To give an idea, if I rotated the scene, then if it took above 5 seconds to reflect
-the change in the landscape, this is way too slow to be of any use or of any fun.
-This will be a failure.
-
-\subsubsection*{User Testing}
-Being a game and very much a visual project, feedback will be needed from a 
-numerous amount of people due to the subjectiveness of these criteria. 
-Written feedback in the style of questionnaires would be a good way to
-quantify the performance of my project by the people I will be asking to take
-part in my tests. 
-
-\subsubsection*{Responsiveness}
-The responsiveness can be tested against some hard time boundaries, once again
-with their exponential penalty the more time it is from the the boundary. This
-can easily be tested by tracking how much time it takes between tested actions.
-When it comes to the assessing the responsiveness of the illumination change,
-this can be measured by eye, if the illumination stays consistent with the 
-lighting in the scene, then generally this can be considered a success. If the
-scene looks realistic and the shadow placement makes sense and obscured 
-areas become visible on rotation, then these are also indicators that it passes
-the test. The realism of a scene is a lot more subjective and therefore, as 
-mentioned above, the test will range over a set amount of people. If the majority
-thinks the scene still looks real after a change, we can consider this a success.
-
 
 \bibliographystyle{plain}
 \bibliography{biblio}

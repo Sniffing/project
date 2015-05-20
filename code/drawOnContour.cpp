@@ -106,7 +106,7 @@ void drawMap(void)
   glColor3f(1.0f,1.0f,1.0f);
   //getBackgroundFromCamera(&cam);
   drawBackground(BG_TEXTURE);
-  glFlush();
+  
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   // Coordinates are <-x  and (-ve x)->
@@ -286,7 +286,7 @@ int main(int argc, char** argv){
   // int stableCounter = 0;
   // Mat tempBase;
   // cam >> tempBase;
-  // cvtColor(tempBase,tempBase,CV_BGR2GRAY); 
+  // cvtColor(tempBase,tempBase,CV_BGR2GRY); 
 
   // while( cam.isOpened() )    // check if we succeeded
   //   {

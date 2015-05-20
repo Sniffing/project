@@ -29,7 +29,6 @@ static bool adjacent(Point a, Point b)
 }
 
 
-
 // static Mat* findAndDrawContours( Mat* image, bool debug, bool join ) 
 // { 
 //   /// Draw contours
@@ -176,7 +175,7 @@ int main(int argc, char** argv)
 	globalFPS += fps;
 	globalFPS = (floor(globalFPS) == 0) ? 0 : globalFPS / 2;
 	
-
+	//ratioImages(tempBase, nextFrame, diffFrame);
 	absdiff(tempBase, nextFrame, diffFrame);	
 	threshold(diffFrame, diffFrame, thresh, maxVal, THRESH_BINARY);
 	imshow("Difference Frame", diffFrame);

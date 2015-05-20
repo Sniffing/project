@@ -126,7 +126,7 @@ void drawMap(void)
 
   //Background Render  
   glColor3f(1.0f,1.0f,1.0f);
-  //getBackgroundFromCamera(&cam);
+  getBackgroundFromCamera(&cam);
   drawBackground(BG_TEXTURE);
 
   glMatrixMode(GL_MODELVIEW);
@@ -221,8 +221,8 @@ int main(int argc, char** argv){
   init();
 
   
-  Mat frame = imread("testpics/simple.jpg",CV_LOAD_IMAGE_COLOR);
-  BG_TEXTURE = makeBackground(&frame);
+  //Mat frame = imread("testpics/simple.jpg",CV_LOAD_IMAGE_COLOR);
+  //BG_TEXTURE = makeBackground(&frame);
 
   glutMouseFunc(mouseButton);
   glutMotionFunc(mouseMove);

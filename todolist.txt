@@ -1,16 +1,17 @@
 Code
 - make contours a single line, not a double line
-- use matchTemplate to see how it performs (matchShapes)
+- more contour joining
+- find out interpolation to make landscapes look good (euclidean distance)
 - Find out an appropriate distance measure
 - make a new drawing and add a typical contours in to estimate a threshold
 - take a picture of table and find out if contours can be found
-- alignment of webcam and openGL camera
+- alignment of webcam and openGL camera with calibration
 
 Report
 - Add images about LandscapAR
 - write about the augmented sandbox
-- Consider Thinning and Hit and Miss Morpphology
-
+- Consider Thinning and Hit and Miss Morphology
+- Redo the Image Ratioing section because it's not right
 
 Running tests on amount of closing operations
 (Proved futile because closing is idempotent)

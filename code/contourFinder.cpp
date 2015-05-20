@@ -34,11 +34,6 @@ static bool adjacent(Point a, Point b)
 }
 
 
-Tree* createHierarchyTree(vector<Vec4i>* hierarchy){
-  Tree* hierarchyTree = new Tree(hierarchy);
-  return hierarchyTree;
-}
-
 static Mat* findAndDrawContours( Mat* image, bool debug, bool join ) 
 {
   Mat contourImage(1024,2048, DataType<float>::type);
