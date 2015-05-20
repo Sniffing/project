@@ -46,14 +46,21 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
   Canny( *image,contourImage,lowerthresh,upperthresh,5);
   findContours( contourImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_NONE, Point(0, 0) );
 
+
+
   HIERARCHY_TREE = createHierarchyTree(&hierarchy);
-  HIERARCHY_TREE->printTree();
 
   if (join) {
     cout << "joining contours" << endl;
     cout << "original number of contours is " << contours.size() << endl;
     
     naiveContourJoin(&contours,&joinedContours,&hierarchy);
+
+    printContours(&joinedContours);
+    contours = *nubContours(&joinedContours);
+    cout << "WE REMOVIN DUPS " << endl;
+    printContours(&contours);
+
     cout << "contours reduced to " << joinedContours.size() << endl;
   }
  
@@ -98,20 +105,12 @@ void printContours(vector<vector<Point> >* contours) {
     Point start = it->front();
     Point end = it->back();
   
-    for (vector<Point>::const_iterator itp = it->begin(); itp != it->end(); itp++) {
-      cout << "Point("+to_string(itp->x)+","+to_string(itp->y)+") ";
-    }
+    cout << "has " << it->size() << " points";
+    //for (vector<Point>::const_iterator itp = it->begin(); itp != it->end(); itp++) {
+      //cout << "Point("+to_string(itp->x)+","+to_string(itp->y)+") ";
+    //}
     cout << "; " << endl;
-    cout << endl;
     contourNumber++;
-  }
-}
-
-void printHierarchy(vector<Vec4i>* hierarchy){
-  int count = 0;
-  for(vector<Vec4i>::const_iterator it = hierarchy->begin(); it != hierarchy->end();it++){
-    cout << count << "). Next:" << (*it)[0] << ", Prev:" << (*it)[1] << ", Child:" << (*it)[2] << ", Parent:" << (*it)[3] << endl;
-    count++ ;
   }
 }
 
@@ -188,8 +187,8 @@ int main(int argc, char* argv[])
    //erosion then dilation since we want the darker (pen) regions to close
     erode(scaledImage,erodedImage,element);
     dilate(erodedImage,dilatedImage,element);
-            
-    Mat closedFinal = *(findAndDrawContours(&dilatedImage,true,JOIN_FLAG));
+    
+    Mat closedFinal = *(findAndDrawContours(&dilatedImage,DEBUG_FLAG,JOIN_FLAG));
     imshow("MORPHEDLINES",closedFinal);
 
     int c = waitKey();

@@ -11,6 +11,7 @@
 #include <GL/glext.h>
 #include <GL/freeglut.h>
 #include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 using namespace cv;
@@ -235,3 +236,33 @@ void printHierarchy(vector<Vec4i>* h){
     count++;
   } 
 }
+
+
+namespace std{
+  template<>
+  struct hash<Point> {
+    size_t operator()(const Point& p) const
+    {
+      return (hash<int>()(p.x) * hash<int>()(p.y));
+    }
+  };
+}
+
+vector<Point>* removeContourDuplicates(vector<Point>* contour){
+  unordered_set<Point>* contourSet = new unordered_set<Point>(contour->begin(), contour->end());
+  vector<Point>* nonDupContour = new vector<Point>(contourSet->begin(),contourSet->end());
+  return nonDupContour;
+}
+
+//Iterates over contours list and removes duplicates from each contour
+vector<vector<Point> >* nubContours(vector<vector<Point> >*contours){
+  vector<vector<Point> >* nonDupContours = new vector<vector<Point> >();
+  for(vector<vector<Point> >::const_iterator it = contours->begin(); it != contours->end(); it++){
+    vector<Point> c = *it;
+    vector<Point>* newVec = removeContourDuplicates(&c);
+    nonDupContours->push_back(*newVec);
+  }
+  return nonDupContours;
+}
+
+

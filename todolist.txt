@@ -6,6 +6,7 @@ Code
 - make a new drawing and add a typical contours in to estimate a threshold
 - take a picture of table and find out if contours can be found
 - alignment of webcam and openGL camera with calibration
+- histogram differencing
 
 Report
 - Add images about LandscapAR
@@ -19,3 +20,5 @@ Running tests on amount of closing operations
 Runnin tests on structuring element, 5 seems to be best, 7 is too wide
 and joins stuff it shouldn't. 3 works best on Normal lines, 5 can still
 work it just doenst capture the double boundary on a drawn line
+
+Doing distancetransforms is fukin retarded in opencv
