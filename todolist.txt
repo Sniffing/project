@@ -12,7 +12,12 @@ Report
 - Add images about LandscapAR
 - write about the augmented sandbox
 - Consider Thinning and Hit and Miss Morphology
+- Write about OpenGL
+- Write Drawing the Map
+- Write Detecting Contours
+- Write generating Base image
 - Redo the Image Ratioing section because it's not right
+- Redo Introduction
 
 Running tests on amount of closing operations
 (Proved futile because closing is idempotent)
@@ -21,4 +26,7 @@ Runnin tests on structuring element, 5 seems to be best, 7 is too wide
 and joins stuff it shouldn't. 3 works best on Normal lines, 5 can still
 work it just doenst capture the double boundary on a drawn line
 
-Doing distancetransforms is fukin retarded in opencv
+Doing distance transforms is fukin retarded in opencv
+
+EXPLORE THE GPU UNIT IN OPENCV "Developers should try different combinations of CPU and GPU processing, measure their timing, and then choose the 
+combination that performs the best. "

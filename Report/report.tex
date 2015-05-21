@@ -11,7 +11,10 @@
 \usepackage{float}
 \usepackage[bottom]{footmisc}
 \usepackage{subcaption}
+\usepackage{listings}
 \usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \linespread{1.1} % Line spacing
 \usepackage[total={6in, 8in}]{geometry}
@@ -19,8 +22,8 @@
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
 
 \begin{document}
-\title{Novel Gaming Experiences with Advanced Illumination 
-through Augmented Reality: Interim Report}
+\title{An Interactive Creative environment through dynamically 
+changing Augmented Reality Landscapes}
 \author{Terence Tse \\
 		Supervisor: Benjamin Glocker\\
 		Second Marker: Abhijeet Ghosh}
@@ -712,6 +715,8 @@ overall change in the image.
 
 \subsubsection*{Camera alignment}
 
+\subsection*{Ordinance Survey Maps}
+
 \subsection*{Existing Projects}
 
 \subsubsection*{LandscapAR}
@@ -892,22 +897,245 @@ pitfall and cause minor hindrance to the progression of the project.
 \section*{Implementation}
 In this section I will briefly outline the main steps I took to in
 the creation of this project to tackle various problems.
+\subsection*{Assumptions and Restrictions of the Designer}
 \subsection*{Setting up the Camera and Environment}
 \subsubsection*{Camera Calibration and Setup}
+\subsubsection*{Choosing C++}
+\begin{center}
+“C makes it easy to shoot yourself in the foot; C++ makes it harder, but when you do it blows your whole leg off.”
+― Bjarne Stroustrup
+\end{center}
+
+Regardless of this, C++ was the language of choice for this project.
+As a project that was concerned with Augmented Reality, it meant that I was
+definitely going to be messing around with Computer Vision and using 
+Computer graphics to identify marker points and then render objects over them.
+In addition, it is a project that will be aimed at users of all kinds of ages,
+anyone requiring a creative environment should be able to use the end product.
+Augmented Reality is defined to have real time response and also requires custom 3D 
+object generation and so will need to be very fast. Generally, this will mean
+that I aim to use a language that can be immedaitely converted into native
+machine code not something like Java that needs to be converted into Java byte code.
+In addition, this project utilised the Computer Vision library
+\textit{OpenCV} and the Computer Graphics Library \textit{OpenGL}. OpenCV is written 
+C/C++ and has full support in C, C++, Java and Python, other language wrappers are
+avialable such as C\#, Perl and Ruby. OpenGL supports various languages, however
+since we are working on a real time program, we want a language that compiles
+directly into machine code so that it is quick! As a result, the overlapping
+language was C++ and the language that was chosen to proceed with this project in.
+C was the other alternative, although due to personal experience and Bjarne's
+very relatable quote above, C++ was the language of choice. Even though there
+were various annoying points along the way in terms of debugging, I consider
+C++ the best, and probably only, choice of language I had.
+
 \subsubsection*{OpenCV}
+OpenCV is the "Open Computer Vision" library, it is open source and was
+developed by Intel in 1998. From the year 2000, it has been under the BSD
+license, meaning it is a \textit{very} popular library to use. In addition,
+it is probably the largest and most extensivel used computer vision library.
+OpenCV has a strong focus on real time applications, such as in video and
+image processing. In addition, some other areas that
+OpenCV is used in include Face recognition, Robotics, Motion Tracking, 
+Augmented Reality and Interactions between Humans and Computers. In addition,
+OpenCV also includes some statistical machine learning tools, aiding with
+Decision Trees, KNN algorithsms, Naive Bayesian Classifiers amongst others. 
+I shall not be utilising these in this project, however.
+OpenCV has various modules focused on different areas of
+Computer vision and offer numerous different transformations and operations
+on images and video such as segmentation, edge detection, object tracking and
+various others. Kim Yu Doo's paper\cite{Kim14} has a very nice summary of
+these moudles that OpenCV offers. One of these is the recent GPU module which
+allows computation to be done on the GPU to accelearate computation, this is
+highlighted in K. Pulli's (senior Director at NVIDIA research) article  
+\textit{Real-Time Computer Vision with OpenCV}\cite{Pulli12}.\\
+\\
+There were numerous other Computer Vision libraries available, such as 
+the Cambridge Video Dynamics library (CVD) and CCV, though due to the extensive
+documentation and usage of OpenCV along with its massive user
+community, it was obvious to choose it over these. 
+Using the OpenCV library has been very easy and seamless, with plenty
+of online documentation and guidelines. There are also numerous samples
+that come along with the library that helped me get to grips with using it 
+for my project. The version used throughout was opencv 2.4.11.
+
 \subsubsection*{OpenGL}
+OpenGL, "Open Graphics Library" was introduced when I was born, in 1992 and
+developed by Silicon Graphics and is supported by NVIDIA. 
+It is the most widely adopted Computer Graphics Library. Akin to OpenCV, it
+has a massive community and a lot of online help, along with a Wiki page to
+support users. OpenGL interacts with GPUs to create computer graphics 
+
+...............MORE(Sort out opengl version)
+
 \subsection*{Capturing the Landscape map}
 \subsubsection*{Drawing the map}
+During the implementation of the project, to initially start working 
+with contour detection and landscape maps. I asked 2 friends along with
+myself to draw potential landscape maps. I used these to test the
+contour detection, initially just upon a static image basis, rather than using
+video feed. The landscape maps were drawn on typical pieces of white paper with
+black biro pen. The reason for using black biro pen is that it is the most
+common utensil for the average person to use to draw or write things. Other utensils
+considered were pencils and black marker pens. Pencils will allow erasing parts
+of the scene, however, there will be gradient changes due to smudges and 
+the effects of rubbing out pencil drawings. I decided to leave this for a 
+part later in the project. Black marker pens are much thicker and thus easier
+to detect by vision techniques, however, I did not want to limit users to just
+black markers as they are not as commonplace as black biros.\\
+\\
+The images were drawn in specific ways, they can be viewed in Figure 
+\ref{fig:landscapeMaps}. \\
+
+\begin{figure}[!ht]
+	\centering
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[scale=0.05]{pics/normal.jpg}
+		\caption{A variety of contours and other shapes.}
+		\label{fig:landscapeMapNormal}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[scale=0.05]{pics/height.jpg}
+		\caption{All contours open, no artifacts.}
+		\label{fig:landscapeMapHeight}
+	\end{subfigure}
+	
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[scale=0.05]{pics/thicklines.jpg}
+		\caption{Shapes and contours drawn in thickly, all closed.}
+		\label{fig:landscapeMapThick}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[scale=0.05]{pics/shitlines.jpg}
+		\caption{Roughly drawn contours and pictures, som artifacts in the corner.}
+		\label{fig:landscapeMapShit}
+	\end{subfigure}
+	
+	
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[scale=0.05]{pics/simple.jpg}
+		\caption{Very simple contours drawn in; both closed.}
+		\label{fig:landscapeMapSimple}
+	\end{subfigure}
+	\caption{Original landscape maps}
+	\label{fig:landscapeMaps}
+\end{figure}
+
+Figure \ref{fig:landscapeMapNormal} has a couple of contours, closed, along with
+a few other shapes. The contours have some small artifacts(some bold lines and
+additional lines on the contour) which may happen in a typical drawing due to 
+human error. The lines were drawn with intent, and although the other shapes are 
+outside of the project's scope to identify as somethinig other than contours,
+this picture was used to illustrate a "typical landscape map". \\
+\\
+Figure \ref{fig:landscapeMapHeight} was drawn by a friend who thought that 
+labelling the contours with numbers to illustrate height would be a good idea.
+Unfortunately, this is outside the scope of the project, we are following
+the OS Map specification where each contour will dictate an uniform increase in
+height. By doing so, the friend has created a bunch of open contours which were
+used in this project to test the ability to close contours with small gaps. 
+The ability to recognise numbers through template matching to manually set the 
+heights may be a possible extension to this project but not something I will look
+in to. \\
+\\
+Figure \ref{fig:landscapeMapThick} shows lines drawn in thickly, they are also
+all connected. This represents a landscape map where the user may have used
+a black marker or just thickly sketched out their design, making contour edges 
+rough. This was made to mimic some noise as people may accidentally go over 
+drawn lines and add small artifacts off the side of contours. This problem was
+not very large, however, due to the ability to use Morphological Closing as well
+as smoothing of the image with the Canny Edge Detector.\\
+\\
+Figure \ref{fig:landscapeMapShit} tries to mimick a bad situation where
+the user has drawn contours with large gaps, artifacts and odd other shapes
+on the landscape map. There are also some scribbles in the top right corner, 
+placed as a test to see how far I could go with removing the unwanted 
+scribbles. This drawing was more of a "lower bound" performance measure, to see
+how limited the program would behave and could be done to remove human error
+and what kind of restrictions and prerequisites a landscape map should have
+to be cause a decent Augemented Reality rendering.\\
+\\
+Figure \ref{fig:landscapeMapSimple} is a very simple image. Two contours, one 
+inside the other, both closed. This is the basic iage that could be used to
+represent a "perfect" landscape map and is used to test how well the program
+would work in the optimal conditions, if this isn't satisfactory, we cannot
+expect any of the other drawings nor the user's drawings to perform well at all.
+\\
+
+
+
+Working on static images allowed me to mimic opoerating on frames taken from
+a webcam. As a result, operating in this way allowed me to easily and quickly 
+make adjustments to threshold parameters and other operations on the images
+rather than having to extract from a camera each time and manually look at each
+result generated. Instead, it was much easier to load the image and run several 
+bash scripts which output all the image results to files I could quickly view.
+I was very quickly able to attain empirical value for some of the thresholds
+and parameters in the function calls that OpenCV offers, these shall be presented
+in the next section.
+
+............. MORE (PENCIL)
 \subsubsection*{Detecting Contours}
-\subsubsection*{Genearting the Hierarchy Tree}
+Detecting contours is very simple when using OpenCV. A single function call
+will perform Canny Edge detection, as outlined in the background of this report,
+on the provided image. The function also performs double thresholding, so takes
+two threshold values that I had determined empirically, along with an
+aperture size for the Sobel operator and a choice of wether to use the L1 or L2 norm
+when determining gradient magnitudes.\\
+\\
+The Canny function returns a list of contours and these are represented as
+a list of cartesian co-ordinates which dictate which pixels are considered part
+of an identified contour. Calling the  
+
+.......................MORE
+\begin{lstlisting}
+void Canny(InputImage, ListOfContours, Threshold1, Threshold2, SobelApertureSize, GradientMagnitudeOperator)¶
+\end{lstlisting}
+
+\subsubsection*{Generating the Hierarchy Tree}
 \subsection*{Generating the 3D scene}
 \subsubsection*{View Point alignment}
 \subsubsection*{Using the Hierarchy Tree}
 \subsubsection*{Terrain Generation}
 \subsection*{Detecting change in the scene}
 \subsubsection*{Generating the Base image}
-\subsubsection*{Introducting change}
+The Base Image is the current landscape map that is used for generating the
+Augmented Reality 3D landscape. This project was focused on providing 
+users with an dynamically updating environment to tackle the problem that
+some similar applications out there have, which is having to tell the program
+when they want the scene rebuilt. For a creative individual, quickly and seamlessly
+being able to make changes to their creation is paramount and a key motivation
+for this project. Rendering the landscape over and over again based on
+each frame is inefficient, and not really needed,thus I have implemented an 
+algorithm that only requires re-render of a scene if there has been significant
+enough change, i.e. the addition of a new contour.
+
+
+\subsubsection*{Introducing change}
 \subsubsection*{Determining Stabilisation}
+
+\begin{algorithm}
+\caption{Base Image Generation}
+\label{CHalgorithm}
+\begin{algorithmic}[1]
+\Procedure{CH\textendash Election} {}
+\For{each node $i$ \Pisymbol{psy}{206} $N$ }
+\State Broadcast HELLO message to its neighbor
+\State let $k$ \Pisymbol{psy}{206} $N1$ ($i$) U {$i$} be s.t
+\State QOS($k$) = max {QOS($j$) \textbar $j$ \Pisymbol{psy}{206} $N1$($i$)  U $i$}
+\State MPRSet($i$) = $k$
+\EndFor
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
 \subsection*{Restructure and regenerating the 3D scene}
 \subsubsection*{Generating a Difference Image}
 \subsubsection*{Determining new contours}
@@ -973,7 +1201,7 @@ A marker is something on the paper or creative environment that will be
 detected and understood by the program. Right now, the only markers we have
 at the user's disposal are contour lines which are converted into land with
 different elevation levels. While it is very easy to add special computer
-generated markers
+generated markers ......................MORE...................
  						it removes from the creative experience of the application
 as there is less interaction with pen and paper. \\
 \\
@@ -1056,7 +1284,7 @@ of which I shall list:
 		  outward/upward, the user can scale the generated scene to their 
 		  desired size! Will require alignment of Leap Motion hand point 
 		  coordinate space to the 3D scene coordinate space to work.
-	\item \textit{Adding content by drag and drop.}
+	\item \textit{Adding content by drag and drop.}\\
 		  This functionality is inspired by games much like \textit{The Sims}.
 		  The user can choose to either add in content through the computer and
 		  literally drop it into the scene by moving their hands around. This
@@ -1067,7 +1295,7 @@ of which I shall list:
 		  introduce more of a game aspect into the project and will definitely
 		  appeal to the younger set of users while adding functionality for
 		  those who could be using this for professional work.
-	\item \textit{Introduce "God Mode"}
+	\item \textit{Introduce "God Mode"}\\
 		  Again inspired by some games and similar to the above point. Allow
 		  the user to view hands in the scene, as if you were playing the
 		  role of God. This is purely to enchance the program as more of a game
@@ -1082,11 +1310,58 @@ of which I shall list:
 \subsubsection*{No Calibration Marker}
 
 
-\subsubsection*{Continued testing and experimentation} 
-Some shit here \\
+\subsection*{Continued testing and experimentation} 
+For this project to come together, there were numerous problems that
+had to be solved. Truthfully, some of these problems could have been entire
+projects themselves and have been studied a lot in their field of literature.
+Since there is not enough time to explore each of these problems in 
+depth, some simple approaches have been taken to reach a suitable solution
+that will fulfil the needs of this project. The main areas which I think would
+benefit from more extensive testing are highlighted in this section.
+
+\subsubsection*{Contour closing}
+Contour closing is a pretty large topic in the field of Computer Vision as 
+it is the basis for segmentation. As a result, it plays \texttt{the} main role
+in many applications of computer vision. As a result of this there are 
+already numerous papers out there which look into achieving accurate segmentation.
+Some of these require human input, such as creating atlases in medical imaging.
+Machine learning methods can also require some forms of human input, mainly in 
+reinforcement learning where the program may segment an image by finding contours 
+and then the user correct the segmentation, causing updates to the program's
+segmentation algorithm. Over time, this would hopefully improve the performance
+of the program when identifying contours in roughly similar images. \\
 \\
+In this project, contour closing has been dealt with through a naive approach.
+Firstly, morphological closing helps connect very cloase contours, however, there
+were still contours that were very close that weren't caught by this transform.
+The next approach was to join contours that have start and end points which
+neighboured the start/end point of another contour.
+....................MORE
+
+\subsubsection*{Thresholding}
+Computer Vision is heavily dependent on aesthetics. A successful Computer
+Vision application is not one that performs the best, but the one which looks,
+visually, the best. As users, we greatly desire things that look good! If
+landscapes looked horribly choppy and like they were made from the previous 
+decade, users will generally not be satisfied with it. This is heavily evident
+in the game and movie industry where there is constant desire to make games
+and movies more realistic and not computer generated. Removing the invisible 
+cloak worn by generated images that practically say "I'm not real" is the
+goal of many companies in this field. This is even more so in  Augmented Reality,
+where even in the name it containes the word "reality." \\
 \\
-\\
+In this project, there were various points where we applied thresholds to images
+in an attempt to better segment and divide parts of the image. Some areas include
+contour detection, 
+.......................MORE
+
+\subsubsection*{Stabilisation of background}
+To determine if there was any change in the landscape map, we implemented an
+algorithm which takes a base frame and the current frame and calculates a change
+measure. The base frame was considered the "Background" and any change was the
+"Foreground". 
+
+...........MORE
 
 \newpage
 

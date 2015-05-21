@@ -13,7 +13,7 @@ vector<vector<Point> > contours;
 vector<Vec4i> hierarchy;
 Tree* h_tree;
 
-int hmap[WIN_SIZE][WIN_SIZE];
+float hmap[WIN_SIZE][WIN_SIZE];
 
 //scene interaction variables
 int mouse_old_x, mouse_old_y;
@@ -184,16 +184,17 @@ void mouseButton(int button, int state, int x, int y) {
   }
 }
 
-int getLevel(TreeNode* currNode, Point p, vector<vector<Point> >* contours, Tree* hierarchy){
+pair<float,TreeNode*>* getContainingContour(TreeNode* currNode, Point p, vector<vector<Point> >* contours, Tree* hierarchy){
   bool hasNext = true;
   while(hasNext) {
     vector<Point> currContour = contours->at(currNode->getID());
-    double state = pointPolygonTest(currContour,p,false);
+    double state = pointPolygonTest(currContour,p,true);
     if(state != -1) { //Is in the contour
       if(currNode->getChildren()->empty()) {
-	return currNode->getLevel();
+	pair<float,TreeNode*>* containingContour = new pair<float,TreeNode*>(state, currNode);
+	return containingContour;
       } else {
-	return getLevel(currNode->getChildren()->at(0), p, contours, hierarchy);
+	return getContainingContour(currNode->getChildren()->at(0), p, contours, hierarchy);
       } 
     } else {
       TreeNode* nextNode = currNode->getNext();
@@ -204,15 +205,44 @@ int getLevel(TreeNode* currNode, Point p, vector<vector<Point> >* contours, Tree
       }
     }
   }
-  return -1;
+  return new pair<float,TreeNode*>(0.0, new TreeNode());
 }
 
+float findDistanceToNearestChild(vector<TreeNode*>* children,vector<vector<Point> >*contours, Point p){
+  cout << "in this on" << endl;
+  float distance = numeric_limits<float>::max();
+  for(auto it = children->begin(); it!= children->end(); it++){
+    float thisDistance = pointPolygonTest(contours->at((*it)->getID()),p,true);
+    distance = min(distance, thisDistance);
+  }
+  return distance;
+}
+
+
 void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int height, int width) {
-  TreeNode* contour = hierarchy->getRoot();
+  TreeNode* c = hierarchy->getRoot();
   
   for(int i = 0; i < height; i++){
     for(int j = 0; j < width; j++){
-      hmap[i][j] = getLevel(contour, Point(i,j), contours, hierarchy)*50;
+      Point p = Point(i,j);
+
+      pair<float,TreeNode*>* containingContour = getContainingContour(c, p, contours, hierarchy);
+      TreeNode* contour = containingContour->second;
+      int baseLevel = contour->getLevel();
+      int topLevel = baseLevel+1;
+      float distanceToContainer = abs(containingContour->first);
+      float distanceToNext; // SORT THIS SHIT OUT
+      
+      contour->print();
+      
+      //something kills in here
+      if(contour->getChildren()->empty()){
+	distanceToNext = 0.5f;
+      } else {
+	distanceToNext = findDistanceToNearestChild(contour->getChildren(),contours,p);
+      }      
+      hmap[i][j] = (float)baseLevel + (distanceToNext / (distanceToNext + distanceToContainer));
+     
     }
   }
 }
@@ -239,6 +269,7 @@ int main(int argc, char** argv){
 
   int map[512][512];
   createHeightMap(&contours, h_tree, WIN_SIZE,WIN_SIZE);
+  cout << "fuck im screwed" <<  endl;
   BG_TEXTURE = makeBackground(&scaledImage);
   
 

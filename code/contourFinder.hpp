@@ -34,6 +34,7 @@ public:
   void setID(int);
   int getLevel();
   void setLevel(int);
+  void print();
 private:
   int level;
   TreeNode* parent;
@@ -47,7 +48,13 @@ TreeNode::TreeNode(){
   this->setNext(NULL);
   this->setPrev(NULL);
   this->setParent(NULL);
-  this->setLevel(0);
+  this->setLevel(-1);
+}
+
+void TreeNode::print(){
+  cout << "I am node: " << nodeID << " | ";
+  cout << "I had " << children->size() << " children | ";
+  cout << "I am on level " << level << endl;
 }
 
 TreeNode::TreeNode(Vec4i data, unordered_map<int,TreeNode*>* allNodes,
@@ -138,9 +145,10 @@ public:
   void makeAndInsertNode(int,Vec4i*,unordered_map<int,TreeNode*>*,vector<Vec4i>*);
   void printTree();
   int getSize();
+  TreeNode* getNodeWithID(int id);
 private:
   int size;
-  std::unordered_map<int,TreeNode*>* allNodes; 
+  unordered_map<int,TreeNode*>* allNodes; 
   void insertNode(int,TreeNode*);
 };
 
@@ -153,6 +161,10 @@ void printVector(vector<TreeNode*>* children){
     cout << ", ";
   }
 };
+
+TreeNode* Tree::getNodeWithID(int id){
+  return allNodes->at(id);
+}
 
 void Tree::printTree(){
   for(int i = 0; i < allNodes->size(); i++){
@@ -237,13 +249,12 @@ void printHierarchy(vector<Vec4i>* h){
   } 
 }
 
-
 namespace std{
   template<>
   struct hash<Point> {
     size_t operator()(const Point& p) const
     {
-      return (hash<int>()(p.x) * hash<int>()(p.y));
+      return (hash<int>()(p.x) ^ hash<int>()(p.y));
     }
   };
 }
