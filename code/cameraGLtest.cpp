@@ -1,45 +1,14 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/core/core.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-#include <iostream>
-#include <time.h>
-#include <math.h>
-#include <GL/glew.h>
-#include <GL/glut.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glext.h>
-#include <GL/freeglut.h>
 
-int heightMap[20][20] = { {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-			  {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			  {0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			  {0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			  {0,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			  {0,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0},
-			  {0,1,2,2,3,3,3,3,3,3,2,2,1,1,1,1,1,1,1,0},
-			  {0,2,2,2,3,3,3,3,3,3,3,2,2,1,1,1,1,1,1,0},
-			  {0,2,2,2,5,5,5,3,3,3,3,2,2,1,1,1,1,1,1,0},
-			  {0,1,2,2,5,5,5,5,3,3,2,2,1,1,1,1,1,1,1,0},
-			  {0,1,2,2,3,3,3,3,3,2,2,1,1,1,1,1,1,1,1,0},
-			  {0,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0},
-			  {0,1,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			  {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			  {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},
-			  {0,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,0},
-			  {0,1,1,1,1,1,1,1,1,3,3,4,4,4,4,3,1,1,1,0},
-			  {0,1,1,1,1,1,1,1,1,3,3,4,4,4,3,3,1,1,1,0},
-			  {0,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,0},
-			  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}; 
+#include "mouseFunctionsGL.hpp"
+#include <unistd.h>
 
+int heightMap[40][40] = { {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0,0,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0},			  {0,1,2,2,3,3,3,3,3,3,2,2,1,1,1,1,1,1,1,0,0,1,2,2,3,3,3,3,3,3,2,2,1,1,1,1,1,1,1,0},			  {0,2,2,2,3,3,3,3,3,3,3,2,2,1,1,1,1,1,1,0,0,2,2,2,3,3,3,3,3,3,3,2,2,1,1,1,1,1,1,0},			  {0,2,2,2,5,5,5,3,3,3,3,2,2,1,1,1,1,1,1,0,0,2,2,2,5,5,5,3,3,3,3,2,2,1,1,1,1,1,1,0},			  {0,1,2,2,5,5,5,5,3,3,2,2,1,1,1,1,1,1,1,0,0,1,2,2,5,5,5,5,3,3,2,2,1,1,1,1,1,1,1,0},			  {0,1,2,2,3,3,3,3,3,2,2,1,1,1,1,1,1,1,1,0,0,1,2,2,3,3,3,3,3,2,2,1,1,1,1,1,1,1,1,0},			  {0,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0,0,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0},			  {0,1,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			 {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,0,0,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,0},			  {0,1,1,1,1,1,1,1,1,3,3,4,4,4,4,3,1,1,1,0,0,1,1,1,1,1,1,1,1,3,3,4,4,4,4,3,1,1,1,0},			  {0,1,1,1,1,1,1,1,1,3,3,4,4,4,3,3,1,1,1,0,0,1,1,1,1,1,1,1,1,3,3,4,4,4,3,3,1,1,1,0}, {0,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,0,0,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,0},		  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0,0,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0},			  {0,1,2,2,3,3,3,3,3,3,2,2,1,1,1,1,1,1,1,0,0,1,2,2,3,3,3,3,3,3,2,2,1,1,1,1,1,1,1,0},			  {0,2,2,2,3,3,3,3,3,3,3,2,2,1,1,1,1,1,1,0,0,2,2,2,3,3,3,3,3,3,3,2,2,1,1,1,1,1,1,0},			  {0,2,2,2,5,5,5,3,3,3,3,2,2,1,1,1,1,1,1,0,0,2,2,2,5,5,5,3,3,3,3,2,2,1,1,1,1,1,1,0},			  {0,1,2,2,5,5,5,5,3,3,2,2,1,1,1,1,1,1,1,0,0,1,2,2,5,5,5,5,3,3,2,2,1,1,1,1,1,1,1,0},			  {0,1,2,2,3,3,3,3,3,2,2,1,1,1,1,1,1,1,1,0,0,1,2,2,3,3,3,3,3,2,2,1,1,1,1,1,1,1,1,0},			  {0,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0,0,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,0},			  {0,1,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			 {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0},			  {0,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,0,0,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,0},			  {0,1,1,1,1,1,1,1,1,3,3,4,4,4,4,3,1,1,1,0,0,1,1,1,1,1,1,1,1,3,3,4,4,4,4,3,1,1,1,0},			  {0,1,1,1,1,1,1,1,1,3,3,4,4,4,3,3,1,1,1,0,0,1,1,1,1,1,1,1,1,3,3,4,4,4,3,3,1,1,1,0}, {0,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,0,0,1,1,1,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,0},		  {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+};  
 
-//scene interaction variables
-int mouse_old_x, mouse_old_y;
-int mouse_buttons = 0;
-float rotate_x = 0.0, rotate_y = 0.0;
-float move_x = 0.0, move_y = 0.0;
-float win_width = 512.0, win_height = 512.0;
-float translate_z = -1.0;
 
 GLuint BG_TEXTURE = 0;
 
@@ -105,7 +74,6 @@ void drawBackground(GLuint temp_texture){
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D,temp_texture);
  
-  //glDepthMask(GL_FALSE);
   glPushMatrix();
   glBegin( GL_QUADS ); 
     glTexCoord2f( 0.0f, 0.0f );glVertex2f( -20.0f, -20.0f);
@@ -114,14 +82,11 @@ void drawBackground(GLuint temp_texture){
     glTexCoord2f( 1.0f, 0.0f );glVertex2f( 20.0f, -20.0f );
   glEnd();
   glPopMatrix();
-
 }
 
 
 void drawMap(void)
 {
-
-  // clear the drawing buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   //Background Render  
@@ -133,8 +98,7 @@ void drawMap(void)
   glLoadIdentity();
   // Coordinates are <-x  and (-ve x)->
   // z comes toward the screen
-  
-  //glEnable(GL_DEPTH_TEST);
+ 
   glPushMatrix();
   glDepthMask(GL_TRUE);
   glDisable(GL_TEXTURE_2D);
@@ -144,24 +108,21 @@ void drawMap(void)
   glRotatef(rotate_y, 0.0, 1.0, 0.0);
   // gluLookAt(0.0f,6.0f,15.0f,0.0,0.0,0.0f,0.0f,1.0f,0.0f);
 
-  //glColor3f(0.0f,0.0f,1.0f);    // Color Blue  
-  //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-  for(int i=-9; i<9; i++) {
-      for(int j=-9; j<9; j++) {
+  
+  for(int i=-19; i<19; i++) {
+      for(int j=-19; j<19; j++) {
         glBegin(GL_QUADS);        // Draw The Cube Using quads
         glColor3f(0.0f,1.0f/heightMap[i+10][j+10],0.0f);    // Color Blue
 
-        glVertex3f(   i, heightMap[i+10][j+10]    , (j+41) );
-        glVertex3f( i+1, heightMap[i+11][j+10]  , (j+41) );
-        glVertex3f( i+1, heightMap[i+11][j+11], (j + 42));
-	glVertex3f(   i, heightMap[i+10][j+11]  , (j + 42));
+        glVertex3f(   i, heightMap[i+20][j+20]    , (j+41) );
+        glVertex3f( i+1, heightMap[i+21][j+20]  , (j+41) );
+        glVertex3f( i+1, heightMap[i+21][j+21], (j + 42));
+	glVertex3f(   i, heightMap[i+20][j+21]  , (j + 42));
         glEnd();
       }
     }
   
   glPopMatrix();
-
-  glFlush();
   glutSwapBuffers();
 }
  
@@ -186,30 +147,6 @@ void reshape(int x, int y)
   win_height = y;
 }
 
-void mouseMove(int x, int y) { 	 
-  if (mouse_buttons == GLUT_RIGHT_BUTTON) {
-    float plane_y = (1 + abs(translate_z)) * tan(M_PI/8) * 2;
-    move_x += 3*((x - mouse_old_x) / win_width) * plane_y * win_width/win_height;
-    move_y -= 3*((y - mouse_old_y) / win_height) * plane_y;
-  } else if (mouse_buttons == GLUT_LEFT_BUTTON) {
-    rotate_y += (x - mouse_old_x);
-    rotate_x += (y - mouse_old_y);
-  } else if (mouse_buttons == GLUT_MIDDLE_BUTTON) {
-    translate_z +=  (mouse_old_y  - y);
-  }
-  mouse_old_x = x;
-  mouse_old_y = y;  // this will only be true when the left button is down
-}
- 
-void mouseButton(int button, int state, int x, int y) {
-  if (state == GLUT_DOWN) {
-    mouse_buttons = button;
-    mouse_old_x = x;
-    mouse_old_y = y;
-  } else {
-    mouse_buttons = 0;
-  }
-}
 
 int main(int argc, char** argv){
 
@@ -234,59 +171,6 @@ int main(int argc, char** argv){
 
   glutMainLoop();
 
-  // while(cam.isOpened()){
-  //   if(!testImage.empty()){
-  //     makeBackground(&testImage);
-  //   }
-  // }
-    
-  
-  
-  // time_t start,end;
-  // globalFPS = 0;
-
-  // //VideoCapture cam(1);
-
-  // //If web cam is not found, default to whatever 
-  // if (!cam.isOpened()) { 
-  //   cam = VideoCapture(0);
-  //   if (!cam.isOpened()){
-  //     //No cameras found
-  //     cout << "No Webcams have been located" << endl;
-  //     return -1;
-  //   }
-  // }
-
-  // //Grab original frame
-  // cam.read(baseFrame);
-  // cvtColor(baseFrame,baseFrame,CV_BGR2GRAY); 
-  // imwrite("original.jpg", baseFrame);
-
-  // int frameCounter = 0;
-  // int fps;
-
-  // int stableCounter = 0;
-  // Mat tempBase;
-  // cam >> tempBase;
-  // cvtColor(tempBase,tempBase,CV_BGR2GRAY); 
-
-  // while( cam.isOpened() )    // check if we succeeded
-  //   {
-        
-  //     if ( !cam.read(thisFrame) )
-  // 	break;
-
-  //     if(frameCounter == 0) {
-  // 	time(&start);
-  //     }
-
-  //     cam >> thisFrame;
-      
-  //     //Turn the current frame into a texture for background
-  //     makeBackground(&thisFrame);
-
-  //   }
-  
   return 0;
 } 
 

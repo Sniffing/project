@@ -90,14 +90,11 @@ void makeBackground(Mat* image){
 	       GL_BGR, // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
 	       GL_UNSIGNED_BYTE,  // Image data type
 	       image->data);        // The actual image data itself
-
-  //glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 void drawBackground(){
   glBindTexture( GL_TEXTURE_2D, BG_TEXTURE ); 
   
-  //  orthogonalStart();
   glPushMatrix();
   glBegin(GL_QUADS);
   glTexCoord2f(-20.0f, -20.0f); glVertex3f( -10.0f, -5.0f,10.f);
@@ -107,8 +104,6 @@ void drawBackground(){
   glEnd();
 
   glPopMatrix();
-
-  //  orthogonalEnd();
 }
 
 
@@ -141,23 +136,23 @@ void drawMap(void)
   glColor3f(0.0f,0.0f,1.0f);    // Color Blue  
   //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   
-  // for(int i=-9; i<9; i++) {
-  //     for(int j=-9; j<9; j++) {
-  //       glBegin(GL_QUADS);        // Draw The Cube Using quads
-  //       glColor3f(0.0f,1.0f/heightMap[i+10][j+10],0.0f);    // Color Blue
+  for(int i=-9; i<9; i++) {
+      for(int j=-9; j<9; j++) {
+        glBegin(GL_QUADS);        // Draw The Cube Using quads
+        glColor3f(0.0f,1.0f/heightMap[i+10][j+10],0.0f);    // Color Blue
 
-  //       glVertex3f(   i, heightMap[i+10][j+10]    , j );
-  //       glVertex3f( i+1, heightMap[i+11][j+10]  , j );
-  //       glVertex3f( i+1, heightMap[i+11][j+11], j + 1);
-  //       glVertex3f(   i, heightMap[i+10][j+11]  , j + 1);
-  //       glEnd();
-  //     }
-  //   }
-  glTexCoord2f(0.0f, 0.0f); glVertex3f( -10.0f, -5.0f,10.f);
-  glTexCoord2f(0.0f, 1.0f); glVertex3f( -10.0f, 5.0f,10.f);
-  glTexCoord2f(1.0f, 1.0f); glVertex3f( 10.0f, 5.0f,10.f);
-  glTexCoord2f(1.0f, 0.0f); glVertex3f( 10.0f, -5.0f,10.f);
-  glEnd();
+        glVertex3f(   i, heightMap[i+10][j+10]    , j );
+        glVertex3f( i+1, heightMap[i+11][j+10]  , j );
+        glVertex3f( i+1, heightMap[i+11][j+11], j + 1);
+        glVertex3f(   i, heightMap[i+10][j+11]  , j + 1);
+        glEnd();
+      }
+    }
+  //glTexCoord2f(0.0f, 0.0f); glVertex3f( -10.0f, -5.0f,10.f);
+  //glTexCoord2f(0.0f, 1.0f); glVertex3f( -10.0f, 5.0f,10.f);
+  //glTexCoord2f(1.0f, 1.0f); glVertex3f( 10.0f, 5.0f,10.f);
+  //glTexCoord2f(1.0f, 0.0f); glVertex3f( 10.0f, -5.0f,10.f);
+  //glEnd();
 
   glPopMatrix();
   glFlush();
@@ -342,8 +337,7 @@ int main(int argc, char** argv){
 	cout << "image stablised" << endl;
       }
 	
-	  
-	
+	  	
 
       int k = waitKey(10);
       if ( k==27 ) { // if escape

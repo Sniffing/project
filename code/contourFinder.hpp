@@ -26,10 +26,12 @@ public:
   int getID();
   vector<TreeNode*>* getChildren();
   TreeNode* getChild(int);
+  void removeChild(int);
   void setParent(TreeNode*);
   void setNext(TreeNode*);
   void setPrev(TreeNode*);
   void addChild(TreeNode*);
+  void addChildren(vector<TreeNode*>*);
   void setChildren(vector<TreeNode*>*);
   void setID(int);
   int getLevel();
@@ -49,12 +51,17 @@ TreeNode::TreeNode(){
   this->setPrev(NULL);
   this->setParent(NULL);
   this->setLevel(-1);
+  children = new vector<TreeNode*>();
 }
 
 void TreeNode::print(){
   cout << "I am node: " << nodeID << " | ";
-  cout << "I had " << children->size() << " children | ";
+  cout << "I have " << children->size() << " children | ";
   cout << "I am on level " << level << endl;
+}
+
+void TreeNode::removeChild(int i){
+  children->erase(children->begin() + i);
 }
 
 TreeNode::TreeNode(Vec4i data, unordered_map<int,TreeNode*>* allNodes,
@@ -98,6 +105,10 @@ void TreeNode::setNext(TreeNode* node){
 
 void TreeNode::setPrev(TreeNode* node){
   prev = node;
+}
+
+void TreeNode::addChildren(vector<TreeNode*>* childrenList){
+  children->insert(children->end(), childrenList->begin(), childrenList->end());
 }
 
 void TreeNode::setChildren(vector<TreeNode*>* childrenList) {
@@ -144,13 +155,47 @@ public:
   TreeNode* getRoot();
   void makeAndInsertNode(int,Vec4i*,unordered_map<int,TreeNode*>*,vector<Vec4i>*);
   void printTree();
-  int getSize();
+  void joinNodes(int first, int second);
+  void rearrangeAllNodes();
+  int getSize(); // Num of contours
   TreeNode* getNodeWithID(int id);
 private:
   int size;
   unordered_map<int,TreeNode*>* allNodes; 
   void insertNode(int,TreeNode*);
 };
+
+void Tree::joinNodes(int f, int s){
+  TreeNode* first = allNodes->at(f);
+  TreeNode* second = allNodes->at(s);
+
+  //By definition, these should have the same parents so
+  //will always be in the same branch of tree, either that
+  //or will try to connect to a child/parent directly
+  if (first->getLevel() == second->getLevel()){
+    first->setNext(second->getNext());
+    vector<TreeNode*>* children = second->getChildren();
+    first->addChildren(children);
+  } else { // will be parent connecting to child due to ordering
+
+    TreeNode* secondChild = second->getNext();
+    if (secondChild)
+      secondChild->setPrev(NULL);
+
+    //Move the children up a level and make first the parent
+    vector<TreeNode*>* children = second->getChildren();
+    if(!children->empty())
+      first->addChildren(children);
+
+    //Removes second from the children list of the first
+    first->removeChild(0);
+  }
+  //remove second from all nodes
+  allNodes->erase(s);
+}
+
+void Tree::rearrangeAllNodes(){
+}
 
 void printVector(vector<TreeNode*>* children){
   if (children->empty()){cout<<"No children"; return;}
@@ -166,13 +211,18 @@ TreeNode* Tree::getNodeWithID(int id){
   return allNodes->at(id);
 }
 
+
 void Tree::printTree(){
   for(int i = 0; i < allNodes->size(); i++){
-    cout << "Contour: " << to_string(i)  << " at level "<< allNodes->at(i)->getLevel() << " Children: [";
-    TreeNode* node = allNodes->at(i);
-    vector<TreeNode*>* children = node->getChildren();
-    printVector(children);
-    cout << "]" << endl;
+    if (!allNodes->at(i)){
+      cout << "NULL NODE (joined)." <<endl;
+    } else {
+      cout << "Contour: " << to_string(i)  << " at level "<< allNodes->at(i)->getLevel() << " Children: [";
+      TreeNode* node = allNodes->at(i);
+      vector<TreeNode*>* children = node->getChildren();
+      printVector(children);
+      cout << "]" << endl;
+    }
   }
 }
 
@@ -184,6 +234,8 @@ Tree::Tree(vector<Vec4i>* hierarchy){
   
   int count = 0;
   allNodes = new unordered_map<int,TreeNode*>();
+ 
+
   //Create nodes
   for(vector<Vec4i>::const_iterator it = hierarchy->begin(); it != hierarchy->end(); it++){
     TreeNode* node = new TreeNode(); 
@@ -193,7 +245,7 @@ Tree::Tree(vector<Vec4i>* hierarchy){
   }
 
   size = count;
-
+  
   //Fill Nodes
   count = 0;
   for(vector<Vec4i>::const_iterator it = hierarchy->begin(); it != hierarchy->end(); it++){
@@ -208,8 +260,10 @@ Tree::Tree(vector<Vec4i>* hierarchy){
     //Sets parents, works because stored incrementally
     if(!newNode->getParent()) 
       node->setLevel(0);
-    else
-      node->setLevel(node->getParent()->getLevel() +1);
+    else {
+      int level = node->getParent()->getLevel() +1;
+      node->setLevel(level);
+    }
     count++;
   }
 }
@@ -276,4 +330,59 @@ vector<vector<Point> >* nubContours(vector<vector<Point> >*contours){
   return nonDupContours;
 }
 
+static bool adjacent(Point a, Point b)
+{
 
+  if(a.x == (b.x + 1) || a.x == (b.x-1) || a.x == b.x) {
+    return (a.y == b.y || a.y == (b.y+1) || a.y == (b.y-1));
+  } else {
+    return false;
+  }
+}
+
+
+//HOLY SHIT IT WORKS
+void naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> >* joinedList, Tree* htree){
+
+  Point currFront, currBack, nextFront, nextBack;
+  vector<Point> currContour;
+  int currContourID = 0;
+  vector<Point> nextContour;
+  int nextContourID = 1;
+  int i = 0;
+  
+  currContour = contourList->at(i); 
+  currFront = currContour.front();
+  currBack = currContour.back();
+  
+  i++;
+  while (i < contourList->size()){
+    nextContour = contourList->at(i);
+    nextFront = nextContour.front();
+    nextBack = nextContour.back();
+    if(adjacent(currFront, nextFront) ||
+       adjacent(currFront, nextBack)  ||
+       adjacent(currBack, nextFront)  ||
+       adjacent(currBack, nextBack)) {
+      
+      // Change the next comparison point and add to the current contour
+      currFront = nextFront;
+      currBack = nextBack;
+      currContour.insert(currContour.end(), nextContour.begin(), nextContour.end());
+      htree->joinNodes(currContourID,nextContourID);
+      htree->printTree();
+      
+    } else {
+      
+      joinedList->push_back(currContour);
+      currContour = nextContour;
+      currContourID = nextContourID;
+      currFront = nextFront;
+      currBack = nextBack;
+    }
+    i++;
+    nextContourID ++;
+  }
+  joinedList->push_back(currContour);
+  
+}

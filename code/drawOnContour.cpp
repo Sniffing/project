@@ -1,6 +1,6 @@
 #include "contourFinder.hpp"
 
-#define WIN_SIZE 512
+#define WIN_SIZE 256
 
 using namespace cv;
 using namespace std;
@@ -36,24 +36,25 @@ GLuint makeBackground(Mat* image){
   if (image->empty()) {
     cout <<"Frame not ready" << endl;
   }
-  flip(*image, *image, 0);
+
+  //flip(*image, *image, 0);
   glGenTextures(1, &BG_TEXTURE);
   glBindTexture(GL_TEXTURE_2D, BG_TEXTURE);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   // Set texture clamping method
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
   glTexImage2D(GL_TEXTURE_2D,     // Type of texture
-	       0,                 // Pyramid level (for mip-mapping) - 0 is the top level
-	       GL_RGB,            // Internal colour format to convert to
+	       0,                 // Pyramid level - 0 is the top level
+	       GL_LUMINANCE,      // Internal colour format to convert to (GL_RGB)
 	       image->cols,
 	       image->rows, 
 	       0,           
-	       GL_BGR, // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
+	       GL_LUMINANCE, // Input image format (GL_BGR GL_LUMINANCE etc.)
 	       GL_UNSIGNED_BYTE,  // Image data type
 	       image->ptr());        // The actual image data itself
 
@@ -81,7 +82,7 @@ void drawBackground(GLuint temp_texture){
 
   glLoadIdentity();
   //Background being drawn at depth z=0 so anything +ve clips it
-  glOrtho(0.0f,512.0f,0.0f,512.0f,0.0f,600.0f);
+  glOrtho(0.0f,512.0f,0.0f,512.0f,0.0f,300.0f);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D,temp_texture);
   
@@ -99,7 +100,7 @@ void drawBackground(GLuint temp_texture){
 void drawMap(void)
 {
   // clear the drawing buffer
-  glClearColor(0.0f,0.0f,0.0f,0.0f);
+  glClearColor(0.0f,0.0f,0.0f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   //Background Render  
@@ -108,22 +109,23 @@ void drawMap(void)
   drawBackground(BG_TEXTURE);
   
   glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
+  
   // Coordinates are <-x  and (-ve x)->
   // z comes toward the screen
 
   glPushMatrix();
+  glLoadIdentity();
   glTranslatef(move_x, move_y, 0.0);
   glRotatef(rotate_x, 1.0, 0.0, 0.0);
   glRotatef(rotate_y, 0.0, 1.0, 0.0);
-  //gluLookAt(0.0f,255.0f,700.0f,255.0,255.0,255.0f,0.0f,1.0f,0.0f);
+  gluLookAt(-255.0f,10.0f,-255.0f,0.0,0.0,0.0f,0.0f,1.0f,0.0f);
   //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   
   
   for(int i=1; i<WIN_SIZE; i++) {
     for(int j=1; j<WIN_SIZE; j++) {
       glBegin(GL_QUADS);        // Draw The Cube Using quads
-      glColor3f(0.0f,hmap[i][j]/255.0f,0.0f);    // Color Blue
+      glColor3f(0.0f,255.0f,0.0f);    
       glVertex3f( i, hmap[i][j] ,j);
       glVertex3f( i+1, hmap[i][j] ,j);
       glVertex3f( i+1, hmap[i][j] ,j+1);
@@ -131,10 +133,9 @@ void drawMap(void)
       glEnd();
     }
   }
-  
 
   glPopMatrix();
-  glFlush();
+  //glFlush();
   glutSwapBuffers();
 }
  
@@ -186,17 +187,26 @@ void mouseButton(int button, int state, int x, int y) {
 
 pair<float,TreeNode*>* getContainingContour(TreeNode* currNode, Point p, vector<vector<Point> >* contours, Tree* hierarchy){
   bool hasNext = true;
+  //cout << "curr node has id " << currNode->getID() << endl;
+  
   while(hasNext) {
+    
     vector<Point> currContour = contours->at(currNode->getID());
+    cout << "GETTING NODE: " <<currNode->getID() << endl;
     double state = pointPolygonTest(currContour,p,true);
+    cout << "past" << endl;
     if(state != -1) { //Is in the contour
       if(currNode->getChildren()->empty()) {
+	cout << "has no children" << endl;
 	pair<float,TreeNode*>* containingContour = new pair<float,TreeNode*>(state, currNode);
 	return containingContour;
       } else {
+	cout << "has children" << endl;
+	cout << currNode->getChildren()->at(0)->getID() << endl;
 	return getContainingContour(currNode->getChildren()->at(0), p, contours, hierarchy);
       } 
     } else {
+      cout << "POINT FOUND IN CONTOUR" << endl;
       TreeNode* nextNode = currNode->getNext();
       if(!nextNode) {
 	hasNext = false;
@@ -209,7 +219,6 @@ pair<float,TreeNode*>* getContainingContour(TreeNode* currNode, Point p, vector<
 }
 
 float findDistanceToNearestChild(vector<TreeNode*>* children,vector<vector<Point> >*contours, Point p){
-  cout << "in this on" << endl;
   float distance = numeric_limits<float>::max();
   for(auto it = children->begin(); it!= children->end(); it++){
     float thisDistance = pointPolygonTest(contours->at((*it)->getID()),p,true);
@@ -221,29 +230,29 @@ float findDistanceToNearestChild(vector<TreeNode*>* children,vector<vector<Point
 
 void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int height, int width) {
   TreeNode* c = hierarchy->getRoot();
-  
+
   for(int i = 0; i < height; i++){
     for(int j = 0; j < width; j++){
       Point p = Point(i,j);
 
+      cout <<"goes in here"<<endl;
       pair<float,TreeNode*>* containingContour = getContainingContour(c, p, contours, hierarchy);
+      cout << "passes here"<<endl;
       TreeNode* contour = containingContour->second;
       int baseLevel = contour->getLevel();
       int topLevel = baseLevel+1;
       float distanceToContainer = abs(containingContour->first);
-      float distanceToNext; // SORT THIS SHIT OUT
+      float distanceToNext;
       
-      contour->print();
-      
-      //something kills in here
       if(contour->getChildren()->empty()){
 	distanceToNext = 0.5f;
       } else {
 	distanceToNext = findDistanceToNearestChild(contour->getChildren(),contours,p);
       }      
       hmap[i][j] = (float)baseLevel + (distanceToNext / (distanceToNext + distanceToContainer));
-     
+      
     }
+    cout << endl;
   }
 }
 
@@ -256,21 +265,36 @@ int main(int argc, char** argv){
   glutCreateWindow(argv[0]);
   init();
   
-  Mat frame = imread("testpics/simple.jpg",CV_LOAD_IMAGE_COLOR);
+  Mat frame = imread("testpics/thicksimple.jpg",CV_LOAD_IMAGE_GRAYSCALE);
   Mat contourImage;
-  Mat scaledImage(512,512, DataType<float>::type);
+  Mat scaledImage(WIN_SIZE,WIN_SIZE, DataType<float>::type);
   resize(frame,scaledImage,scaledImage.size(),0,0,INTER_LINEAR);
  
   
-  Canny(scaledImage,contourImage,lowerthresh,upperthresh,5);
+ 
+  Mat erodedImage(WIN_SIZE,WIN_SIZE,DataType<float>::type);
+  Mat dilatedImage(WIN_SIZE,WIN_SIZE,DataType<float>::type);
+  Mat element = getStructuringElement( MORPH_ELLIPSE,
+                                       Size( 5, 5 ),
+				       Point( ceil(5.0f/2.0), ceil(5.0f/2.0) ) );
+
+ 
+   //erosion then dilation since we want the darker (pen) regions to close
+  erode(scaledImage,erodedImage,element);
+  dilate(erodedImage,dilatedImage,element);
+
+  Canny(dilatedImage,contourImage,lowerthresh,upperthresh,5);
   findContours( contourImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_NONE, Point(0, 0) );
 
-  h_tree = createHierarchyTree(&hierarchy);
 
-  int map[512][512];
+  vector<vector<Point> >* joinedContours = new vector<vector<Point> >();
+  h_tree = createHierarchyTree(&hierarchy);
+  //  naiveContourJoin(&contours, joinedContours, h_tree);
+  //cout << "finished join" << endl;
+  int map[WIN_SIZE][WIN_SIZE];
   createHeightMap(&contours, h_tree, WIN_SIZE,WIN_SIZE);
-  cout << "fuck im screwed" <<  endl;
-  BG_TEXTURE = makeBackground(&scaledImage);
+  
+  //BG_TEXTURE = makeBackground(&scaledImage);
   
 
   glutMouseFunc(mouseButton);

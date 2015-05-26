@@ -8,5 +8,5 @@ boardWidth=6
 squareSize=0.025
 
 cd ~/finalyear/project/code/OpenCV/opencv-2.4.11/build/bin
-./cpp-example_calibration $cameraNumber -w $boardWidth -h $boardHeight -s $squareSize -o "../cam_$cameraNumber_params.yml	" -op -oe
+./cpp-example-calibration $cameraNumber -w $boardWidth -h $boardHeight -s $squareSize -o ../cam_$cameraNumber_params.yml -op -oe
 

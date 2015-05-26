@@ -19,19 +19,9 @@ int NEIGHBOURHOOD = 5;
 const char* wndname = "Contour detector";
 Tree* HIERARCHY_TREE;
 
-vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> >* joinedList, vector<Vec4i>* hierarchy);
 void printContours(vector<vector<Point> >* contours);
 void printHierarchy(vector<Vec4i>* hierarchy);
 
-static bool adjacent(Point a, Point b)
-{
-
-  if(a.x == (b.x + 1) || a.x == (b.x-1) || a.x == b.x) {
-    return (a.y == b.y || a.y == (b.y+1) || a.y == (b.y-1));
-  } else {
-    return false;
-  }
-}
 
 
 static Mat* findAndDrawContours( Mat* image, bool debug, bool join ) 
@@ -45,7 +35,6 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
   // Find contours
   Canny( *image,contourImage,lowerthresh,upperthresh,5);
   findContours( contourImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_NONE, Point(0, 0) );
-
 
 
   HIERARCHY_TREE = createHierarchyTree(&hierarchy);
@@ -114,45 +103,7 @@ void printContours(vector<vector<Point> >* contours) {
   }
 }
 
-//HOLY SHIT IT WORKS
-vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> >* joinedList, vector<Vec4i>* hierarchy){
-  Point currFront, currBack, nextFront, nextBack;
-  vector<Point> currContour;
-  vector<Point> nextContour;
-  int i = 0;
 
-  vector<Vec4i> newHierarchy;// = new vector<Vec4i>();
-
-  currContour = contourList->at(i); 
-  currFront = currContour.front();
-  currBack = currContour.back();
-  
-  i++;
-  while (i < contourList->size()){
-    nextContour = contourList->at(i);
-    nextFront = nextContour.front();
-    nextBack = nextContour.back();
-    if(adjacent(currFront, nextFront) ||
-       adjacent(currFront, nextBack)  ||
-       adjacent(currBack, nextFront)  ||
-       adjacent(currBack, nextBack)) {
-      
-      // Change the next comparison point and add to the current contour
-      currFront = nextFront;
-      currBack = nextBack;
-      currContour.insert(currContour.end(), nextContour.begin(), nextContour.end());
-
-    } else {
-      
-      joinedList->push_back(currContour);
-      currContour = nextContour;
-      currFront = nextFront;
-      currBack = nextBack;
-    }
-    i++;
-  }
-  joinedList->push_back(currContour);
-}
 
 int main(int argc, char* argv[])
 {
@@ -170,15 +121,15 @@ int main(int argc, char* argv[])
     Mat image = imread(argv[1],CV_LOAD_IMAGE_GRAYSCALE);
     //GaussianBlur(image,image,Size(3,3),1,1,BORDER_CONSTANT);
 
-    Mat scaledImage(512,512, DataType<float>::type);
+    Mat scaledImage(256,256, DataType<float>::type);
     resize(image,scaledImage,scaledImage.size(),0,0,INTER_LINEAR);
  
     Mat finalImage;
     finalImage = *(findAndDrawContours(&scaledImage,DEBUG_FLAG,false));
     
 
-    Mat erodedImage(512,512,DataType<float>::type);
-    Mat dilatedImage(512,512,DataType<float>::type);
+    Mat erodedImage(256,256,DataType<float>::type);
+    Mat dilatedImage(256,256,DataType<float>::type);
     Mat element = getStructuringElement( MORPH_ELLIPSE,
                                        Size( NEIGHBOURHOOD, NEIGHBOURHOOD ),
 				       Point( ceil(NEIGHBOURHOOD/2.0), ceil(NEIGHBOURHOOD/2.0) ) );
@@ -189,6 +140,7 @@ int main(int argc, char* argv[])
     dilate(erodedImage,dilatedImage,element);
     
     Mat closedFinal = *(findAndDrawContours(&dilatedImage,DEBUG_FLAG,JOIN_FLAG));
+    
     imshow("MORPHEDLINES",closedFinal);
 
     int c = waitKey();

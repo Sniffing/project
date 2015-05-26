@@ -9,14 +9,10 @@ Code
 - histogram differencing
 
 Report
-- Add images about LandscapAR
-- write about the augmented sandbox
 - Consider Thinning and Hit and Miss Morphology
 - Write about OpenGL
-- Write Drawing the Map
+- Write Assumption
 - Write Detecting Contours
-- Write generating Base image
-- Redo the Image Ratioing section because it's not right
 - Redo Introduction
 
 Running tests on amount of closing operations
