@@ -19,6 +19,8 @@ aruco/aruco.h
 /home/terence/finalyear/project/code/aruco/aruco/aruco.h
 aruco/cvdrawingutils.h
 /home/terence/finalyear/project/code/aruco/aruco/cvdrawingutils.h
+math.h
+/home/terence/finalyear/project/code/aruco/math.h
 
 /usr/local/include/aruco/aruco.h
 markerdetector.h

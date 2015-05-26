@@ -1,6 +1,7 @@
 #include "contourFinder.hpp"
+#include "mouseFunctionsGL.hpp"
 
-#define WIN_SIZE 256
+#define WIN_SIZE 512
 
 using namespace cv;
 using namespace std;
@@ -14,14 +15,6 @@ vector<Vec4i> hierarchy;
 Tree* h_tree;
 
 float hmap[WIN_SIZE][WIN_SIZE];
-
-//scene interaction variables
-int mouse_old_x, mouse_old_y;
-int mouse_buttons = 0;
-float rotate_x = 0.0, rotate_y = 0.0;
-float move_x = 0.0, move_y = 0.0;
-float win_width = 512.0, win_height = 512.0;
-float translate_z = -1.0;
 
 GLuint BG_TEXTURE = 0;
 
@@ -37,7 +30,7 @@ GLuint makeBackground(Mat* image){
     cout <<"Frame not ready" << endl;
   }
 
-  //flip(*image, *image, 0);
+  flip(*image, *image, 0);
   glGenTextures(1, &BG_TEXTURE);
   glBindTexture(GL_TEXTURE_2D, BG_TEXTURE);
 
@@ -50,11 +43,11 @@ GLuint makeBackground(Mat* image){
 
   glTexImage2D(GL_TEXTURE_2D,     // Type of texture
 	       0,                 // Pyramid level - 0 is the top level
-	       GL_LUMINANCE,      // Internal colour format to convert to (GL_RGB)
+	       GL_RGB,      // Internal colour format to convert to (GL_RGB)
 	       image->cols,
 	       image->rows, 
 	       0,           
-	       GL_LUMINANCE, // Input image format (GL_BGR GL_LUMINANCE etc.)
+	       GL_BGR, // Input image format (GL_BGR GL_LUMINANCE etc.)
 	       GL_UNSIGNED_BYTE,  // Image data type
 	       image->ptr());        // The actual image data itself
 
@@ -82,7 +75,7 @@ void drawBackground(GLuint temp_texture){
 
   glLoadIdentity();
   //Background being drawn at depth z=0 so anything +ve clips it
-  glOrtho(0.0f,512.0f,0.0f,512.0f,0.0f,300.0f);
+  glOrtho(0.0f,WIN_SIZE,0.0f,WIN_SIZE,0.0f,300.0f);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D,temp_texture);
   
@@ -105,7 +98,7 @@ void drawMap(void)
 
   //Background Render  
   glColor3f(1.0f,1.0f,1.0f);
-  //getBackgroundFromCamera(&cam);
+  getBackgroundFromCamera(&cam);
   drawBackground(BG_TEXTURE);
   
   glMatrixMode(GL_MODELVIEW);
@@ -118,7 +111,7 @@ void drawMap(void)
   glTranslatef(move_x, move_y, 0.0);
   glRotatef(rotate_x, 1.0, 0.0, 0.0);
   glRotatef(rotate_y, 0.0, 1.0, 0.0);
-  gluLookAt(-255.0f,10.0f,-255.0f,0.0,0.0,0.0f,0.0f,1.0f,0.0f);
+  //gluLookAt(-512.0f,10.0f,-512.0f,0.0,0.0,0.0f,0.0f,1.0f,0.0f);
   //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   
   
@@ -160,53 +153,21 @@ void reshape(int x, int y)
   win_height = y;
 }
 
-void mouseMove(int x, int y) { 	 
-  if (mouse_buttons == GLUT_RIGHT_BUTTON) {
-    float plane_y = (1 + abs(translate_z)) * tan(M_PI/8) * 2;
-    move_x += 3*((x - mouse_old_x) / win_width) * plane_y * win_width/win_height;
-    move_y -= 3*((y - mouse_old_y) / win_height) * plane_y;
-  } else if (mouse_buttons == GLUT_LEFT_BUTTON) {
-    rotate_y += (x - mouse_old_x);
-    rotate_x += (y - mouse_old_y);
-  } else if (mouse_buttons == GLUT_MIDDLE_BUTTON) {
-    translate_z +=  (mouse_old_y  - y);
-  }
-  mouse_old_x = x;
-  mouse_old_y = y;  // this will only be true when the left button is down
-}
- 
-void mouseButton(int button, int state, int x, int y) {
-  if (state == GLUT_DOWN) {
-    mouse_buttons = button;
-    mouse_old_x = x;
-    mouse_old_y = y;
-  } else {
-    mouse_buttons = 0;
-  }
-}
 
-pair<float,TreeNode*>* getContainingContour(TreeNode* currNode, Point p, vector<vector<Point> >* contours, Tree* hierarchy){
+TreeNode* getContainingContour(TreeNode* currNode, Point p, vector<vector<Point> >* contours, Tree* hierarchy){
   bool hasNext = true;
-  //cout << "curr node has id " << currNode->getID() << endl;
-  
+
   while(hasNext) {
-    
     vector<Point> currContour = contours->at(currNode->getID());
-    cout << "GETTING NODE: " <<currNode->getID() << endl;
-    double state = pointPolygonTest(currContour,p,true);
-    cout << "past" << endl;
+    int state = pointPolygonTest(currContour,p,false);
+
     if(state != -1) { //Is in the contour
-      if(currNode->getChildren()->empty()) {
-	cout << "has no children" << endl;
-	pair<float,TreeNode*>* containingContour = new pair<float,TreeNode*>(state, currNode);
-	return containingContour;
-      } else {
-	cout << "has children" << endl;
-	cout << currNode->getChildren()->at(0)->getID() << endl;
-	return getContainingContour(currNode->getChildren()->at(0), p, contours, hierarchy);
-      } 
+	if(currNode->getChildren()->empty()) {
+	  return currNode;
+	} else {
+	  return getContainingContour(currNode->getChildren()->at(0), p, contours, hierarchy);
+	} 
     } else {
-      cout << "POINT FOUND IN CONTOUR" << endl;
       TreeNode* nextNode = currNode->getNext();
       if(!nextNode) {
 	hasNext = false;
@@ -215,7 +176,7 @@ pair<float,TreeNode*>* getContainingContour(TreeNode* currNode, Point p, vector<
       }
     }
   }
-  return new pair<float,TreeNode*>(0.0, new TreeNode());
+  return currNode;
 }
 
 float findDistanceToNearestChild(vector<TreeNode*>* children,vector<vector<Point> >*contours, Point p){
@@ -231,17 +192,20 @@ float findDistanceToNearestChild(vector<TreeNode*>* children,vector<vector<Point
 void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int height, int width) {
   TreeNode* c = hierarchy->getRoot();
 
+  int baseLevel = 0;
+  int topLevel = 1;
+
   for(int i = 0; i < height; i++){
     for(int j = 0; j < width; j++){
       Point p = Point(i,j);
 
-      cout <<"goes in here"<<endl;
-      pair<float,TreeNode*>* containingContour = getContainingContour(c, p, contours, hierarchy);
-      cout << "passes here"<<endl;
-      TreeNode* contour = containingContour->second;
-      int baseLevel = contour->getLevel();
-      int topLevel = baseLevel+1;
-      float distanceToContainer = abs(containingContour->first);
+      TreeNode* contour = getContainingContour(c, p, contours, hierarchy);
+      float distanceToContainer = pointPolygonTest(contours->at(contour->getID()),
+						   p,true);
+      
+      baseLevel = contour->getLevel();
+      topLevel = baseLevel+1;     
+ 
       float distanceToNext;
       
       if(contour->getChildren()->empty()){
@@ -250,7 +214,7 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	distanceToNext = findDistanceToNearestChild(contour->getChildren(),contours,p);
       }      
       hmap[i][j] = (float)baseLevel + (distanceToNext / (distanceToNext + distanceToContainer));
-      
+      cout << hmap[i][j] << " ";
     }
     cout << endl;
   }
@@ -270,8 +234,6 @@ int main(int argc, char** argv){
   Mat scaledImage(WIN_SIZE,WIN_SIZE, DataType<float>::type);
   resize(frame,scaledImage,scaledImage.size(),0,0,INTER_LINEAR);
  
-  
- 
   Mat erodedImage(WIN_SIZE,WIN_SIZE,DataType<float>::type);
   Mat dilatedImage(WIN_SIZE,WIN_SIZE,DataType<float>::type);
   Mat element = getStructuringElement( MORPH_ELLIPSE,
@@ -289,10 +251,12 @@ int main(int argc, char** argv){
 
   vector<vector<Point> >* joinedContours = new vector<vector<Point> >();
   h_tree = createHierarchyTree(&hierarchy);
-  //  naiveContourJoin(&contours, joinedContours, h_tree);
-  //cout << "finished join" << endl;
+  naiveContourJoin(&contours, joinedContours, h_tree);
+ 
+
   int map[WIN_SIZE][WIN_SIZE];
-  createHeightMap(&contours, h_tree, WIN_SIZE,WIN_SIZE);
+
+  createHeightMap(joinedContours, h_tree, WIN_SIZE,WIN_SIZE);
   
   //BG_TEXTURE = makeBackground(&scaledImage);
   
@@ -306,59 +270,6 @@ int main(int argc, char** argv){
   //glutIdleFunc(animation);
 
   glutMainLoop();
-
-  // while(cam.isOpened()){
-  //   if(!testImage.empty()){
-  //     makeBackground(&testImage);
-  //   }
-  // }
-    
-  
-  
-  // time_t start,end;
-  // globalFPS = 0;
-
-  // //VideoCapture cam(1);
-
-  // //If web cam is not found, default to whatever 
-  // if (!cam.isOpened()) { 
-  //   cam = VideoCapture(0);
-  //   if (!cam.isOpened()){
-  //     //No cameras found
-  //     cout << "No Webcams have been located" << endl;
-  //     return -1;
-  //   }
-  // }
-
-  // //Grab original frame
-  // cam.read(baseFrame);
-  // cvtColor(baseFrame,baseFrame,CV_BGR2GRAY); 
-  // imwrite("original.jpg", baseFrame);
-
-  // int frameCounter = 0;
-  // int fps;
-
-  // int stableCounter = 0;
-  // Mat tempBase;
-  // cam >> tempBase;
-  // cvtColor(tempBase,tempBase,CV_BGR2GRY); 
-
-  // while( cam.isOpened() )    // check if we succeeded
-  //   {
-        
-  //     if ( !cam.read(thisFrame) )
-  // 	break;
-
-  //     if(frameCounter == 0) {
-  // 	time(&start);
-  //     }
-
-  //     cam >> thisFrame;
-      
-  //     //Turn the current frame into a texture for background
-  //     makeBackground(&thisFrame);
-
-  //   }
   
   return 0;
 } 
