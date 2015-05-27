@@ -13,10 +13,15 @@ public:
   void correctIndices(int);
   int getSize(); // Num of contours
   TreeNode* getNodeWithID(int id);
+  void removeNode(int i);
 private:
   unordered_map<int,TreeNode*>* allNodes; 
   void insertNode(int,TreeNode*);
 };
+
+void Tree::removeNode(int i){
+  allNodes->erase(i);
+}
 
 void Tree::joinNodes(int f, int s){
   TreeNode* first = allNodes->at(f);

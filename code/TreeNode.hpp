@@ -25,6 +25,7 @@ public:
   TreeNode* getPrev();
   int getID();
   vector<TreeNode*>* getChildren();
+  int getNumChildren();
   TreeNode* getChild(int);
   void removeChild(int);
   void setParent(TreeNode*);
@@ -52,6 +53,10 @@ TreeNode::TreeNode(){
   this->setParent(NULL);
   this->setLevel(-1);
   children = new vector<TreeNode*>();
+}
+
+int TreeNode::getNumChildren(){
+  return children->size();
 }
 
 void TreeNode::print(){

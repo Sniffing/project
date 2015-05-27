@@ -54,11 +54,11 @@ vector<vector<Point> >* nubContours(vector<vector<Point> >*contours){
   return nonDupContours;
 }
 
-static bool adjacent(Point a, Point b)
+static bool adjacent(Point a, Point b, int neighbourhood)
 {
 
-  if(a.x == (b.x + 1) || a.x == (b.x-1) || a.x == b.x) {
-    return (a.y == b.y || a.y == (b.y+1) || a.y == (b.y-1));
+  if(a.x == (b.x + neighbourhood) || a.x == (b.x-neighbourhood) || a.x == b.x) {
+    return (a.y == b.y || a.y == (b.y+neighbourhood) || a.y == (b.y-neighbourhood));
   } else {
     return false;
   }
@@ -85,10 +85,10 @@ void naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> 
     nextContour = contourList->at(i);
     nextFront = nextContour.front();
     nextBack = nextContour.back();
-    if(adjacent(currFront, nextFront) ||
-       adjacent(currFront, nextBack)  ||
-       adjacent(currBack, nextFront)  ||
-       adjacent(currBack, nextBack)) {
+    if(adjacent(currFront, nextFront,1) ||
+       adjacent(currFront, nextBack,1)  ||
+       adjacent(currBack, nextFront,1)  ||
+       adjacent(currBack, nextBack,1)) {
       
       // Change the next comparison point and add to the current contour
       currFront = nextFront;
@@ -111,4 +111,26 @@ void naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> 
   htree->correctIndices(totalNodes);
   joinedList->push_back(currContour);
   
+}
+
+
+void naiveDoubleRemoval(vector<vector<Point> >* contours, Tree* htree){
+  int originalSize = htree->getSize();
+  for(int i = 0; i< contours->size(); i++){
+    vector<Point> contour = contours->at(i);
+    TreeNode* contourNode = htree->getNodeWithID(i);
+    if (contourNode->getNumChildren() == 1){
+      TreeNode* childNode = contourNode->getChild(0);
+      int contourNum = childNode->getID();
+      vector<Point> childContour = contours->at(contourNum);
+      //if(adjacent(childContour.at(1), contour.at(1),7)) {
+	contourNode->removeChild(0);
+	contourNode->addChildren(childNode->getChildren());
+	contours->erase(contours->begin()+contourNum);
+	htree->removeNode(contourNum);
+	//}
+	
+    }
+    htree->correctIndices(originalSize);
+  }
 }

@@ -1,0 +1,6 @@
+map time 53405.01500 ms
+tree time 0.00000 ms
+background time 0.00000 ms
+landscape time: 0.00000 ms
+Polygon test time: 0.19700 ms
+Contatining test time: 0.19500 ms

@@ -23,10 +23,9 @@ void printContours(vector<vector<Point> >* contours);
 void printHierarchy(vector<Vec4i>* hierarchy);
 
 
-
 static Mat* findAndDrawContours( Mat* image, bool debug, bool join ) 
 {
-  Mat contourImage(1024,2048, DataType<float>::type);
+  Mat contourImage(1024,1024, DataType<float>::type);
   vector<vector<Point> > contours;
   vector<Vec4i> hierarchy;
 
@@ -42,8 +41,13 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
   if (join) {
     cout << "joining contours" << endl;
     cout << "original number of contours is " << contours.size() << endl;
+
+    naiveContourJoin(&contours,&joinedContours,HIERARCHY_TREE);
+    //naiveDoubleRemoval(&joinedContours,HIERARCHY_TREE);
     
-    naiveContourJoin(&contours,&joinedContours,&hierarchy);
+    cout << "tree is size: " << HIERARCHY_TREE->getSize() << endl;
+    HIERARCHY_TREE->printTree();
+    cout << "num contours: " << joinedContours.size() << endl;
 
     printContours(&joinedContours);
     contours = *nubContours(&joinedContours);
