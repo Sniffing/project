@@ -20,7 +20,8 @@ private:
 };
 
 void Tree::removeNode(int i){
-  allNodes->erase(i);
+  TreeNode* node = allNodes->at(i);
+  int totalNodes = allNodes->size();
 }
 
 void Tree::joinNodes(int f, int s){

@@ -53,6 +53,22 @@ VideoCapture cam = VideoCapture(0);
 void drawBackground(GLuint temp_texture);
 void createLandscape();
 
+void readCameraParameters(String cameraFile){
+  
+  FileStorage fs2(cameraFile, FileStorage::READ);
+  Mat intrinsics, distortionCoefficients,extrinsics;
+  fs2["camera_matrix"] >> intrinsics;
+  fs2["distortion_coefficients"] >> distortionCoefficients;
+  fs2["extrinsic_parameters"] >> extrinsics;
+
+  // cout << intrinsics << endl;
+  // cout << extrinsics << endl;
+  // cout << distortionCoefficients << endl;
+
+  fs2.release();
+}
+
+
 GLuint makeBackground(Mat* image){
   if (image->empty()) {
     cout <<"Frame not ready" << endl;
@@ -112,7 +128,7 @@ void getBackgroundFromCamera(VideoCapture* cam){
 
   bg_start=clock();
 
-  cvtColor(frame,grayFrame,CV_BGR2GRAY);
+  //cvtColor(frame,grayFrame,CV_BGR2GRAY);
   //checkForChange(&grayFrame);
  
   GLuint temp_texture = makeBackground(&frame);
@@ -127,15 +143,15 @@ void drawBackground(GLuint temp_texture){
 
   glLoadIdentity();
   //Background being drawn at depth z=0 so anything +ve clips it
-  glOrtho(0.0f,WIN_SIZE,0.0f,WIN_SIZE,0.0f,300.0f);
+  glOrtho(-(WIN_SIZE/2.0f),WIN_SIZE/2.0f,-(WIN_SIZE/2.0f),WIN_SIZE/2.0f,0.0f,10.0f);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D,temp_texture);
   
   glBegin( GL_QUADS ); 
-    glTexCoord2f( 0.0f, 0.0f );glVertex2f( 0.0f, 0.0f);
-    glTexCoord2f( 0.0f, 1.0f );glVertex2f( 0.0f, WIN_SIZE );
-    glTexCoord2f( 1.0f, 1.0f );glVertex2f( WIN_SIZE, WIN_SIZE );
-    glTexCoord2f( 1.0f, 0.0f );glVertex2f( WIN_SIZE, 0.0f );
+  glTexCoord2f( 0.0f, 0.0f );glVertex2f( -(WIN_SIZE/2.0f), -(WIN_SIZE/2.0f));
+  glTexCoord2f( 0.0f, 1.0f );glVertex2f( -(WIN_SIZE/2.0f),(WIN_SIZE/2.0f) );
+  glTexCoord2f( 1.0f, 1.0f );glVertex2f( (WIN_SIZE/2.0f),(WIN_SIZE/2.0f) );
+  glTexCoord2f( 1.0f, 0.0f );glVertex2f( (WIN_SIZE/2.0f), -(WIN_SIZE/2.0f));
   glEnd();
   glDisable(GL_TEXTURE_2D);
   
@@ -164,45 +180,38 @@ void drawMap(void)
   glTranslatef(move_x, move_y, 0.0);
   glRotatef(rotate_x, 1.0, 0.0, 0.0);
   glRotatef(rotate_y, 0.0, 1.0, 0.0);
-  gluLookAt(512.0f,15.0f,512.0f,255.0f,0.0,255.0f,0.0f,1.0f,0.0f);
+  gluLookAt(WIN_SIZE/2.0f,WIN_SIZE/2.0f,-2.0f,WIN_SIZE/2.0f,WIN_SIZE/2.0f,0.0f,0.0f,1.0f,0.0f);
   //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   
   
   for(int i=1; i<WIN_SIZE; i++) {
     for(int j=1; j<WIN_SIZE; j++) {
       glBegin(GL_QUADS);        // Draw The Cube Using quads
-
-      glColor3f(1.0f,1.0f-(255.0f/hmap[i][j]),1.0f);    
-      
-      glVertex3f( i, hmap[i][j],j);
-      glVertex3f( i+1, hmap[i][j] ,j);
-      glVertex3f( i+1, hmap[i][j] ,j+1);
-      glVertex3f( i, hmap[i][j] ,j+1);
+      glColor3f(0.0f,(1.0f/hmap[i][j]),0.0f);          
+      glVertex3f( i, j,hmap[i][j]);
+      glVertex3f( i+1, j,hmap[i][j]);
+      glVertex3f( i+1, j+1,hmap[i][j]);
+      glVertex3f( i, j+1,hmap[i][j]);
       glEnd();
     }
   }
   
   drawing_end = clock();
   glPopMatrix();
-  //glFlush();
   glutSwapBuffers();
 }
  
 
 void reshape(int x, int y)
 {
-  //if (y == 0 || x == 0) return;  //Nothing is visible then, so return
-
   //Set a new projection matrix
 
   glMatrixMode(GL_PROJECTION);  
   glLoadIdentity();
-  //Angle of view:40 degrees
-  //Near clipping plane distance: 0.5
-  //Far clipping plane distance: 20.0
 
   glViewport(0,0,x,y);  //Use the whole window for rendering   
-  gluPerspective(40.0,(GLdouble)x/(GLdouble)y,0.05,512.0);
+  GLdouble aspectRatio = (GLdouble)x/(GLdouble)y;
+  gluPerspective(0.0,aspectRatio,0.01,512.0);
   glMatrixMode(GL_MODELVIEW);
 
   win_width = x;
@@ -251,7 +260,6 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 
   int baseLevel = 0;
   int topLevel = 1;
-
   
   for(int i = 0; i < height; i++){
     for(int j = 0; j < width; j++){
@@ -271,8 +279,7 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
       } else {
 	topLevel = baseLevel+1;     
  
-	float distanceToContainer = fabs(pointPolygonTest(contours->at(contour->getID()),
-							  p,true));   
+	float distanceToContainer = fabs(pointPolygonTest(contours->at(contour->getID()),p,true));   
 	float distanceToNext;
       
 	if(contour->getChildren()->empty()){
@@ -289,12 +296,22 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	}
 
       }
-      //printf("%1.4f ",hmap[i][j]);
+      //printf("%1.2f ",hmap[i][j]);
       if(i == 10 && j == 20) { singlepptest_end=clock(); }
     }
+    //cout << endl;
   }
   height_map_end=clock();
 }
+
+void printContourAreas(vector<vector<Point> >* contours){
+  for(int i = 0; i<contours->size() ; i++){
+    vector<Point> thisContour = contours->at(i);
+    double area = contourArea(thisContour,true);
+    cout << "Contour " << i << " has area " << area << endl;
+  }
+}
+
 
 void createLandscape(){
   Mat scaledImage(WIN_SIZE,WIN_SIZE, DataType<float>::type);
@@ -317,7 +334,8 @@ void createLandscape(){
   joinedContours = nubContours(&contours); 
   //naiveDoubleRemoval(joinedContours, h_tree);
 
-
+  //printContourAreas(joinedContours);
+  
   int map[WIN_SIZE][WIN_SIZE];
 
   createHeightMap(joinedContours, h_tree, WIN_SIZE,WIN_SIZE);
@@ -332,9 +350,10 @@ int main(int argc, char** argv){
   glutInitWindowPosition(200, 200);
   glutCreateWindow(argv[0]);
   init();
-  
-  BASEFRAME = imread("testpics/thicksimple.jpg",CV_LOAD_IMAGE_GRAYSCALE);
-  
+
+  readCameraParameters(argv[1]);
+  BASEFRAME = imread("testpics/perfectsimple.png",CV_LOAD_IMAGE_GRAYSCALE);
+ 
   //Mat frame;
   //cam >> frame;
 

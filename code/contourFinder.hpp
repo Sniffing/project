@@ -113,6 +113,34 @@ void naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> 
   
 }
 
+void naiveDoubleRemovalFromArea(vector<vector<Point> >* contours, Tree *htree, int t){
+  vector<Point> currContour = contours->at(0);
+  double areaCurr = abs(contourArea(currContour,true));
+  vector<Point> contour;
+  vector<vector<Point> >* newContours = new vector<vector<Point> >();
+  int original = htree->getSize();
+
+  for (int i = 1; i< contours->size(); i++){
+    contour = contours->at(i);
+    double area = abs(contourArea(contour,true));
+
+    if(abs(area-areaCurr) < (double)t) {
+      //remove the contour now, essentially a join but no merge of points!
+      htree->joinNodes(i-1,i);
+
+      newContours->push_back(currContour);
+      newContours->push_back(contour);
+    } else {
+      newContours->push_back(currContour);
+      currContour = contour;
+      areaCurr = area;
+    }    
+  }
+  htree->correctIndices(original);
+  contours = newContours;
+  cout << "contours has size " << contours->size()<<endl;
+}
+
 
 void naiveDoubleRemoval(vector<vector<Point> >* contours, Tree* htree){
   int originalSize = htree->getSize();

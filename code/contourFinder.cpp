@@ -15,6 +15,7 @@
 int upperthresh = 2000;
 int lowerthresh = 900;
 int NEIGHBOURHOOD = 5;
+int AREA_THRESHOLD = 30;
 
 const char* wndname = "Contour detector";
 Tree* HIERARCHY_TREE;
@@ -44,15 +45,13 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
 
     naiveContourJoin(&contours,&joinedContours,HIERARCHY_TREE);
     //naiveDoubleRemoval(&joinedContours,HIERARCHY_TREE);
-    
+
     cout << "tree is size: " << HIERARCHY_TREE->getSize() << endl;
     HIERARCHY_TREE->printTree();
     cout << "num contours: " << joinedContours.size() << endl;
 
     printContours(&joinedContours);
     contours = *nubContours(&joinedContours);
-    cout << "WE REMOVIN DUPS " << endl;
-    printContours(&contours);
 
     cout << "contours reduced to " << joinedContours.size() << endl;
   }
@@ -69,18 +68,22 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
 
   vector<vector<Point> >allContours;
   vector<Point> tempContours;
+  
+  //naiveDoubleRemovalFromArea(&joinedContours,HIERARCHY_TREE,AREA_THRESHOLD);
+
   for( int i = 0; i< joinedContours.size(); i++ )
   {
-    Scalar color = Scalar((i % 2)*20 , (i%3)*20,i*20 );
-   
+    Scalar color = Scalar(0 ,(i+1)*30,0 );
+    double area = contourArea(joinedContours.at(i),true);
+    cout << "Contour " << i << " has area: " << area << endl;
     if(JOIN_FLAG) {
       
       drawContours( *drawing, joinedContours, i, color, 1, 8, hierarchy, 0, Point() );
       Mat erodedImage(drawing->rows, drawing->cols,DataType<float>::type);
       Mat element = getStructuringElement( MORPH_ELLIPSE,Size( 3, 3),Point( 1,1 ));
-
-      dilate(*drawing, erodedImage, element);
-      erode(erodedImage,*drawing, element);
+      
+      //dilate(*drawing, erodedImage, element);
+      //erode(erodedImage,*drawing, element);
       
       //printContours(&joinedContours);
     } else {
@@ -125,7 +128,7 @@ int main(int argc, char* argv[])
     Mat image = imread(argv[1],CV_LOAD_IMAGE_GRAYSCALE);
     //GaussianBlur(image,image,Size(3,3),1,1,BORDER_CONSTANT);
 
-    Mat scaledImage(256,256, DataType<float>::type);
+    Mat scaledImage(512,512, DataType<float>::type);
     resize(image,scaledImage,scaledImage.size(),0,0,INTER_LINEAR);
  
     Mat finalImage;
@@ -144,7 +147,6 @@ int main(int argc, char* argv[])
     dilate(erodedImage,dilatedImage,element);
     
     Mat closedFinal = *(findAndDrawContours(&dilatedImage,DEBUG_FLAG,JOIN_FLAG));
-    
     imshow("MORPHEDLINES",closedFinal);
 
     int c = waitKey();

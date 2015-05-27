@@ -13,6 +13,7 @@ Report
 - Write about OpenGL
 - Write Assumption
 - Write Detecting Contours
+- redo principal axis definiion wtih bookmark
 - Redo Introduction
 
 Running tests on amount of closing operations
