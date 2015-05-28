@@ -1,1 +1,1 @@
-/home/terence/finalyear/project/code/aruco/build/CMakeFiles/aruco_simple.dir
+/home/terence/finalyear/project/code/aruco/build/CMakeFiles/aruco_landscape.dir

@@ -56,38 +56,38 @@ CMAKE_SOURCE_DIR = /home/terence/finalyear/project/code/aruco
 CMAKE_BINARY_DIR = /home/terence/finalyear/project/code/aruco/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/aruco_simple.dir
+# Target rules for target CMakeFiles/aruco_landscape.dir
 
 # All Build rule for target.
-CMakeFiles/aruco_simple.dir/all:
-	$(MAKE) -f CMakeFiles/aruco_simple.dir/build.make CMakeFiles/aruco_simple.dir/depend
-	$(MAKE) -f CMakeFiles/aruco_simple.dir/build.make CMakeFiles/aruco_simple.dir/build
+CMakeFiles/aruco_landscape.dir/all:
+	$(MAKE) -f CMakeFiles/aruco_landscape.dir/build.make CMakeFiles/aruco_landscape.dir/depend
+	$(MAKE) -f CMakeFiles/aruco_landscape.dir/build.make CMakeFiles/aruco_landscape.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/terence/finalyear/project/code/aruco/build/CMakeFiles  1
-	@echo "Built target aruco_simple"
-.PHONY : CMakeFiles/aruco_simple.dir/all
+	@echo "Built target aruco_landscape"
+.PHONY : CMakeFiles/aruco_landscape.dir/all
 
 # Include target in all.
-all: CMakeFiles/aruco_simple.dir/all
+all: CMakeFiles/aruco_landscape.dir/all
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/aruco_simple.dir/rule: cmake_check_build_system
+CMakeFiles/aruco_landscape.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/terence/finalyear/project/code/aruco/build/CMakeFiles 1
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/aruco_simple.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/aruco_landscape.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/terence/finalyear/project/code/aruco/build/CMakeFiles 0
-.PHONY : CMakeFiles/aruco_simple.dir/rule
+.PHONY : CMakeFiles/aruco_landscape.dir/rule
 
 # Convenience name for target.
-aruco_simple: CMakeFiles/aruco_simple.dir/rule
-.PHONY : aruco_simple
+aruco_landscape: CMakeFiles/aruco_landscape.dir/rule
+.PHONY : aruco_landscape
 
 # clean rule for target.
-CMakeFiles/aruco_simple.dir/clean:
-	$(MAKE) -f CMakeFiles/aruco_simple.dir/build.make CMakeFiles/aruco_simple.dir/clean
-.PHONY : CMakeFiles/aruco_simple.dir/clean
+CMakeFiles/aruco_landscape.dir/clean:
+	$(MAKE) -f CMakeFiles/aruco_landscape.dir/build.make CMakeFiles/aruco_landscape.dir/clean
+.PHONY : CMakeFiles/aruco_landscape.dir/clean
 
 # clean rule for target.
-clean: CMakeFiles/aruco_simple.dir/clean
+clean: CMakeFiles/aruco_landscape.dir/clean
 .PHONY : clean
 
 #=============================================================================

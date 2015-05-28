@@ -4,8 +4,10 @@
 #include <cmath>
 #include <time.h>
 #include <iostream>
+#include "aruco.h"
+#include "cvdrawingutils.h"
 
-#define WIN_SIZE 512
+#define WIN_SIZE 256
 #define MAX_COLOUR_VAL 255
 #define CHANGE_THRESHOLD 100
 #define NEW_BASE_THRESHOLD 200
@@ -15,6 +17,7 @@
 
 using namespace cv;
 using namespace std;
+using namespace aruco;
 
 int upperthresh = 2000;
 int lowerthresh = 900;
@@ -35,9 +38,7 @@ Mat contourImage;
 
 Mat erodedImage(WIN_SIZE,WIN_SIZE,DataType<float>::type);
 Mat dilatedImage(WIN_SIZE,WIN_SIZE,DataType<float>::type);
-Mat element = getStructuringElement( MORPH_ELLIPSE,
-				     Size( 5, 5 ),
-				     Point( ceil(5.0f/2.0), ceil(5.0f/2.0) ) );
+Mat element;
 
 clock_t height_map_start, height_map_end;
 clock_t tree_start, tree_end;
@@ -47,7 +48,7 @@ clock_t singlepptest_start, singlepptest_end;
 clock_t containing_start,containing_end;
 
 int globalFPS;
-VideoCapture cam = VideoCapture(0);
+VideoCapture cam = VideoCapture(1);
 
 //////////////////////////////////////////////////////////
 void drawBackground(GLuint temp_texture);
@@ -116,7 +117,7 @@ void checkForChange(Mat* thisFrame){
     if(changedFrameCounter > STABILISATION_REQUIREMENT) {
       changedFrameCounter = 0;
       BASEFRAME = *thisFrame;
-      //createLandscape();
+      createLandscape();
     }
   }
 }
@@ -128,8 +129,8 @@ void getBackgroundFromCamera(VideoCapture* cam){
 
   bg_start=clock();
 
-  //cvtColor(frame,grayFrame,CV_BGR2GRAY);
-  //checkForChange(&grayFrame);
+  cvtColor(frame,grayFrame,CV_BGR2GRAY);
+  checkForChange(&grayFrame);
  
   GLuint temp_texture = makeBackground(&frame);
   drawBackground(temp_texture);
@@ -185,17 +186,20 @@ void drawMap(void)
   
   
   for(int i=1; i<WIN_SIZE; i++) {
+    glBegin(GL_QUADS);        // Draw The Cube Using quads
     for(int j=1; j<WIN_SIZE; j++) {
-      glBegin(GL_QUADS);        // Draw The Cube Using quads
+      
       glColor3f(0.0f,(1.0f/hmap[i][j]),0.0f);          
       glVertex3f( i, j,hmap[i][j]);
-      glVertex3f( i+1, j,hmap[i][j]);
-      glVertex3f( i+1, j+1,hmap[i][j]);
-      glVertex3f( i, j+1,hmap[i][j]);
-      glEnd();
+      glVertex3f( i, j+1,hmap[i][j+1]);
+      glVertex3f( i+1, j+1,hmap[i+1][j+1]);
+      //glColor3f(0.0f,(1.0f/hmap[i+1][j]),0.0f);          
+      glVertex3f( i+1, j,hmap[i+1][j]);
     }
+      glEnd();
   }
   
+
   drawing_end = clock();
   glPopMatrix();
   glutSwapBuffers();
@@ -271,7 +275,7 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
       TreeNode* contour = getContainingContour(c, p, contours, hierarchy);
 
       if(i == 10 && j == 20) { containing_end=clock(); }
-
+            
       baseLevel = contour->getLevel();
       if(baseLevel == 0) {
 	//If outside, don't give it anything
@@ -288,15 +292,15 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	  distanceToNext = fabs(findDistanceToNearestChild(contour->getChildren(),contours,p));
 	}      
 	
-	//counters dsitances of 0, i.e. on the contour
+	//counters distances of 0, i.e. on the contour
 	if(distanceToNext < 0.001f || distanceToContainer < 0.001f){
-	  hmap[i][j] = float(topLevel);
+	  hmap[i][j] = (float)topLevel;
 	} else {
 	  hmap[i][j] = (float)baseLevel + (distanceToNext / (distanceToNext + distanceToContainer));
 	}
 
       }
-      //printf("%1.2f ",hmap[i][j]);
+      //printf("%1.4f ",hmap[i][j]);
       if(i == 10 && j == 20) { singlepptest_end=clock(); }
     }
     //cout << endl;
@@ -324,22 +328,24 @@ void createLandscape(){
   Canny(dilatedImage,contourImage,lowerthresh,upperthresh,5);
   findContours( contourImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_NONE, Point(0, 0) );
 
+  if(contours.size() > 0) {
+    vector<vector<Point> >* joinedContours = new vector<vector<Point> >();
+    vector<vector<Point> >* approximatedContours = new vector<vector<Point> >();
+    time(&tree_start);
+    h_tree = createHierarchyTree(&hierarchy);
+    time(&tree_end);
 
-  vector<vector<Point> >* joinedContours = new vector<vector<Point> >();
-  time(&tree_start);
-  h_tree = createHierarchyTree(&hierarchy);
-  time(&tree_end);
+    naiveContourJoin(&contours, joinedContours, h_tree);
+    joinedContours = nubContours(joinedContours); 
+    //approxContours(joinedContours, approximatedContours);
+    //naiveDoubleRemoval(joinedContours, h_tree);
+    cout << h_tree->getSize() << " contours found" << endl;
+    //printContourAreas(joinedContours);
   
-  //naiveContourJoin(&contours, joinedContours, h_tree);
-  joinedContours = nubContours(&contours); 
-  //naiveDoubleRemoval(joinedContours, h_tree);
+    int map[WIN_SIZE][WIN_SIZE];
 
-  //printContourAreas(joinedContours);
-  
-  int map[WIN_SIZE][WIN_SIZE];
-
-  createHeightMap(joinedContours, h_tree, WIN_SIZE,WIN_SIZE);
-  
+    createHeightMap(joinedContours, h_tree, WIN_SIZE,WIN_SIZE);
+  }
 }
 
 int main(int argc, char** argv){
@@ -351,13 +357,23 @@ int main(int argc, char** argv){
   glutCreateWindow(argv[0]);
   init();
 
-  readCameraParameters(argv[1]);
-  BASEFRAME = imread("testpics/perfectsimple.png",CV_LOAD_IMAGE_GRAYSCALE);
- 
-  //Mat frame;
-  //cam >> frame;
+  //  MarkerDetector MDetector;
 
-  //cvtColor(frame, BASEFRAME,CV_BGR2GRAY);
+  element = getStructuringElement( MORPH_ELLIPSE,
+				     Size( 5, 5 ),
+				     Point( ceil(5.0f/2.0), ceil(5.0f/2.0) ) );
+  readCameraParameters(argv[1]);
+  //BASEFRAME = imread("testpics/perfectsimple.png",CV_LOAD_IMAGE_GRAYSCALE);
+ 
+  int check = 0;
+  while(!cam.isOpened()){
+    if (check > 50) 
+      break;
+  }
+  Mat frame;
+  cam >> frame;
+
+  cvtColor(frame, BASEFRAME,CV_BGR2GRAY);
   createLandscape();
 
 

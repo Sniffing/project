@@ -40,5 +40,5 @@ SET(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 SET(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/aruco_simple.dir/DependInfo.cmake"
+  "CMakeFiles/aruco_landscape.dir/DependInfo.cmake"
   )

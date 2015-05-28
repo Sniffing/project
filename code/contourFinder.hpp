@@ -142,6 +142,13 @@ void naiveDoubleRemovalFromArea(vector<vector<Point> >* contours, Tree *htree, i
 }
 
 
+void approxContours(vector<vector<Point> >* contours, vector<vector<Point> >* newContours) {
+  newContours->resize(contours->size());
+  for(size_t i = 0; i<contours->size(); i++){
+    approxPolyDP(Mat(contours->at(i)), newContours->at(i),1,false);
+  }
+}
+
 void naiveDoubleRemoval(vector<vector<Point> >* contours, Tree* htree){
   int originalSize = htree->getSize();
   for(int i = 0; i< contours->size(); i++){

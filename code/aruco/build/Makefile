@@ -102,41 +102,41 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named aruco_simple
+# Target rules for targets named aruco_landscape
 
 # Build rule for target.
-aruco_simple: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 aruco_simple
-.PHONY : aruco_simple
+aruco_landscape: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 aruco_landscape
+.PHONY : aruco_landscape
 
 # fast build rule for target.
-aruco_simple/fast:
-	$(MAKE) -f CMakeFiles/aruco_simple.dir/build.make CMakeFiles/aruco_simple.dir/build
-.PHONY : aruco_simple/fast
+aruco_landscape/fast:
+	$(MAKE) -f CMakeFiles/aruco_landscape.dir/build.make CMakeFiles/aruco_landscape.dir/build
+.PHONY : aruco_landscape/fast
 
-aruco_simple.o: aruco_simple.cpp.o
-.PHONY : aruco_simple.o
+aruco_landscape.o: aruco_landscape.cpp.o
+.PHONY : aruco_landscape.o
 
 # target to build an object file
-aruco_simple.cpp.o:
-	$(MAKE) -f CMakeFiles/aruco_simple.dir/build.make CMakeFiles/aruco_simple.dir/aruco_simple.cpp.o
-.PHONY : aruco_simple.cpp.o
+aruco_landscape.cpp.o:
+	$(MAKE) -f CMakeFiles/aruco_landscape.dir/build.make CMakeFiles/aruco_landscape.dir/aruco_landscape.cpp.o
+.PHONY : aruco_landscape.cpp.o
 
-aruco_simple.i: aruco_simple.cpp.i
-.PHONY : aruco_simple.i
+aruco_landscape.i: aruco_landscape.cpp.i
+.PHONY : aruco_landscape.i
 
 # target to preprocess a source file
-aruco_simple.cpp.i:
-	$(MAKE) -f CMakeFiles/aruco_simple.dir/build.make CMakeFiles/aruco_simple.dir/aruco_simple.cpp.i
-.PHONY : aruco_simple.cpp.i
+aruco_landscape.cpp.i:
+	$(MAKE) -f CMakeFiles/aruco_landscape.dir/build.make CMakeFiles/aruco_landscape.dir/aruco_landscape.cpp.i
+.PHONY : aruco_landscape.cpp.i
 
-aruco_simple.s: aruco_simple.cpp.s
-.PHONY : aruco_simple.s
+aruco_landscape.s: aruco_landscape.cpp.s
+.PHONY : aruco_landscape.s
 
 # target to generate assembly for a file
-aruco_simple.cpp.s:
-	$(MAKE) -f CMakeFiles/aruco_simple.dir/build.make CMakeFiles/aruco_simple.dir/aruco_simple.cpp.s
-.PHONY : aruco_simple.cpp.s
+aruco_landscape.cpp.s:
+	$(MAKE) -f CMakeFiles/aruco_landscape.dir/build.make CMakeFiles/aruco_landscape.dir/aruco_landscape.cpp.s
+.PHONY : aruco_landscape.cpp.s
 
 # Help Target
 help:
@@ -144,12 +144,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... aruco_simple"
+	@echo "... aruco_landscape"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... aruco_simple.o"
-	@echo "... aruco_simple.i"
-	@echo "... aruco_simple.s"
+	@echo "... aruco_landscape.o"
+	@echo "... aruco_landscape.i"
+	@echo "... aruco_landscape.s"
 .PHONY : help
 
 
