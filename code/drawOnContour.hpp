@@ -7,6 +7,7 @@
 #include <aruco/aruco.h>
 #include <aruco/marker.h>
 #include <aruco/markerdetector.h>
+#include <aruco/cameraparameters.h>
 #include <aruco/cvdrawingutils.h>
 #include <stack>
 

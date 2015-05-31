@@ -80,7 +80,7 @@ void getBackgroundFromCamera(VideoCapture* cam){
   checkForChange(&grayFrame);
  
   GLuint temp_texture = makeBackground(&frame);
-  //drawBackground(temp_texture);
+  drawBackground(temp_texture);
   
   bg_end=clock();
 }
@@ -101,9 +101,16 @@ void drawMap(void)
   
   // Coordinates are <-x  and (-ve x)->
   // z comes toward the screen
-
-  glPushMatrix();
   glLoadIdentity();
+
+  
+  //glMatrixMode(GL_PROJECTION);  
+  //glLoadIdentity();
+  //glOrtho(0, WIN_SIZE, 0, WIN_SIZE, -1.0, 1.0);
+  //glViewport(0,0,WIN_SIZE,WIN_SIZE);  //Use the whole window for rendering   
+  //GLdouble aspectRatio = (GLdouble)WIN_SIZE/(GLdouble)WIN_SIZE;
+  //gluPerspective(0.0,aspectRatio,0.01,512.0);
+
   glTranslatef(move_x, move_y, 0.0);
   glRotatef(rotate_x, 1.0, 0.0, 0.0);
   glRotatef(rotate_y, 0.0, 1.0, 0.0);
@@ -124,6 +131,23 @@ void drawMap(void)
   //     glEnd();
   // }
 
+  //glPopMatrix();
+
+
+  // glMatrixMode(GL_PROJECTION);
+  // double proj_matrix[16];
+  // camParams.glGetProjectionMatrix(BASEFRAME.size(),BASEFRAME.size(),proj_matrix,0.05,10);
+  // glLoadIdentity();
+  // glLoadMatrixd(proj_matrix);
+
+
+  // double modelview_matrix[16];
+  // BASEMARKER.glGetModelViewMatrix(modelview_matrix);
+  // glMatrixMode(GL_MODELVIEW);
+  // glLoadIdentity();
+  // glLoadMatrixd(modelview_matrix);
+  // glPushMatrix();
+
   glutSolidTeapot(20);
   
   drawing_end = clock();
@@ -136,9 +160,9 @@ void reshape(int x, int y)
 {
   //Set a new projection matrix
 
-  glMatrixMode(GL_PROJECTION);  
-  glLoadIdentity();
-
+  //glMatrixMode(GL_PROJECTION);  
+  // glLoadIdentity();
+  //glOrtho(0, x, 0, y, -1.0, 1.0);
   glViewport(0,0,x,y);  //Use the whole window for rendering   
   GLdouble aspectRatio = (GLdouble)x/(GLdouble)y;
   gluPerspective(0.0,aspectRatio,0.01,512.0);
@@ -207,7 +231,6 @@ int main(int argc, char** argv){
 
 
   if(TIME_FLAG){
-
     double maptime = (height_map_end-height_map_start) / (double)(CLOCKS_PER_SEC / 1000);
     double treetime = (tree_end-tree_start)/ (double)(CLOCKS_PER_SEC / 1000);
     double bgtime = (bg_end-bg_start)/ (double)(CLOCKS_PER_SEC / 1000);
@@ -222,6 +245,7 @@ int main(int argc, char** argv){
     printf("Polygon test time: %2.5f ms",pptest); cout << endl;
     printf("Contatining test time: %2.5f ms",containing); cout << endl;
   }
+
   glutMouseFunc(mouseButton);
   glutMotionFunc(mouseMove);
   glutDisplayFunc(drawMap); 
