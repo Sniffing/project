@@ -6,6 +6,7 @@
 #include <iostream>
 #include "aruco.h"
 #include "cvdrawingutils.h"
+#include <stack>
 
 #define WIN_SIZE 256
 #define MAX_COLOUR_VAL 255
@@ -48,7 +49,7 @@ clock_t singlepptest_start, singlepptest_end;
 clock_t containing_start,containing_end;
 
 int globalFPS;
-VideoCapture cam = VideoCapture(1);
+VideoCapture cam = VideoCapture(0);
 
 //////////////////////////////////////////////////////////
 void drawBackground(GLuint temp_texture);
@@ -117,7 +118,7 @@ void checkForChange(Mat* thisFrame){
     if(changedFrameCounter > STABILISATION_REQUIREMENT) {
       changedFrameCounter = 0;
       BASEFRAME = *thisFrame;
-      createLandscape();
+      //      createLandscape();
     }
   }
 }
@@ -129,8 +130,8 @@ void getBackgroundFromCamera(VideoCapture* cam){
 
   bg_start=clock();
 
-  cvtColor(frame,grayFrame,CV_BGR2GRAY);
-  checkForChange(&grayFrame);
+  //  cvtColor(frame,grayFrame,CV_BGR2GRAY);
+  //  checkForChange(&grayFrame);
  
   GLuint temp_texture = makeBackground(&frame);
   drawBackground(temp_texture);
@@ -181,7 +182,7 @@ void drawMap(void)
   glTranslatef(move_x, move_y, 0.0);
   glRotatef(rotate_x, 1.0, 0.0, 0.0);
   glRotatef(rotate_y, 0.0, 1.0, 0.0);
-  gluLookAt(WIN_SIZE/2.0f,WIN_SIZE/2.0f,-2.0f,WIN_SIZE/2.0f,WIN_SIZE/2.0f,0.0f,0.0f,1.0f,0.0f);
+  //gluLookAt(WIN_SIZE/2.0f,WIN_SIZE/2.0f,-2.0f,WIN_SIZE/2.0f,WIN_SIZE/2.0f,0.0f,0.0f,1.0f,0.0f);
   //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   
   
@@ -258,52 +259,118 @@ TreeNode* getContainingContour(TreeNode* currNode, Point p, vector<vector<Point>
   return currNode;
 }
 
+//Will return the containing contour
+TreeNode* storeAndGoContainingContainer(TreeNode* currNode, Point p, vector<vector<Point> >* contours, int base, stack<TreeNode*>* stack){
+
+}
+
+float assignHeight(int baseLevel, int topLevel, vector<vector<Point> >*contours, TreeNode* contourNode, Point p){
+  if(baseLevel <= 0) {
+    //If outside, don't give it anything
+    return 0.000001;
+  } else {
+    float distanceToContainer = fabs(pointPolygonTest(contours->at(contourNode->getID()),p,true));   
+    float distanceToNext;
+      
+    if(contourNode->getChildren()->empty()){
+      distanceToNext = 0.5f;
+    } else {
+      distanceToNext = fabs(findDistanceToNearestChild(contourNode->getChildren(),contours,p));
+    }      
+    
+    //counters distances of 0, i.e. on the contour
+    if(distanceToNext < 0.001f || distanceToContainer < 0.001f){
+      return (float)topLevel;
+    } else {
+      float height = (float)baseLevel + (distanceToNext / (distanceToNext + distanceToContainer));
+      return height;
+    }
+
+  }
+}
+
 void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int height, int width) {
   height_map_start=clock();
-  TreeNode* c = hierarchy->getRoot();
+  TreeNode* root = hierarchy->getRoot();
+  TreeNode* examining;
 
-  int baseLevel = 0;
-  int topLevel = 1;
-  
+  int baseLevel;
+  int topLevel;
+  bool contourFoundNow = false;
+  stack<TreeNode*>* nodeStack = new stack<TreeNode*>();
+
   for(int i = 0; i < height; i++){
+    //end of line, reset variables
+    root = hierarchy->getRoot();
+    baseLevel = 0;
+    topLevel = 1;
+    nodeStack = new stack<TreeNode*>();
+
     for(int j = 0; j < width; j++){
       Point p = Point(i,j);
 
       if(i == 10 && j == 20) { singlepptest_start=clock();
 	containing_start=clock();}
 
-      TreeNode* contour = getContainingContour(c, p, contours, hierarchy);
-
       if(i == 10 && j == 20) { containing_end=clock(); }
-            
-      baseLevel = contour->getLevel();
-      if(baseLevel == 0) {
-	//If outside, don't give it anything
-      	hmap[i][j] = 0.000001;
-      } else {
-	topLevel = baseLevel+1;     
- 
-	float distanceToContainer = fabs(pointPolygonTest(contours->at(contour->getID()),p,true));   
-	float distanceToNext;
-      
-	if(contour->getChildren()->empty()){
-	  distanceToNext = 0.5f;
-	} else {
-	  distanceToNext = fabs(findDistanceToNearestChild(contour->getChildren(),contours,p));
-	}      
-	
-	//counters distances of 0, i.e. on the contour
-	if(distanceToNext < 0.001f || distanceToContainer < 0.001f){
-	  hmap[i][j] = (float)topLevel;
-	} else {
-	  hmap[i][j] = (float)baseLevel + (distanceToNext / (distanceToNext + distanceToContainer));
-	}
+   
+      //TreeNode* contour = getContainingContour(c, p, contours, hierarchy);      
+      //baseLevel = contour->getLevel();
 
+      // TreeNode* contour = storeAndGoContainingContainer(c, p, contours, baseLevel); 
+      //Find if we are on a pixel which is part of a contour
+      //If the point is on the contou we are currently within, we've reached the boundary
+      bool isEmpty = nodeStack->empty();
+      if (!isEmpty && pointPolygonTest(contours->at(nodeStack->top()->getID()),p,false) == 0){
+	nodeStack->pop();
+	baseLevel -=1;
+	topLevel -= baseLevel+1;
+      } else {
+	//If stack is empty then must get the base nodes to check
+	if (isEmpty){
+	  examining = root;
+	} else { //If there are children, we'll be looking at them, else no worries
+	  TreeNode* stacktop = nodeStack->top();
+	  if(!stacktop->getChildren()->empty()) //alternative is that examining was set from before (null)
+	    examining = nodeStack->top()->getChild(0);
+	}
+	//PRE: Top of the stack has the last contour we saw
+	//POST: Top of stack has the current contour we are on
+	while(examining) { //For all contours on this level
+	  //If on contour
+	  if(pointPolygonTest(contours->at(examining->getID()),p,false) == 0){
+	    nodeStack->push(examining);  //make current Node this one
+	    
+	    //Must check the next pixels along, incase they are part of the current 
+	    //bit of the contour, which will cause inaccuracies in boundary crossing counts
+	    contourFoundNow = true;
+
+	    baseLevel = nodeStack->top()->getLevel();
+	    topLevel = baseLevel + 1;
+	    break;//found node so stop
+	  } 
+	  examining = examining->getNext();
+	}
       }
+
+      TreeNode* contourNode = (nodeStack->empty()) ? root : nodeStack->top();
+      hmap[i][j] = assignHeight(baseLevel, topLevel, contours, contourNode, p);
+
+      //Will continue assigning until there is at least one pixel seen that is not part of
+      //the contour
+      int jplus=1;
+      bool nextState = true;
+      while(contourFoundNow && nextState && (j+jplus < width)){
+	nextState = pointPolygonTest(contours->at(contourNode->getID()),Point(i, j+jplus),false) == 0;
+	hmap[i][j+jplus] = assignHeight(baseLevel, topLevel, contours, contourNode, Point(i, j+jplus));
+	jplus++;
+      }
+      j += jplus;
+      contourFoundNow = false;
+      
       //printf("%1.4f ",hmap[i][j]);
       if(i == 10 && j == 20) { singlepptest_end=clock(); }
     }
-    //cout << endl;
   }
   height_map_end=clock();
 }
@@ -328,9 +395,10 @@ void createLandscape(){
   Canny(dilatedImage,contourImage,lowerthresh,upperthresh,5);
   findContours( contourImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_NONE, Point(0, 0) );
 
+
   if(contours.size() > 0) {
     vector<vector<Point> >* joinedContours = new vector<vector<Point> >();
-    vector<vector<Point> >* approximatedContours = new vector<vector<Point> >();
+    //vector<vector<Point> >* approximatedContours = new vector<vector<Point> >();
     time(&tree_start);
     h_tree = createHierarchyTree(&hierarchy);
     time(&tree_end);
@@ -357,23 +425,24 @@ int main(int argc, char** argv){
   glutCreateWindow(argv[0]);
   init();
 
+  //cam = VideoCapture(argv[1]);
   //  MarkerDetector MDetector;
 
   element = getStructuringElement( MORPH_ELLIPSE,
 				     Size( 5, 5 ),
 				     Point( ceil(5.0f/2.0), ceil(5.0f/2.0) ) );
   readCameraParameters(argv[1]);
-  //BASEFRAME = imread("testpics/perfectsimple.png",CV_LOAD_IMAGE_GRAYSCALE);
+  BASEFRAME = imread("testpics/simple.jpg",CV_LOAD_IMAGE_GRAYSCALE);
  
   int check = 0;
   while(!cam.isOpened()){
     if (check > 50) 
       break;
   }
-  Mat frame;
-  cam >> frame;
+  //  Mat frame;
+  //cam >> frame;
+  //cvtColor(frame, BASEFRAME,CV_BGR2GRAY);
 
-  cvtColor(frame, BASEFRAME,CV_BGR2GRAY);
   createLandscape();
 
 

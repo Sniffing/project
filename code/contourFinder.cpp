@@ -8,7 +8,7 @@
 #include <math.h>
 #include <string.h>
 
-#define DEBUG_FLAG false //Print debug messages?
+#define DEBUG_FLAG true //Print debug messages?
 #define JOIN_FLAG true
 
 //int thresh = 5000; //Doesnt find paper edges
@@ -46,20 +46,19 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
   if (JOIN_FLAG) {
     naiveContourJoin(&contours,&joinedContours,HIERARCHY_TREE);
     //naiveDoubleRemoval(&joinedContours,HIERARCHY_TREE);
-
     contours = *nubContours(&joinedContours);
 
-    vector<RotatedRect>* rectangles = new vector<RotatedRect>();
-    cout << "contours size is:" << contours.size() << endl;
-    for(int i =0; i< contours.size(); i++){
-      vector<Point> contour = contours.at(i);
-      rectangles->push_back(fitEllipse(Mat(contour)));
-    }
+    // vector<RotatedRect>* rectangles = new vector<RotatedRect>();
+    // cout << "contours size is:" << contours.size() << endl;
+    // for(int i =0; i< contours.size(); i++){
+    //   vector<Point> contour = contours.at(i);
+    //   rectangles->push_back(fitEllipse(Mat(contour)));
+    // }
 
-    Point p(218,128);
-     for(int i =0 ; i<rectangles->size(); i++){
-       cout << "Is in rect " << i << " :" << isInRectangle((*rectangles)[i],p)<<endl;
-     }
+    // Point p(218,128);
+    //  for(int i =0 ; i<rectangles->size(); i++){
+    //    //cout << "Is in rect " << i << " :" << isInRectangle((*rectangles)[i],p)<<endl;
+    //  }
     
      //approxContours(&joinedContours,&joinedContours);
   }
@@ -77,17 +76,18 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
  
   //naiveDoubleRemovalFromArea(&joinedContours,HIERARCHY_TREE,AREA_THRESHOLD);
 
-  for( int i = 0; i< joinedContours.size(); i++ )
-  { 
+   for( int i = 0; i< joinedContours.size(); i++ )
+   {
+    
     Scalar color(255,255,255);
     if(JOIN_FLAG) {
       cout << "size of joined contours" << joinedContours.size() << endl;
-      drawContours( *drawing, joinedContours, i, color,1, CV_AA, hierarchy,0, Point() );
+      drawContours( *drawing, joinedContours, i, color,-1, CV_AA, hierarchy,0, Point() );
       //printContours(&joinedContours);
     } else {
-      drawContours( *drawing, joinedContours, i, color,1, CV_AA, hierarchy, 0, Point() );
+      drawContours( *drawing, joinedContours, i, color,-1, CV_AA, hierarchy, 0, Point() );
     }
-  }
+    }
   
   return drawing;
 }

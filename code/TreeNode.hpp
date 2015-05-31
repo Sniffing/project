@@ -19,6 +19,7 @@ using namespace cv;
 class TreeNode {
 public:
   TreeNode();
+  TreeNode(TreeNode*);
   TreeNode(Vec4i data, unordered_map<int,TreeNode*>*, vector<Vec4i>*,int);
   TreeNode* getParent();
   TreeNode* getNext();
@@ -59,10 +60,26 @@ int TreeNode::getNumChildren(){
   return children->size();
 }
 
+TreeNode::TreeNode(TreeNode* node){
+  if(node){
+    level = node->getLevel();
+    parent = node->getParent();
+    next = node->getNext();
+    prev = node->getPrev();
+    children = node->getChildren();
+    nodeID = node->getID();
+  }
+}
+
 void TreeNode::print(){
+  cout << "printing node....";
   cout << "I am node: " << nodeID << " | ";
   cout << "I have " << children->size() << " children | ";
-  cout << "I am on level " << level << endl;
+  cout << "I am on level " << level << " | ";
+  if(next)
+    cout << "my next node is" << next->getID() <<endl;
+  else
+    cout << "There are no others on my level" << endl;
 }
 
 void TreeNode::removeChild(int i){

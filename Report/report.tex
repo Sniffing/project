@@ -1,7 +1,7 @@
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
-\documentclass[11pt]{report}
+\documentclass[11pt]{article}
 
 \usepackage{lastpage} % Required to determine the last page for the footer
 \usepackage{extramarks} % Required for headers and footers
@@ -13,11 +13,20 @@
 \usepackage{subcaption}
 \usepackage{listings}
 \usepackage{amsmath}
+\usepackage{color}
 
 \linespread{1.1} % Line spacing
 \usepackage[total={6in, 8in}]{geometry}
 
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%set c++ settings for adding in code snippets
+\lstset{language=C++,
+                basicstyle=\ttfamily,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{cyan}\ttfamily
+}
 
 \begin{document}
 \title{An Interactive Creative environment through dynamically 
@@ -29,12 +38,11 @@ changing Augmented Reality Landscapes}
 \newpage
 \tableofcontents
 \newpage
-
-\section*{Abstract}
+\section{~DO~ Abstract}
 Oh
 \newpage
 
-\section*{Introduction}
+\section{~DO~ Introduction}
 \begin{center}
 Creativity involves breaking out of established patterns in
 		order to look at things in a different way. \textit{Edward de Bono.}
@@ -118,7 +126,7 @@ computer vision such as template matching. This will serve as a basis for a
 creative environment for users, requiring minimal interaction with the user and
 more time for pen on paper work. 
 \\ \\
-\subsection*{Project Goals}
+\subsection{Project Goals}
 The bigger picture and where this project hopes it can contribute and make 
 headway into is permitting a dynamic and responsive AR application that allows
 creators to quickly draw up environments which can then be visualised. 
@@ -146,9 +154,9 @@ are:
 \end{itemize}
 
 \newpage
-\section*{Background}
+\section{Background}
 
-\subsection*{Augmented Reality}
+\subsection{Augmented Reality}
 \begin{center}
 What is Augmented Reality(AR) and why should we be interested in it? \\
 \end{center}
@@ -178,7 +186,7 @@ These are:
 	\item Augment the Environment
 \end{enumerate}
 
-\underline{Augment the User} \\
+\subsubsection{Augment the User} 
 Augmenting the user is having the user carrying, wearing or using a device
 that provide the user with extra information. When we talk about augmenting
 the user, the devices we talk about are usually
@@ -190,37 +198,37 @@ glass, with GPS coordinates and a scan of the shape of the Eiffel Tower,
 Google Glass would be able to tell that what the user was looking at. From there,
 it can project information about the landmark to the user which would not have
 been accessible so easily otherwise! \\
-
+\\
 This is one such trivial application of
 user worn AR, it is very useful for lesser known things, for example, instead of 
 looking at a famous landmark, the user could be an engineer, looking at a 
 complex piece of machinery and a HUD allowing them to get information on each
 component. This is also being trialled in Medicine, where doctors can use
 Augmented Reality to help teach surgical procedures or even help them in
-analysis of medical images such as X-Rays.\\
+analysis of medical images such as X-Rays.
 
-\underline{Augment Devices} \\
+\subsubsection{Augment Devices} 
 When an object or device has a small computer placed into it, it can be 
 considered as an augmented device. One example of this is again in 
 surgery and medical environments. Having tools such as scalpels or other 
 medical equipment fitted with computers to plot out how much of the skin has
 to be cut, for example, allows the user to receive much more information
 than they would be able to than without. Mackay also talks about these briefly 
-in her paper.\\
+in her paper.
 
-\underline{Augment the Environment} \\
+\subsubsection{Augment the Environment} 
 This form or AR doesn't add any additional hardware to devices nor the user.
 It focuses on having external devices, such as projectors or cameras take 
 input from the user and use that to transofrm the environment that they are in
 or are manipulating. This class of AR is much wider than the two 
 aformentionned as there are less things imposed on an object/person which 
 allow a larger spectrum of devices to be used. \\
-
+\\
 An example of Augmenting the environment is an AR keyboard, a projector displays
 a keyboard in front of where it is placed, the user can then "press" keys and
 the kyboard will be able to detect which key has been selected and translate it 
 into computer input. \\
-
+\\
 A more common device is your smart phone! Tablet or even computer screens can
 be included in this form of AR. There are plenty of mobile applications that
 allow users to experience AR in their own unique way. An example used in the
@@ -231,7 +239,7 @@ interactive way. There are also similar applications in retail, for example
 in retail! Augmented reality mirrors are being used to avoid the time in the
 changing room and allow customers to "try" on pieces of clothing through
 AR by overlaying the garment over their captured video. \\
-
+\\
 Another fun implementation of AR is the Augmented Sandbox. A projector and
 a camera are used to transform a sandbox into a remoldable landscape. The camera
 uses depth sensing and the input from here is transformed into lanscape height
@@ -239,17 +247,36 @@ and the projector correspondingly projects land or water onto these areas. The
 magic happens when the sand is manipulated and the whole system re-renders the
 landscape in real time to provide an interactive augmented environment! Sarah
 Reed from the University of California lead the authoring of the persentation
-about this piece of tehnology\cite{Reed14}.\\
+about this piece of tehnology\cite{Reed14}.
 
+\subsection{Construction of AR scenes.}
+Augmented Reality has two main parts to it; Computer Vision and Computer Graphics.
+There may also be all sort of other computer science topics melded in, for
+example Machine Learning, Artificial Intelligence and various others. 
+The pipeline in Figure \ref{fig:arpipeline} describes how a basic AR 
+application should be created.\\
 
-\subsection*{Computer Vision and Image Processing}
+\begin{figure} 
+	\includegraphics[scale=0.5]{pics/ARpipeline}
+	\caption{Augmented Reality pipeline.}
+	\label{fig:arpipeline}
+\end{figure}
+
+The middle stage, where the data from Computer Vision methods is processed
+is where we can usually slot in thing slike Machine Learning or other kinds
+of data manipulation, before handing it over to be rendered by Computer
+Graphics applications. For the purposes of this project, I will not need,
+nor do I intended, to stray from this basic pipeline where data processing in 
+the middle will be minimal.
+
+\subsection{Computer Vision and Image Processing}
 A key part of this project is the Computer Vision aspect. The field of
 Computer Vision involves the understanding of data from images and pictures.
 "Understanding" is a broad term that encompasses many ways of manipulating or
 processing images in order to extract features or points of interest that
 can be then used by the computer.
 
-\subsubsection*{Edge Detection}
+\subsubsection{Edge Detection}
 % Detecting lines and edges of paper, for registration
 
 \begin{center}
@@ -293,7 +320,7 @@ When it comes to
 We can distinguish edge detectors into two sets, the Laplacian of Gaussain detectors
 and the Gradient-based detectors.
 
-\subsubsection*{Gradient-based detectors}
+\subsubsection{Gradient-based detectors}
 Gradient edge detectors look for changes of gradient (first-order) of 
 neighbouring pixels. Some common gradient-based detectors are Sobel,
 Prewitt, Canny and Robert. Each of these detectors starts off with an image
@@ -310,7 +337,7 @@ Users can then set a threshold value for which any pixel with a final
 gradient that is above that threshold will be treated and marked as an edge,
 the others will be discarded.
 
-\subsubsection*{Laplacian (of Gaussian)-based detectors}
+\subsubsection{Laplacian (of Gaussian)-based detectors}
 Laplacian based detectors are similar to Gradient-based ones except that 
 instead of taking the first derivative, they consider the second derivative.
 Their goal is to look for zero-crossings, i.e. local maxima in 
@@ -321,7 +348,8 @@ method can be coupled with a Gaussian kernel which serves to de-noise the
 image by smoothing out the pixel intensities. 
 
 
-\subsubsection*{Canny Edge Detector}
+\subsubsection{Canny Edge Detector}
+\label{sec:Canny}
 % Detecting Contours for landscaping
 
 There have been numerous methods of detecting edges put forward,
@@ -361,7 +389,7 @@ can be described algorithmically below:
 The steps are more fully explained in the paper by 09gr820, 
 \textit{Canny Edge Detection}\cite{09gr820}.
 
-\subsubsection*{Open and Closed contours}
+\subsubsection{Open and Closed contours}
 We understand a closed contour to be a loop. By this we mean that if we had
 to draw a closed contour, we begin at a point on a piece of paper and end at that
 point, either by not removing our pen from the page or, if done so, will resume
@@ -430,7 +458,7 @@ which would mean a lot more difficult computation to be done to achieve
 our goal of generating a corresponding landscape. Indeed, this is the problem of
 many similar projects.
 
-\subsubsection*{Mathematical Morphology}
+\subsubsection{Mathematical Morphology}
 One technique to help close contours/loops in Computer Vision is \textit{Closing}.
 To understand \textit{Closing}, we must first introduce the ideas of 
 Mathematical Morphology (MM). MM is a method of analysing geometric objects
@@ -461,7 +489,7 @@ different results from these operators the kernels can be changed, for example
 to a 10x10 square hich will cause a more drastic shrink or growth of bright 
 areas. For the purpose of explanation, I will assume we are using a 3x3 kernel.
 
-\subsubsection*{Erosion}
+\subsubsection{Erosion}
 \begin{center}
 Erosion causes bright areas of images to shrink.
 \end{center}
@@ -502,7 +530,7 @@ whose size can be changed to affect noise sensitivity.\\
 	\caption{Erosion}
 \end{figure}
 
-\subsubsection*{Dilation}
+\subsubsection{Dilation}
 \begin{center}
 	Dilation causes bright areas of image to expand.
 \end{center}
@@ -542,7 +570,7 @@ depending on how sensitive you want the operation to be.
 \end{figure}
 
 
-\subsubsection*{Closing}
+\subsubsection{Closing}
 \begin{center}
 Closing is Dilation followed by Erosion.
 \end{center}
@@ -596,14 +624,7 @@ losing too much fine detail through enlarging the bright area!
 	\label{fig:closing}
 \end{figure}
 
-
-
-\subsubsection*{Image Registration}
-% Lining up the AR to the paper
-\subsubsection*{Feature Extraction}
-% Possibly extracting known feature points like a house indicator
-
-\subsubsection*{Image Differencing}
+\subsubsection{Image Differencing}
 For users to be able to draw their own landscapes, there has to be some way
 of recognising when there has been a change, physically, on paper. To 
 automate this process will enable the program to decide for itself when
@@ -615,7 +636,7 @@ be further explained below. The general method for image differencing from
 a video feed is taking two frames, at time $t_s$ and a time in the future
 $t_{s+c}$ and compare the two.
 
-\subsubsection*{Simple Intensity Differencing}
+\subsubsection{Simple Intensity Differencing}
 The simplest form of finding the difference between two images is comparing 
 their pixel intensities. 
 \begin{align}
@@ -685,7 +706,7 @@ of the pixels based on average intensities and variance. This shall
 not be explained further but details of it and other detection 
 techniques are highlighted it Radke's paper\cite{Radke04}.
 
-\subsubsection*{Image Ratioing}
+\subsubsection{Image Ratioing}
 Image Ratioing is another method to compare images. The general concept
 is explained (along with other change detection techniques) in Singh's
 paper \textit{Review Article Digital change detection techniques 
@@ -724,7 +745,7 @@ which it is based", i.e. a Non-Gaussian distributed image which is produced as
 the resultof ratioing as the areas on either side of the mode are not equal, 
 making the error rates on both sides not equal.
 
-\subsubsection*{Camera alignment}
+\subsubsection{~DO~ Camera alignment}
 A vast amount of Computer Vision requires the use of a camera, whether to 
 capture video or just still pictures. However, cameras suffer from distortion
 in the lens and of varying degrees, usually with relation to the quality
@@ -770,10 +791,10 @@ From a mathematical standpoint, there are .........SEE ARUCO EXPLANATION
 
 .................MORE (Using checkerboards)
 
-\subsection*{Computer Graphics}
+\subsection{~DO~ Computer Graphics}
 
 
-\subsection*{Ordnance Survey Maps}
+\subsection{Ordnance Survey Maps}
 Ordnance Survey(OS) are an agency for Great Britain that specialise in
 making maps. The agency was formed all the way back around 1791 and has
 been producing maps for Britain since. Ordnance Maps are, of course, 2D and
@@ -809,9 +830,10 @@ steep. If you compare this to somewhere such as near Ballinvally, the contours
 are much further apart, indicating a flatter, less steeply increasing/decreasing 
 slopes. 
 
-\subsection*{Existing Projects}
+\subsection{Existing Projects}
 
-\subsubsection*{LandscapAR}
+\subsubsection{LandscapAR}
+\label{LandscapAR}
 Looking into the Augmented reality scene and looking for potential similar
 applications brought me across the mobile application \textit{LandscapAR},
 made by Stapps. The premise of the application is that it is aimed at
@@ -848,14 +870,14 @@ keep this image on the screen is lackluster in some scenarios.  \\
 	\centering
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
-		\includegraphics[scale=0.1]{pics/landscapeARNoPaper.png}
+		\includegraphics[scale=0.3]{pics/landscapeARNoPaper.png}
 		\caption{The user must align their paper properly}
 		\label{fig:landscapeARNoPaper1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
-		\includegraphics[scale=0.1]{pics/landscapeARNoPaper2.png}
+		\includegraphics[scale=0.3]{pics/landscapeARNoPaper2.png}
 		\caption{The user must align their paper properly}
 		\label{fig:landscapeARNoPaper2}
 	\end{subfigure}
@@ -863,7 +885,7 @@ keep this image on the screen is lackluster in some scenarios.  \\
 	
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
-		\includegraphics[scale=0.1]{pics/landscapeARTooFar.png}
+		\includegraphics[scale=0.3]{pics/landscapeARTooFar.png}
 		\caption{The range of detection is limited.}
 		\label{fig:landscapeARNoTooFar}
 	\end{subfigure}
@@ -871,14 +893,14 @@ keep this image on the screen is lackluster in some scenarios.  \\
 	
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
-		\includegraphics[scale=0.1]{pics/landscapeARtopdown.png}
+		\includegraphics[scale=0.3]{pics/landscapeARtopdown.png}
 		\caption{Output from a simple scan produces a top down image}
 		\label{fig:landscapeARtopdown}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
-		\includegraphics[scale=0.1]{pics/landscapeARangled.png}
+		\includegraphics[scale=0.3]{pics/landscapeARangled.png}
 		\caption{After scanning it is possible to move the camera}
 		\label{fig:landscapeARangled}
 	\end{subfigure}
@@ -896,7 +918,7 @@ re-scan the image after addition, adding more cumbersome steps. For users
 who want to make several small changes here and there, this will consume a lot
 of time and effort on their part.
 \\
-\subsubsection*{The AR Sandbox}
+\subsubsection{The AR Sandbox}
 The University of California, Davis along with the Lawrance Hall of Science 
 and ECHO Lake Aquarium and Science centre contribute to a project called the
 Augmented Reality Sandbox\cite{Reed14}. The project allows users to turn a 
@@ -920,9 +942,9 @@ quite a bit of interest, with alternate versions being built by others and
 is something that helped in the motivation for this project. The sandbox
 can be seen in Figure \ref{arsandbox}. \\
 
-\begin{figure}
+\begin{figure}[!Ht]
 	\centering
-	\includegraphics[scale=0.2]{pics/sandbox.jpg}
+	\includegraphics[scale=0.8]{pics/sandbox.jpg}
 	\caption{Children learn about watersheds with Augmented Reality.}
 	\label{arsandbox}
 \end{figure}
@@ -950,7 +972,7 @@ requirement for special equipment.
 %motivation for taking up this project.
 
 
-\subsubsection*{Microsoft Kinect V2}
+\subsubsection{Microsoft Kinect V2}
 \underline{Background \& History}\\
 The Microsoft Kinect(V1) was original released as an extra piece of hardware
 for Microsoft's Xbox360 in 2010. The Kinect for windows (V2) was released
@@ -1080,12 +1102,28 @@ pitfall and cause minor hindrance to the progression of the project.
 
 \newpage
 
-\section*{Implementation}
+\section{Implementation}
 In this section I will briefly outline the main steps I took to in
 the creation of this project to tackle various problems.
-\subsection*{Assumptions and Restrictions of the Designer}
-\subsection*{Setting up the Camera and Environment}
-\subsubsection*{Camera Calibration and Setup}
+\subsection{~DO~ Assumptions and Restrictions of the Designer}
+\label{sec:assumptions}
+\subsection{~DO~ Setting up the Camera and Environment}
+\subsubsection{Camera Calibration and Setup}
+It is important in the use of the program that the camera being used to
+capture the scene is stationary. This is a fundamental restriction of the 
+program. Althought it is possible to move the camera every so often,
+most of the time, it should be fixed to achieve the best results. The reason
+for this being that if the camera is on an unstable surface or is constantly
+experiencing some movement, the images captured will differ in pixels even though
+the landscape image itself has not changed. This will cause continuous
+recomputation of the landscape even though it does not need to be done. Extra
+computation imposes unecessary exra costs on the hardware of the user's machine
+and should be avoided. To user is permitted to move the landscape image in 
+what direction they want, so long as it conforms the to restrictions
+outlines in section \ref{sec:assumptions}.\\
+\\
+The camera used for this project was a webcam ..................MORE
+
 To correct the issue of distortion within the web camera, I had to first calibrate
 it in order to figure out its intrinsic parameters. This was
 quite easily done by printing out a 7 by 5 square chessboard and running
@@ -1100,7 +1138,9 @@ each direction ($length of side -1$). The calibration process was very easy,
 just running the program while moving the chessboard in front of the
 camera in question, see Figure \ref{cameraCalibration} will create 
 a YAML file containing the intrinisic camera data and information 
-about its distortion.
+about its distortion. The YAML file can then be passed into the program to
+help account for the the distortion and adjust the resulting displayed 
+camera feed.
 
 \begin{figure}
 	\centering
@@ -1109,7 +1149,7 @@ about its distortion.
 	\label{cameraCalibration}
 \end{figure}
 
-\subsubsection*{Choosing C++}
+\subsubsection{Choosing C++}
 \begin{center}
 “C makes it easy to shoot yourself in the foot; C++ makes it harder, but when you do it blows your whole leg off.”
 ― Bjarne Stroustrup
@@ -1137,7 +1177,7 @@ very relatable quote above, C++ was the language of choice. Even though there
 were various annoying points along the way in terms of debugging, I consider
 C++ the best, and probably only, choice of language I had.
 
-\subsubsection*{OpenCV}
+\subsubsection{OpenCV}
 OpenCV is the "Open Computer Vision" library, it is open source and was
 developed by Intel in 1998. From the year 2000, it has been under the BSD
 license, meaning it is a \textit{very} popular library to use. In addition,
@@ -1167,7 +1207,7 @@ of online documentation and guidelines. There are also numerous samples
 that come along with the library that helped me get to grips with using it 
 for my project. The version used throughout was opencv 2.4.11.
 
-\subsubsection*{OpenGL}
+\subsubsection{~DO~ OpenGL}
 OpenGL, "Open Graphics Library" was introduced when I was born, in 1992 and
 developed by Silicon Graphics and is supported by NVIDIA. 
 It is the most widely adopted Computer Graphics Library. Akin to OpenCV, it
@@ -1176,8 +1216,15 @@ support users. OpenGL interacts with GPUs to create computer graphics
 
 ...............MORE(Sort out opengl version)
 
-\subsection*{Capturing the Landscape map}
-\subsubsection*{Drawing the map}
+\subsubsection{~DO~ ARuco}
+
+\subsection{Capturing the Landscape map}
+Now that the environment has been set up for the user, we begin the first
+part of the Augmented Reality pipeline which is to conduct Computer
+Vision algorithms of the scene the camera is capturing. This corresponds to
+reading in the video feed of the landscape map that the user has drawn.
+
+\subsubsection{~DO~ Drawing the map}
 During the implementation of the project, to initially start working 
 with contour detection and landscape maps. I asked 2 friends along with
 myself to draw potential landscape maps. I used these to test the
@@ -1199,28 +1246,28 @@ The images were drawn in specific ways, they can be viewed in Figure
 	\centering
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
-		\includegraphics[scale=0.05]{pics/normal.jpg}
+		\includegraphics[scale=0.3]{pics/normal.jpg}
 		\caption{A variety of contours and other shapes.}
 		\label{fig:landscapeMapNormal}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
-		\includegraphics[scale=0.05]{pics/height.jpg}
+		\includegraphics[scale=0.3]{pics/height.jpg}
 		\caption{All contours open, no artifacts.}
 		\label{fig:landscapeMapHeight}
 	\end{subfigure}
 	
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
-		\includegraphics[scale=0.05]{pics/thicklines.jpg}
+		\includegraphics[scale=0.3]{pics/thicklines.jpg}
 		\caption{Shapes and contours drawn in thickly, all closed.}
 		\label{fig:landscapeMapThick}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
-		\includegraphics[scale=0.05]{pics/shitlines.jpg}
+		\includegraphics[scale=0.3]{pics/shitlines.jpg}
 		\caption{Roughly drawn contours and pictures, som artifacts in the corner.}
 		\label{fig:landscapeMapShit}
 	\end{subfigure}
@@ -1228,7 +1275,7 @@ The images were drawn in specific ways, they can be viewed in Figure
 	
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
-		\includegraphics[scale=0.05]{pics/simple.jpg}
+		\includegraphics[scale=0.3]{pics/simple.jpg}
 		\caption{Very simple contours drawn in; both closed.}
 		\label{fig:landscapeMapSimple}
 	\end{subfigure}
@@ -1277,8 +1324,7 @@ would work in the optimal conditions, if this isn't satisfactory, we cannot
 expect any of the other drawings nor the user's drawings to perform well at all.
 \\
 
-
-Working on static images allowed me to mimic opoerating on frames taken from
+Working on static images allowed me to mimic operating on frames taken from
 a webcam. As a result, operating in this way allowed me to easily and quickly 
 make adjustments to threshold parameters and other operations on the images
 rather than having to extract from a camera each time and manually look at each
@@ -1288,8 +1334,7 @@ I was very quickly able to attain empirical value for some of the thresholds
 and parameters in the function calls that OpenCV offers, these shall be presented
 in the next section.
 
-............. MORE (PENCIL)
-\subsubsection*{Detecting Contours}
+\subsubsection{Detecting Contours}
 Detecting contours is very simple when using OpenCV. A single function call
 will perform Canny Edge detection, as outlined in the background of this report,
 on the provided image. The function also performs double thresholding, so takes
@@ -1299,22 +1344,140 @@ when determining gradient magnitudes.\\
 \\
 The Canny function returns a list of contours and these are represented as
 a list of cartesian co-ordinates which dictate which pixels are considered part
-of an identified contour. Calling the  
+of an identified contour. The method call in C++ is shown below.
 
-.......................MORE
 \begin{lstlisting}
-void Canny(InputImage, ListOfContours, Threshold1, Threshold2, SobelApertureSize, GradientMagnitudeOperator)¶
+void Canny(img,contourImg,t1,t2,SAS,GMO)¶
 \end{lstlisting}
 
-\subsubsection*{Generating the Hierarchy Tree}
+\begin{enumerate}
+	\item \texttt{img}: \\
+		Input image where we are looking for contours within.
+	\item \texttt{contourImg}: \\
+		Is the resulting contour image produced by the algorithm.
+	\item \texttt{t1}: \\
+		Lower Threshold, part of Hysteresis as mentioned in 
+		Section \ref{sec:Canny}. Contours with a strength higher than
+		this value are considered "weak contours".	
+	\item \texttt{t2}: \\
+		Upper Threshold, second part of Hysteresis, mentioned in 
+		Section \ref{sec:Canny} where contours of higher strength than
+		this value are considered "strong contours".
+	\item \texttt{SAS}: \\
+		Sobel operator Aperture Size. The Sobel operator is used to 
+		detect edges using gradient change and its size can be set here.
+		The operator is a square of length set here.
+	\item \texttt{GMO}: \\
+		Gradient Magnitude Option, specifies how to compute norms of
+		image gradient magnitude.
+\end{enumerate}
 
+The resulting \texttt{contourImg} is what is then passed onward 
+through the pipeline for more processing by Computer Vision methods.
 
-\subsection*{Generating the 3D scene}
-\subsubsection*{View Point alignment}
-\subsubsection*{Using the Hierarchy Tree}
-\subsubsection*{Terrain Generation}
-\subsection*{Detecting change in the scene}
-\subsubsection*{Generating the Base image}
+\subsubsection{Generating the Hierarchy Tree}
+In openCV, there is a function that will take a contour image and from
+it, figure out the points of the image that are on contours. The function is
+called as below:
+\begin{lstlisting}
+void findContours(imgIn,contours,hierarchy,mode,method,p)
+\end{lstlisting}
+
+The variables \texttt{contours} and \texttt{hierarchy} are variables into which
+the outputs of the function are placed. The \texttt{contours} variable is a vector
+of contours, which themselves are represented as vectors of pixel points. 
+The \texttt{hierarchy} variable is a list of all the contours and their
+relation to the other contours (based on what is passed to the \texttt{mode}
+variable in the method). I used \texttt{CV\_RETR\_TREE} to return a list which
+describes a tree like hierarchy of the scene. Take for example the contour
+image (computer generated) by the landscape map in Figure \ref{perfectsimple}.
+The returned hierarchy is seen below (has been formatted for easier reading).
+\begin{lstlisting}
+//Contour N: [Next,Prev,FChild,Parent]
+//Next = Next Contour on the same level as this contour (-1 if none)
+//Prev = Previous Contour on the same level as this contour (-1 if none)
+//FChild = The first child contour of this contour (a child is a contour contained
+//		   within another contour)
+//Parent = the Parent contour of this one (-1 if none)
+
+hierarchy = [
+	Contour 0: [-1, -1, 1, -1]
+	Contour 1: [-1, -1, 2, 0]
+	Contour 2: [-1, -1, 3, 1]
+	Contour 3: [-1, -1, 4, 2]
+	Contour 4: [8, -1, 5, 3]
+	Contour 5: [-1, -1, 6, 4]
+	Contour 6: [-1, -1, 7, 5]
+	Contour 7: [-1, -1, -1, 6]
+	Contour 8: [-1, 4, 9, 3]
+	Contour 9: [-1, -1, 10, 8]
+	Contour 10: [-1, -1, 11, 9]
+	Contour 11: [-1, -1, 12, 10]
+	Contour 12: [-1, -1, 13, 11]
+	Contour 13: [-1, -1, 14, 12]
+	Contour 14: [-1, -1, 15, 13]
+	Contour 15: [-1, -1, -1, 14]
+]
+\end{lstlisting}
+
+\begin{figure}
+	\includegraphics[scale=0.4]{pics/perfectsimple.png}
+	\caption{Computer generated landscape map}
+	\label{perfectsimple}
+\end{figure}
+
+To efficiently use this hierarchy, I actually create a Tree Object that
+encompasses the meaning of the hierarchy. The objects are included below.
+
+\begin{lstlisting}
+class TreeNode {
+public:
+  //Methods and constructors removed
+private:
+  int level; //Level of the node in the tree
+  TreeNode* parent;
+  vector<TreeNode*>* children;
+  TreeNode* next;
+  TreeNode* prev;
+  int nodeID; //ID of the node, as assigned by method findContours
+};
+
+class Tree {
+public:
+  //Methods and contructors removed
+private:
+  unordered_map<int,TreeNode*>* allNodes; //all nodes in this tree
+  void insertNode(int,TreeNode*);
+};
+\end{lstlisting}
+
+I keep this hierarchy as a global object in the program that is used
+whenever there is anything concerning contour manipulation as well as when
+creating the 3D scene which is explained later within this report.
+\subsubsection{~DO~ Joining Contours}
+
+\subsection{Generating the 3D scene}
+After the initial Computer Vision aspect of the program has been completed,
+we can move onto the generation of the Augmented Reality scene that is
+overlayed onto the camera feed so that the user is able to view the
+landscape that they have drawn. From here, we have entered the Computer
+Graphics portion of this Augmented Reality program pipeline.
+\subsubsection{~DO~ View Point alignment}
+\subsubsection{~DO~ From Hierarchy Tree to Height Map}
+\subsubsection{~DO~ Terrain Generation}
+Generating the Terrain is pretty simple. After having create the height map
+in the previous step, all that remains is a simple 1-to-1 map of each
+entry in the 2D array to a pixel point on the screen. I made use of
+the openGL primitive, Quads, to generate the landscape. The code snippet
+below shows how I take use the height map to assign ..............MORE
+\subsection{Detecting change in the scene}
+To provide the user inputless functionality that is the focus of this
+project, there has to be some way to indentify when it is time to 
+redraw the scene. In this section I describe how I determine change within
+the landscape map and whether it is significant enough to represent a 
+user change instead of a small change in environment.
+
+\subsubsection{Generating the Base image}
 The Base Image is the current landscape map that is used for generating the
 Augmented Reality 3D landscape. This project was focused on providing 
 users with an dynamically updating environment to tackle the problem that
@@ -1333,10 +1496,10 @@ out to determine whether significant change has been taken place. After a thresh
 point, the Base can be considered to have changed and a new Base Frame will be
 stored. 
 
-\subsubsection*{Introducing change}
+\subsubsection{~DO~ Introducing change}
 
 
-\subsubsection*{Determining Stabilisation}
+\subsubsection{~DO~ Determining Stabilisation}
 The key part of creating the dynamic, self-updating environment that this 
 project focuses on is determining when it is time to update. The reason for this
 is that there should be an interval between a scene update that is not too frequent
@@ -1356,17 +1519,14 @@ passes the threshold
 
 
 
-\subsection*{Restructure and regenerating the 3D scene}
-\subsubsection*{Generating a Difference Image}
-\subsubsection*{Determining new contours}
-\subsubsection*{Updating the the Hierarchy Tree}
-\subsubsection*{Adding in the environment change}
+\subsection{~DO~ Restructure and regenerating the 3D scene}
+\subsubsection{~DO~ Generating a Difference Image}
 
-\section*{Evaluation}
+\section{Evaluation}
 In this section, I assess the outcomes of this project, trying to 
 give numerical representation to its overall successes and failures.
 
-\subsection*{Test Measures}
+\subsection{~DO~ Test Measures}
 In Table \ref{fig:TestMeasureTable} below, I have compiled the various 
 test measures I look into in an attempt to gain a representation of how 
 well this project has turned out. For each, there is an associated 
@@ -1412,9 +1572,9 @@ Base Frame
 \label{fig:TestMeasureTable}
 \end{table}
 
-\subsection*{Indicators of Success}
+\subsection{~DO~ Indicators of Success}
 
-\subsection*{User Testing}
+\subsection{~DO~ User Testing}
 Being a creative, Augmented Reality environment for people to bring their 
 landscape creations to life, to assess its worth, there has to be feedback
 from the users.
@@ -1423,15 +1583,15 @@ from the users.
 
 Below I have compiled some of the responses from the users who took part in
 trying out this program.
-\subsubsection*{Responsiveness}
+\subsubsection{~DO~ Responsiveness}
 
-\subsubsection*{Aesthetics}
+\subsubsection{~DO~ Aesthetics}
 
-\subsection*{Results}
+\subsection{~DO~ Results}
 
-\subsection*{Overall Evaluation}
+\subsection{~DO~ Overall Evaluation}
 
-\section*{Extensions}
+\section{~DO~ Extensions}
 Having implemented an environment for dynamic creative Augmented Reality,
 content, there are many obvious improvements that can be made to transform 
 this project into a much larger and better application. \\
@@ -1447,13 +1607,13 @@ land. In this section shall highlight some of the more immediate extensions
 and then go on to explore other extensions which have been lingering in the 
 background of my vision for what this project could have become.
 
-\subsection*{Immediate Extensions}
+\subsection{Immediate Extensions}
 There are numerous extensions that can be added to this project due to the 
 vast amounts of things that could be brought to life by Augmented Reality.
 These are the extensions I would have implemented had I more time to commit
 to this project.
 
-\subsubsection*{Coloured Contours}
+\subsubsection{Coloured Contours}
 Currently the program works by taking frames from the camera and then   
 processing them with various operations, such as perform morphological
 closing and blurring by the Canny Edge detector. One additional thing 
@@ -1476,7 +1636,7 @@ measure which will allow classification of the considered pixels to the
 closest colour. From there, generation of the 3D scene will be a switch case 
 between different terrains base on the result of the classification.
 
-\subsubsection*{Other markers}
+\subsubsection{Other markers}
 A marker is something on the paper or creative environment that will be 
 detected and understood by the program. Right now, the only markers we have
 at the user's disposal are contour lines which are converted into land with
@@ -1500,7 +1660,7 @@ If this is smaller than a threshold then it can be said within some statiscal
 region, that the detected area was intended to be that marker. From there placing
 the object over the mid point (with regard to surface normal) will suffice.
 
-\subsubsection*{Photorealistic lighting environment}
+\subsubsection{Photorealistic lighting environment}
 Augmented Reality comes under the fields of Computer Graphics and Computer
 Vision, and as a result it means that for it to be good, it has to look good.
 The potential user of this program can range from professional land/environment
@@ -1526,7 +1686,7 @@ Another point to think about is shadowing and self occlusion which should
 cause shadows to form upon the landscape creataed by other parts of the landscape
 itself. This would be included once the global illumination has been captured.
 
-\subsection*{Future Extensions}
+\subsection{Future Extensions}
 I shall now highlight some of the other ideas I had while going into this 
 project although some were a bit too broad and not realted enough to the main
 goals and contributions of this project. These extensions are more of what
@@ -1535,7 +1695,7 @@ could potnetially be used commercially, or indeed lay groundwork for future
 work in Augmented Reality. There are also ideas here that could be implemented
 when the technology for its realisation becomes available.
 
-\subsubsection*{The Leap Motion}
+\subsubsection{The Leap Motion}
 Before coming into this project I had a great interest and desire to work with
 some of the newer technologies such as touchless controls, Virtual Reality 
 head pieces and Augmented Reality. While investigating these, I ran into the
@@ -1587,10 +1747,43 @@ of which I shall list:
 		  the scene etc. This is one of the more ambitious extensions.
 \end{enumerate}
 
-\subsubsection*{No Calibration Marker}
+\subsubsection{No Calibration Marker}
+The bigger dream for this project was to enable users to be creative 
+wherever they go with their computer or laptop. The idea was to have a
+program that imposes as low an amount of restrictions on the user as 
+possible. One of the main restrictions is the calibration marker. In its
+current state, for the user to begin their creative landscape maps, they
+have to be in possession of paper marked with an ARuco marker. In addition,
+this marker has to be of a specified value and size. \\
+\\
+In order to further improve the application, it would be great to remove 
+the need for a calibration marker. This means that the user does not even 
+have to carry around paper, they can grab any scrap piece that they find 
+around should an idea spring to mind. There have been a few papers and
+investigations in Augmented Reality without fiducial markers. Ferrari
+gives a good introduction into some methods for a real time AR
+system without explicit markers in the paper "Markerless Augmented 
+Reality with a Real-time Affine Region Tracker" \cite{Ferrari}. In here, they
+rightly state that most AR researchers \textit{often
+have to take refuge to putting ‘markers’ or ‘landmarks’ into the scene} 
+due to the real time requirements of AR, as is no different in this project.
+There are also many applications that already work without the need for these markers,
+though many use some form of implicit marker rather than an explicit one.
+An example of this is the Augmented Reality dressing, where a user 
+stands in front of the camera, implicit markers like hands, head, shoulders
+etc. are used to gain an understanding of the scene in front of the camera.\\
+\\
+In order for this to work for my project however, there is need to
+somehow convert a part of the users' landscape map into a base for 
+calibration and alignment. The mobile app \textit{LandscapAR}, mentioned
+in Section \ref{sec:LandscapAR}, uses the paper corners as basis; in my
+opinion that restricts the user to a certain environment (dark background,
+all four corners in camera, etc.) and means a lot more computation if
+tilt of the camera or scene has to be considered. There will have to be
+a lot more investigation and testing of implicit methods in the field of
+AR before I think this extension could come to fruition.
 
-
-\subsection*{Continued testing and experimentation} 
+\subsection{Continued testing and experimentation} 
 For this project to come together, there were numerous problems that
 had to be solved. Truthfully, some of these problems could have been entire
 projects themselves and have been studied a lot in their field of literature.
@@ -1599,7 +1792,7 @@ depth, some simple approaches have been taken to reach a suitable solution
 that will fulfil the needs of this project. The main areas which I think would
 benefit from more extensive testing are highlighted in this section.
 
-\subsubsection*{Contour closing}
+\subsubsection{~DO~ Contour closing}
 Contour closing is a pretty large topic in the field of Computer Vision as 
 it is the basis for segmentation. As a result, it plays \texttt{the} main role
 in many applications of computer vision. As a result of this there are 
@@ -1618,7 +1811,7 @@ The next approach was to join contours that have start and end points which
 neighboured the start/end point of another contour.
 ....................MORE
 
-\subsubsection*{Thresholding}
+\subsubsection{~DO~ Thresholding}
 Computer Vision is heavily dependent on aesthetics. A successful Computer
 Vision application is not one that performs the best, but the one which looks,
 visually, the best. As users, we greatly desire things that look good! If
@@ -1635,7 +1828,7 @@ in an attempt to better segment and divide parts of the image. Some areas includ
 contour detection, 
 .......................MORE
 
-\subsubsection*{Stabilisation of background}
+\subsubsection{~DO~ Stabilisation of background}
 To determine if there was any change in the landscape map, we implemented an
 algorithm which takes a base frame and the current frame and calculates a change
 measure. The base frame was considered the "Background" and any change was the
