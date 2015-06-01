@@ -40,6 +40,7 @@ Marker BASEMARKER;
 float MARKER_SIZE = 0.025; //in meters;
 double TLx, TLy, TRx, TRy, BLx, BLy, BRx, BRy;//coordinates ofr basemarker corners
 Mat BASEFRAME;
+Mat POTENTIAL_NEW_BASEFRAME;
 int frameCounter = 0;
 int changedFrameCounter = 0;
 Mat contourImage;

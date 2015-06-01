@@ -14,6 +14,7 @@
 \usepackage{listings}
 \usepackage{amsmath}
 \usepackage{color}
+\usepackage[ruled,vlined]{algorithm2e}
 
 \linespread{1.1} % Line spacing
 \usepackage[total={6in, 8in}]{geometry}
@@ -1105,8 +1106,70 @@ pitfall and cause minor hindrance to the progression of the project.
 \section{Implementation}
 In this section I will briefly outline the main steps I took to in
 the creation of this project to tackle various problems.
-\subsection{~DO~ Assumptions and Restrictions of the Designer}
+\subsection{Assumptions and Restrictions of the User}
 \label{sec:assumptions}
+At the beginning of this project I had many ideas and aspirations on
+what the final product could do. However, I quickly realised that most
+of these ambitions were unattainable in the time frame and at my level
+of expertise. As a result, some restrictions have been imposed on the
+user when they use the program. In addition, I have designed my
+program with a set of assumptions in mind that simplify the problem from
+one that could merit several research projects if broken down and 
+investigated in depth, into one of reduced difficulty but still 
+contributes what it set out to do. In this section, I list these
+assumptions and restrictions. 
+
+\subsubsection{Assumptions}
+\begin{itemize}
+    \item The user draws perfect connected contours or near 
+    	  perfect contours
+    \item Light in the environment is stable and is not
+    	  changing drastically over short time periods
+    \item The user only draws contours
+    \item The user draws reasonably sized landscape maps and contours
+    \item The user doesn't draw an extremely deep tree of nested contours
+\end{itemize}
+
+I believe the assumptions I have developed this project with are reasonable,
+firstly, it would be very demanding if a user drew an incoherent landscape
+map and hope for the program to understand it. In addition, it will be
+unlikely a person will be drawing the landscape map in an environment
+with rapidly changing light. If the user draws other shapes or triangles,
+they will be interpreted as contours as this program only accommodates contours.
+It should also be reasonable to think that the user will not draw a 
+miniscule landscape map as it becomes hard for both themselves and the camera.
+The case of a large map is fine as the restriction of seeing the ARuco 
+marker keeps the scale within reason. The reason we do not want a deep
+tree is due to the amount of contour level traversal in the program. This
+should only become a problem if the user begins at the very edges of the paper
+and draws containing contours just one or two millimetres apart all the
+way until they fill the paper, which i a rather uninteresting landscape map
+anyway!
+
+\subsubsection{Restrictions}
+\begin{itemize}
+    \item The ARuco marker is visible in the Camera
+    \item The pen colour must be noticeable on the paper colour
+    \item The user must have a fixed camera
+    \item The angle of the camera to the lanscape map can't be too small
+   	\item User must calibrate their camera themselves          
+\end{itemize}
+
+In the ideal form of this project, there would be absolutely no
+restrictions on the user as this means that creativity is constrained
+to within the realms where these restrictions hold. However, as 
+aformentioned, in this project having absolutely no restrictions became
+infeasible. The subject of markerless AR is being researched now curreny 
+methods are rather cumbersome due to the real time requirement of AR. As
+a result, the user must have a marker on the surface they are drawing their
+landscape map. In addition, if it is hard for humans to see the contour
+lines, it is even harder for computers. As a result, the pen colour must
+be of and adequately different shade to that of the surface it is drawn onto.
+The user must also be able to calibrate their camera and make sure it
+is fixed in the scene such that it can see the landscpae map and not at
+too heavy of an angle otherwise the picture becomes way to difficult to 
+recover.
+
 \subsection{~DO~ Setting up the Camera and Environment}
 \subsubsection{Camera Calibration and Setup}
 It is important in the use of the program that the camera being used to
@@ -1122,7 +1185,25 @@ and should be avoided. To user is permitted to move the landscape image in
 what direction they want, so long as it conforms the to restrictions
 outlines in section \ref{sec:assumptions}.\\
 \\
-The camera used for this project was a webcam ..................MORE
+The camera used for this project was a webcam from Logitech, model C930e.
+The webcam can be seen in Figure \ref{webcam}. The camera has 1080p HD 
+recording with scalable video coding. It records at 30fps and has a wide 
+angle view with autofocus. It was very easy to mount this webcam and start
+using. The device is pretty high end, at the time of writing it is valued
+at \$129USD which equates to around £85. Obviously this is not something
+everyone can instantly get their hands on due to its cost, however, the
+program will still function with much cheaper cameras, even in built
+webcams on laptops will work too (however, angling these to face the 
+landscape map while having the screen face the user is probably impossible).
+However, this does prove that the webcam hardware is not a barrier to 
+entry to start using this program to create landscapes. 
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{pics/camera.jpg}
+	\caption{Webcam used in this project: Logitech C930e}
+	\label{webcam}
+\end{figure}
 
 To correct the issue of distortion within the web camera, I had to first calibrate
 it in order to figure out its intrinsic parameters. This was
@@ -1216,7 +1297,16 @@ support users. OpenGL interacts with GPUs to create computer graphics
 
 ...............MORE(Sort out opengl version)
 
-\subsubsection{~DO~ ARuco}
+\subsubsection{~DO~ ArUco}
+ArUco is a C++ Augmented Reality library that offers wrappers and methods
+based around OpenCV (versions 2.1 and above) that simplify the procedure
+of identifying fiducial markers in an image. The library is under the BSD
+license, created by the University of Cordoba in Spain. Release in 2014,
+this library is now ar version 1.2.5.\\
+\\
+ArUco has been used in a multitude of projects already with success and 
+has helped me immensely in the creation of this project. 
+............................MORE
 
 \subsection{Capturing the Landscape map}
 Now that the environment has been set up for the user, we begin the first
@@ -1376,6 +1466,7 @@ The resulting \texttt{contourImg} is what is then passed onward
 through the pipeline for more processing by Computer Vision methods.
 
 \subsubsection{Generating the Hierarchy Tree}
+\label{sec:hierarchytree}
 In openCV, there is a function that will take a contour image and from
 it, figure out the points of the image that are on contours. The function is
 called as below:
@@ -1455,6 +1546,27 @@ I keep this hierarchy as a global object in the program that is used
 whenever there is anything concerning contour manipulation as well as when
 creating the 3D scene which is explained later within this report.
 \subsubsection{~DO~ Joining Contours}
+Joining contours is a key part of this project. As can be seen in the
+section \ref{sec:hierarchytree}, the landscape map in Figure 
+\ref{perfectsimple} produced 15 detected contours after being
+passed to some OpenCV methods. Looking at the landscape map, it is
+extremely clear to us humans that there are ony 4 contours present.
+This means that Canny detection has probably split up each contour into
+3 or 4 different contours that are very close but have gaps in between
+preventing them from being considered as one full contour. The returned
+hierarchy is thus not helpful to us at all as the realtionships between
+contours is inacccurate. Our primary goal now becomes to join contours
+before analysing any hierarchical data.\\
+\\
+The first step to join contours is to perform morphological closing on 
+the image. 
+
+The next step is realising that sometimes, a single contour is split into
+two but since they actually are both from the same contour, their end and
+start points are very close. With this in mind, I implemented a 
+\texttt{naiveContourJoin} function. 
+
+.........................MORE
 
 \subsection{Generating the 3D scene}
 After the initial Computer Vision aspect of the program has been completed,
@@ -1464,8 +1576,49 @@ landscape that they have drawn. From here, we have entered the Computer
 Graphics portion of this Augmented Reality program pipeline.
 \subsubsection{~DO~ View Point alignment}
 \subsubsection{~DO~ From Hierarchy Tree to Height Map}
-\subsubsection{~DO~ Terrain Generation}
-Generating the Terrain is pretty simple. After having create the height map
+Taking the resulting hierarchy from the Computer Vision stage of this
+program, we can then convert it into a height map which represents the
+state of the landscape. The height map is then used later on in the pipeline
+to help generate the landscape.\\
+\\
+Creating the hierarchy tree allowed me to gracefully attach tree
+depths to each contour, encapsulated within a \texttt{TreeNode}. Thus,
+all that needs to be done is identify the contour that each pixel resides
+in and render its height as that equivalent to the depth of the 
+\texttt{TreeNode} in the tree. However, this will create a massive "step"
+landscape which means that where there is a contour boundary, the
+pixels will suddenly jump from one height to another. This looks very
+unrealistic and not aesthetically pleasing. Since anything concerning
+computer graphics relies on looking good, it was a given to smoothen out
+the landscape heights. This was done with Euclidean distance transforms 
+in mind, where we increase the height of the pixel by a percentage of how
+far the pixel is to the next height level. In essence, I implement a 
+basic interpolation function that assigns a height as describe in the 
+pseudocode in Algorithm \ref{algo:assignHeights}.
+
+\begin{algorithm}
+\Begin{
+\For{$h\in imageHeight$}{
+	\For{$w \in imageWidth$}{
+	$p \longleftarrow pixel(h,w)$\;
+	$c1 \longleftarrow getContainingContour(p)$\;
+	$c2 \longleftarrow getClosestContour(p,c1)$\;
+	
+	$baseHeight \longleftarrow getLevel(c1)$\;
+	$d2parent \longleftarrow getDistanceFromContour(p,c1)$\;
+	$d2next \longleftarrow getDistanceFromContour(p,c2)$\;
+	$extraHeight = d2parent/(d2parent+d2next)$\;
+	set $setHeightMap(h,w)$ to $baseHeight + extraHeight$\; 	
+	}
+}
+}
+\caption{Assigning heights to the pixels in the heightmap.}
+\label{algo:assignHeights}
+\end{algorithm}
+
+
+\subsubsection{~DO~ Landscape Generation}
+Generating the landscape is pretty simple. After having create the height map
 in the previous step, all that remains is a simple 1-to-1 map of each
 entry in the 2D array to a pixel point on the screen. I made use of
 the openGL primitive, Quads, to generate the landscape. The code snippet
@@ -1499,28 +1652,51 @@ stored.
 \subsubsection{~DO~ Introducing change}
 
 
+
 \subsubsection{~DO~ Determining Stabilisation}
-The key part of creating the dynamic, self-updating environment that this 
-project focuses on is determining when it is time to update. The reason for this
-is that there should be an interval between a scene update that is not too frequent
-such that it imposes a large amount of computation on the system. In addition, 
-we do not want it so infrequent that even after the user draws a new contour, there 
-is still time before the recomputation occurs as this will take away from the
-real-time component whichh is so fundamental to Augmented Reality. A better
-way of choosing the time to update the 3D scene is to try determine \textit{when}
+The key part of creating the dynamic, self-updating environment
+is determining when it is time to update. The reason for this
+is that there should be an interval between a scene update that is 
+not too frequent such that it imposes a large, unecessary amount of
+computation on the system. In addition, 
+we do not want it so infrequent that even after the user draws 
+a new contour, there is still time before the recomputation occurs 
+as this will take away from the real-time component whichh is so 
+fundamental to Augmented Reality. A better way of choosing the time 
+to update the 3D scene is to try determine \textit{when}
 there has been a change in the landscape map.\\
 \\ 
-As mentioned earlier, the way I have chosen to do this is through a comparison
-of captured frames to an identified base frame. When there has been enough
-difference captured, we can say that there has been a suitable time to update the
-3D scene and the base frame. However, the key here is to decide when we should 
-actually update the base frame. There can be a massive change in the scene which
-passes the threshold 
+As mentioned earlier, the way I have chosen to do this is through 
+a comparison of captured frames to an identified base frame. When 
+there has been enough difference captured, we can say that this is
+a suitable time to update the 3D scene and the base frame. 
+However, the key here is to decide when we should actually update 
+the base frame. There can be a massive change in the scene which
+passes the threshold, for example, the user moving their hand into the
+scene to draw in a new contour, every frame will be massively different
+to the next due to the amount of movement going on in the scene. Thus,
+the problem now becomes when can we say that the user has finished 
+making edits to their masterpiece?\\
+\\
+The solution implemented was to look for stability. After substantial
+change has occured, if the subsequent frames show little change, then
+it is likely the user has finished their changes to the scene. Thus,
+after this time has elapsed, we consider the first frame in the
+examined sequence the new base frame and this will trigger a redraw of
+the 3D scene. There are two ways in which change is identified in a base 
+frame. These are between the landscape map or a change in the position
+and/or orientation of the ArUco marker. 
 
+\subsubsection{Generating a Difference ImaSge}
+
+\subsubsection{Tracking the fiducial marker}
 
 
 \subsection{~DO~ Restructure and regenerating the 3D scene}
-\subsubsection{~DO~ Generating a Difference Image}
+After substantial difference has been identified by the program, there is
+now need to restructure and re-render the scene.
+
+
 
 \section{Evaluation}
 In this section, I assess the outcomes of this project, trying to 

@@ -1,20 +1,11 @@
 Code
-- make contours a single line, not a double line
-- more contour joining
-- find out interpolation to make landscapes look good (euclidean distance)
-- Find out an appropriate distance measure
-- make a new drawing and add a typical contours in to estimate a threshold
-- take a picture of table and find out if contours can be found
-- alignment of webcam and openGL camera with calibration
-- histogram differencing
+- Correct stabilisation
 
 Report
-- Consider Thinning and Hit and Miss Morphology
 - Write about OpenGL
-- Write Assumption
-- Write Detecting Contours
-- redo principal axis definiion wtih bookmark
+- redo principal axis definition wtih bookmark
 - Redo Introduction
+- Correct Joining contours 
 
 Running tests on amount of closing operations
 (Proved futile because closing is idempotent)

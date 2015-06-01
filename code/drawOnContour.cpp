@@ -46,6 +46,8 @@ void checkForChange(Mat* thisFrame){
       BASEFRAME = *thisFrame;
       createLandscape();
     } else if(NEW_BASE_THRESHOLD < pixelsChanged){
+      //CHANGE THIS SHIT THIS IS WRONG
+      POTENTIAL_NEW_BASEFRAME = *thisFrame;
       changedFrameCounter++;
       if(changedFrameCounter > STABILISATION_REQUIREMENT) {
 	changedFrameCounter = 0;
@@ -134,21 +136,24 @@ void drawMap(void)
   //glPopMatrix();
 
 
-  // glMatrixMode(GL_PROJECTION);
-  // double proj_matrix[16];
-  // camParams.glGetProjectionMatrix(BASEFRAME.size(),BASEFRAME.size(),proj_matrix,0.05,10);
-  // glLoadIdentity();
-  // glLoadMatrixd(proj_matrix);
+   glMatrixMode(GL_PROJECTION);
+   double proj_matrix[16];
+   camParams.glGetProjectionMatrix(BASEFRAME.size(),BASEFRAME.size(),proj_matrix,0.05,10);
+   for(int i = 0; i<16; i++){
+     cout << proj_matrix[i] <<endl;
+   }
+   
+   glLoadIdentity(); 
+   glLoadMatrixd(proj_matrix);
+   
 
-
-  // double modelview_matrix[16];
-  // BASEMARKER.glGetModelViewMatrix(modelview_matrix);
-  // glMatrixMode(GL_MODELVIEW);
-  // glLoadIdentity();
-  // glLoadMatrixd(modelview_matrix);
+   double modelview_matrix[16];
+   BASEMARKER.glGetModelViewMatrix(modelview_matrix);
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
+   glLoadMatrixd(modelview_matrix);
   // glPushMatrix();
-
-  glutSolidTeapot(20);
+   glutSolidTeapot(20);
   
   drawing_end = clock();
   glPopMatrix();
