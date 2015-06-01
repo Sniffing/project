@@ -138,8 +138,8 @@ void drawMap(void)
 
         glVertex3f(   i,(j), pow(heightMap[i][j],2));
         glVertex3f( i+1,(j), pow(heightMap[i+1][j],2));
-      glVertex3f( i+1,(j+1), pow(heightMap[i+1][j+1],2));
-    glVertex3f(   i, (j+1), pow(heightMap[i][j+1],2));
+	glVertex3f( i+1,(j+1), pow(heightMap[i+1][j+1],2));
+	glVertex3f(   i, (j+1), pow(heightMap[i][j+1],2));
         glEnd();
       }
     }

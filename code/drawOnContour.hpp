@@ -57,6 +57,8 @@ clock_t drawing_start, drawing_end;
 clock_t singlepptest_start, singlepptest_end;
 clock_t containing_start,containing_end;
 
+Size GLWINDOW_SIZE;
+
 int globalFPS;
 VideoCapture cam = VideoCapture(0);
 CameraParameters camParams;

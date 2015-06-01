@@ -1593,22 +1593,22 @@ computer graphics relies on looking good, it was a given to smoothen out
 the landscape heights. This was done with Euclidean distance transforms 
 in mind, where we increase the height of the pixel by a percentage of how
 far the pixel is to the next height level. In essence, I implement a 
-basic interpolation function that assigns a height as describe in the 
+basic interpolation function that assigns a height as described in the 
 pseudocode in Algorithm \ref{algo:assignHeights}.
 
 \begin{algorithm}
 \Begin{
 \For{$h\in imageHeight$}{
 	\For{$w \in imageWidth$}{
-	$p \longleftarrow pixel(h,w)$\;
-	$c1 \longleftarrow getContainingContour(p)$\;
-	$c2 \longleftarrow getClosestContour(p,c1)$\;
+	p $\longleftarrow pixel(h,w)$\;
+	c1 $\longleftarrow getContainingContour(p)$\;
+	c2 $\longleftarrow getClosestContour(p,c1)$\;
 	
-	$baseHeight \longleftarrow getLevel(c1)$\;
-	$d2parent \longleftarrow getDistanceFromContour(p,c1)$\;
-	$d2next \longleftarrow getDistanceFromContour(p,c2)$\;
-	$extraHeight = d2parent/(d2parent+d2next)$\;
-	set $setHeightMap(h,w)$ to $baseHeight + extraHeight$\; 	
+	baseHeight $\longleftarrow getLevel(c1)$\;
+	d2parent $\longleftarrow getDistanceFromContour(p,c1)$\;
+	d2next $\longleftarrow getDistanceFromContour(p,c2)$\;
+	extraHeight $\longleftarrow d2parent/(d2parent+d2next)$\;
+	HeightMap[h][w] $\longleftarrow$ baseHeight + extraHeight\; 	
 	}
 }
 }
@@ -1616,6 +1616,35 @@ pseudocode in Algorithm \ref{algo:assignHeights}.
 \label{algo:assignHeights}
 \end{algorithm}
 
+However this alrgorithm depends on the function \texttt{getContainingContour}
+which, though provided in OpenCV as \texttt{pointPolygonTest}, using
+the function does not provide results as expected. The \texttt{findContours}
+function, mentioned in \ref{hierarchytree} returns a contour list as
+well as a hierarchy. Even though the hierarhcy can be established, sometimes
+\texttt{pointPolygonTest} doesn't recognise the contours as fully closed and
+so will not return as expected. As a result, I offer an alternative 
+algorithm, seen in Algorithm \ref{algo:assignHeights2}
+
+.......................DO BELOW
+\begin{algorithm}
+\Begin{
+\For{$h\in imageHeight$}{
+	\For{$w \in imageWidth$}{
+	p $\longleftarrow pixel(h,w)$\;
+	c1 $\longleftarrow getContainingContour(p)$\;
+	c2 $\longleftarrow getClosestContour(p,c1)$\;
+	
+	baseHeight $\longleftarrow getLevel(c1)$\;
+	d2parent $\longleftarrow getDistanceFromContour(p,c1)$\;
+	d2next $\longleftarrow getDistanceFromContour(p,c2)$\;
+	extraHeight $\longleftarrow d2parent/(d2parent+d2next)$\;
+	HeightMap[h][w] $\longleftarrow$ baseHeight + extraHeight\; 	
+	}
+}
+}
+\caption{Corrected height assignment into the heightmap.}
+\label{algo:assignHeights2}
+\end{algorithm}
 
 \subsubsection{~DO~ Landscape Generation}
 Generating the landscape is pretty simple. After having create the height map
@@ -1631,6 +1660,7 @@ the landscape map and whether it is significant enough to represent a
 user change instead of a small change in environment.
 
 \subsubsection{Generating the Base image}
+\label{sec:baseimage}
 The Base Image is the current landscape map that is used for generating the
 Augmented Reality 3D landscape. This project was focused on providing 
 users with an dynamically updating environment to tackle the problem that
@@ -1645,9 +1675,9 @@ enough change, i.e. the addition of a new contour.\\
 Right now, as the program starts, the first frame captured is considered to 
 be the Base Frame. The Base Frame is held in memory and from there, 
 constant comparisons to the subsequent frames are carried
-out to determine whether significant change has been taken place. After a threshold
-point, the Base can be considered to have changed and a new Base Frame will be
-stored. 
+out to determine whether significant change has been taken place. After a
+threshold point, the Base can be considered to have changed and a new Base 
+Frame will be stored. 
 
 \subsubsection{~DO~ Introducing change}
 
@@ -1687,10 +1717,84 @@ the 3D scene. There are two ways in which change is identified in a base
 frame. These are between the landscape map or a change in the position
 and/or orientation of the ArUco marker. 
 
-\subsubsection{Generating a Difference ImaSge}
+\subsubsection{Generating a Difference Image}
+Generating a Difference Image is rather simple. In the program, there is
+a global variable, \texttt{BASEFRAME}, which is the current stored base frame.
+Obtaining the base frame is explained in section \ref{sec:baseimage}. The
+code for this is shown below and requires 3 simple calls to OpenCV 
+functions. First, the base frame and the current frame are converted
+into grayscale for ease of comparison. An absolute difference is calculated
+between the two images, pixels with a difference higher than
+\texttt{CHANGE\_THRESHOLD} are marked as they have changed significantly 
+(as described by the threshold).
 
-\subsubsection{Tracking the fiducial marker}
+\begin{lstlisting}
+	/*** Elsewhere in the code ***/
+	//Converts into grayscale images
+	cvtColor(BASEFRAME,gBASEFRAME, CV_BGR2GRAY);
+	cvtColor(thisFrame,gthisFrame, CV_BGR2GRAY);
+	/*****************************/
 
+	//Create an image to store the Difference Image
+  	Mat* diffFrame = new Mat(BASEFRAME.rows, 
+  				BASEFRAME.cols,
+  				DataType<float>::type) ;
+	
+	//Get the absolute difference between the base frame (note:
+	//these are the grayscale versions) and the 
+	//most recent frame, store this in the Difference Image.  				
+  	absdiff(gBASEFRAME, gthisFrame, *diffFrame);	
+  	
+  	//Makes a binary image, pixels which have seen a change
+  	//higher than CHANGE_THRESHOLD are set to 1, the others are 0.
+  	//CHANGE_THRESHOLD is chosen empirically. diffFrame is the final
+  	//binary image and can be used later.
+  	threshold(*diffFrame, *diffFrame, CHANGE_THRESHOLD, 
+  			MAX_COLOUR_VAL, THRESH_BINARY);
+\end{lstlisting}
+
+\subsubsection{~DO~ Tracking the Fiducial Marker}
+
+\subsubsection{~DO~ Detecting Stabilisation}
+After figuring out how to detect change, all that remains is to use those
+as ways to indicate stabilisation. Due to the sparse spread of code
+for the project, I have instead included the pseudocode algorithm I 
+used to detect stabilisation in the image, seen in 
+Algorithm \ref{algo:stabilisation}. 
+
+\begin{algorithm}
+BaseFrame is an image,\\
+PotentialNewFrame starts off as equal to BaseFrame,\\
+PotentialChange is a global flag,\\
+StabilisedCounter is a global counter of frames.
+
+\Begin{
+\While{Camera is open}{
+	thisFrame $\longleftarrow$ Next frame from Camera\;
+	differenceImg $\longleftarrow getDifferenceImage(BaseFrame,thisFrame)$\;
+	changedPixels $\longleftarrow countNonZero(differenceImg)$\;
+	
+	\uIf{changesPixels $> FRAME\_CHANGE\_THRESHOLD$}{
+		PotentialNewFram $\longleftarrow$ thisFrame\;
+		PotentialChange $\longleftarrow true$\;
+	}\uElseIf{PotentialChange is false}{
+		StabilisedCounter++\;
+		\If{StabilisedCounter $\> CHANGE\_REQUIREMENT$}{
+			StabilisedCounter $\longleftarrow 0$\;
+			BaseFrame $\longleftarrow$ PotentialNewFrame\;
+			PotentialChange $\longleftarrow false$\;
+			Redraw the scene\;
+		}			
+	} 
+}
+}
+\caption{Detecting Stabilisation}
+\label{algo:stabilisation}
+\end{algorithm}
+
+The logic behind the algorithm is rather simple. From the base frame,
+each subsequent frame has the potential to become the new base frame should
+there be enough change between the two.
 
 \subsection{~DO~ Restructure and regenerating the 3D scene}
 After substantial difference has been identified by the program, there is
