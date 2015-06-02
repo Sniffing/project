@@ -16,7 +16,7 @@
 \contentsline {subsubsection}{\numberline {3.3.6}Mathematical Morphology}{15}{subsubsection.3.3.6}
 \contentsline {subsubsection}{\numberline {3.3.7}Erosion}{15}{subsubsection.3.3.7}
 \contentsline {subsubsection}{\numberline {3.3.8}Dilation}{16}{subsubsection.3.3.8}
-\contentsline {subsubsection}{\numberline {3.3.9}Closing}{17}{subsubsection.3.3.9}
+\contentsline {subsubsection}{\numberline {3.3.9}Morphological Closing}{17}{subsubsection.3.3.9}
 \contentsline {subsubsection}{\numberline {3.3.10}Image Differencing}{18}{subsubsection.3.3.10}
 \contentsline {subsubsection}{\numberline {3.3.11}Simple Intensity Differencing}{19}{subsubsection.3.3.11}
 \contentsline {subsubsection}{\numberline {3.3.12}Image Ratioing}{20}{subsubsection.3.3.12}
@@ -38,39 +38,39 @@
 \contentsline {subsubsection}{\numberline {4.2.4}\nobreakspace {}DO\nobreakspace {} OpenGL}{36}{subsubsection.4.2.4}
 \contentsline {subsubsection}{\numberline {4.2.5}\nobreakspace {}DO\nobreakspace {} ArUco}{36}{subsubsection.4.2.5}
 \contentsline {subsection}{\numberline {4.3}Capturing the Landscape map}{36}{subsection.4.3}
-\contentsline {subsubsection}{\numberline {4.3.1}\nobreakspace {}DO\nobreakspace {} Drawing the map}{36}{subsubsection.4.3.1}
+\contentsline {subsubsection}{\numberline {4.3.1}Drawing the map}{36}{subsubsection.4.3.1}
 \contentsline {subsubsection}{\numberline {4.3.2}Detecting Contours}{39}{subsubsection.4.3.2}
 \contentsline {subsubsection}{\numberline {4.3.3}Generating the Hierarchy Tree}{40}{subsubsection.4.3.3}
 \contentsline {subsubsection}{\numberline {4.3.4}\nobreakspace {}DO\nobreakspace {} Joining Contours}{42}{subsubsection.4.3.4}
-\contentsline {subsection}{\numberline {4.4}Generating the 3D scene}{42}{subsection.4.4}
-\contentsline {subsubsection}{\numberline {4.4.1}\nobreakspace {}DO\nobreakspace {} View Point alignment}{42}{subsubsection.4.4.1}
-\contentsline {subsubsection}{\numberline {4.4.2}\nobreakspace {}DO\nobreakspace {} From Hierarchy Tree to Height Map}{42}{subsubsection.4.4.2}
-\contentsline {subsubsection}{\numberline {4.4.3}\nobreakspace {}DO\nobreakspace {} Landscape Generation}{44}{subsubsection.4.4.3}
-\contentsline {subsection}{\numberline {4.5}Detecting change in the scene}{44}{subsection.4.5}
-\contentsline {subsubsection}{\numberline {4.5.1}Generating the Base image}{44}{subsubsection.4.5.1}
-\contentsline {subsubsection}{\numberline {4.5.2}\nobreakspace {}DO\nobreakspace {} Introducing change}{45}{subsubsection.4.5.2}
-\contentsline {subsubsection}{\numberline {4.5.3}\nobreakspace {}DO\nobreakspace {} Determining Stabilisation}{45}{subsubsection.4.5.3}
-\contentsline {subsubsection}{\numberline {4.5.4}Generating a Difference Image}{46}{subsubsection.4.5.4}
-\contentsline {subsubsection}{\numberline {4.5.5}\nobreakspace {}DO\nobreakspace {} Tracking the Fiducial Marker}{46}{subsubsection.4.5.5}
-\contentsline {subsubsection}{\numberline {4.5.6}\nobreakspace {}DO\nobreakspace {} Detecting Stabilisation}{46}{subsubsection.4.5.6}
+\contentsline {subsection}{\numberline {4.4}Generating the 3D scene}{43}{subsection.4.4}
+\contentsline {subsubsection}{\numberline {4.4.1}\nobreakspace {}DO\nobreakspace {} View Point alignment}{44}{subsubsection.4.4.1}
+\contentsline {subsubsection}{\numberline {4.4.2}\nobreakspace {}DO\nobreakspace {} From Hierarchy Tree to Height Map}{44}{subsubsection.4.4.2}
+\contentsline {subsubsection}{\numberline {4.4.3}\nobreakspace {}DO\nobreakspace {} Landscape Generation}{45}{subsubsection.4.4.3}
+\contentsline {subsection}{\numberline {4.5}Detecting change in the scene}{45}{subsection.4.5}
+\contentsline {subsubsection}{\numberline {4.5.1}Generating the Base image}{45}{subsubsection.4.5.1}
+\contentsline {subsubsection}{\numberline {4.5.2}Introducing change}{46}{subsubsection.4.5.2}
+\contentsline {subsubsection}{\numberline {4.5.3}Determining Stabilisation}{46}{subsubsection.4.5.3}
+\contentsline {subsubsection}{\numberline {4.5.4}Generating a Difference Image}{47}{subsubsection.4.5.4}
+\contentsline {subsubsection}{\numberline {4.5.5}\nobreakspace {}DO\nobreakspace {} Tracking the Fiducial Marker}{48}{subsubsection.4.5.5}
+\contentsline {subsubsection}{\numberline {4.5.6}Detecting Stabilisation}{48}{subsubsection.4.5.6}
 \contentsline {subsection}{\numberline {4.6}\nobreakspace {}DO\nobreakspace {} Restructure and regenerating the 3D scene}{48}{subsection.4.6}
-\contentsline {section}{\numberline {5}Evaluation}{48}{section.5}
-\contentsline {subsection}{\numberline {5.1}\nobreakspace {}DO\nobreakspace {} Test Measures}{48}{subsection.5.1}
-\contentsline {subsection}{\numberline {5.2}\nobreakspace {}DO\nobreakspace {} Indicators of Success}{48}{subsection.5.2}
-\contentsline {subsection}{\numberline {5.3}\nobreakspace {}DO\nobreakspace {} User Testing}{48}{subsection.5.3}
-\contentsline {subsubsection}{\numberline {5.3.1}\nobreakspace {}DO\nobreakspace {} Responsiveness}{49}{subsubsection.5.3.1}
-\contentsline {subsubsection}{\numberline {5.3.2}\nobreakspace {}DO\nobreakspace {} Aesthetics}{49}{subsubsection.5.3.2}
-\contentsline {subsection}{\numberline {5.4}\nobreakspace {}DO\nobreakspace {} Results}{49}{subsection.5.4}
-\contentsline {subsection}{\numberline {5.5}\nobreakspace {}DO\nobreakspace {} Overall Evaluation}{49}{subsection.5.5}
-\contentsline {section}{\numberline {6}\nobreakspace {}DO\nobreakspace {} Extensions}{49}{section.6}
-\contentsline {subsection}{\numberline {6.1}Immediate Extensions}{49}{subsection.6.1}
-\contentsline {subsubsection}{\numberline {6.1.1}Coloured Contours}{49}{subsubsection.6.1.1}
-\contentsline {subsubsection}{\numberline {6.1.2}Other markers}{50}{subsubsection.6.1.2}
-\contentsline {subsubsection}{\numberline {6.1.3}Photorealistic lighting environment}{50}{subsubsection.6.1.3}
-\contentsline {subsection}{\numberline {6.2}Future Extensions}{51}{subsection.6.2}
-\contentsline {subsubsection}{\numberline {6.2.1}The Leap Motion}{51}{subsubsection.6.2.1}
-\contentsline {subsubsection}{\numberline {6.2.2}No Calibration Marker}{52}{subsubsection.6.2.2}
-\contentsline {subsection}{\numberline {6.3}Continued testing and experimentation}{53}{subsection.6.3}
-\contentsline {subsubsection}{\numberline {6.3.1}\nobreakspace {}DO\nobreakspace {} Contour closing}{53}{subsubsection.6.3.1}
-\contentsline {subsubsection}{\numberline {6.3.2}\nobreakspace {}DO\nobreakspace {} Thresholding}{54}{subsubsection.6.3.2}
-\contentsline {subsubsection}{\numberline {6.3.3}\nobreakspace {}DO\nobreakspace {} Stabilisation of background}{54}{subsubsection.6.3.3}
+\contentsline {section}{\numberline {5}Evaluation}{50}{section.5}
+\contentsline {subsection}{\numberline {5.1}\nobreakspace {}DO\nobreakspace {} Test Measures}{50}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}\nobreakspace {}DO\nobreakspace {} Indicators of Success}{50}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}\nobreakspace {}DO\nobreakspace {} User Testing}{50}{subsection.5.3}
+\contentsline {subsubsection}{\numberline {5.3.1}\nobreakspace {}DO\nobreakspace {} Responsiveness}{51}{subsubsection.5.3.1}
+\contentsline {subsubsection}{\numberline {5.3.2}\nobreakspace {}DO\nobreakspace {} Aesthetics}{51}{subsubsection.5.3.2}
+\contentsline {subsection}{\numberline {5.4}\nobreakspace {}DO\nobreakspace {} Results}{51}{subsection.5.4}
+\contentsline {subsection}{\numberline {5.5}\nobreakspace {}DO\nobreakspace {} Overall Evaluation}{51}{subsection.5.5}
+\contentsline {section}{\numberline {6}\nobreakspace {}DO\nobreakspace {} Extensions}{51}{section.6}
+\contentsline {subsection}{\numberline {6.1}Immediate Extensions}{51}{subsection.6.1}
+\contentsline {subsubsection}{\numberline {6.1.1}Coloured Contours}{51}{subsubsection.6.1.1}
+\contentsline {subsubsection}{\numberline {6.1.2}Other markers}{52}{subsubsection.6.1.2}
+\contentsline {subsubsection}{\numberline {6.1.3}Photorealistic lighting environment}{52}{subsubsection.6.1.3}
+\contentsline {subsection}{\numberline {6.2}Future Extensions}{53}{subsection.6.2}
+\contentsline {subsubsection}{\numberline {6.2.1}The Leap Motion}{53}{subsubsection.6.2.1}
+\contentsline {subsubsection}{\numberline {6.2.2}No Calibration Marker}{54}{subsubsection.6.2.2}
+\contentsline {subsection}{\numberline {6.3}Continued testing and experimentation}{55}{subsection.6.3}
+\contentsline {subsubsection}{\numberline {6.3.1}\nobreakspace {}DO\nobreakspace {} Contour closing}{55}{subsubsection.6.3.1}
+\contentsline {subsubsection}{\numberline {6.3.2}\nobreakspace {}DO\nobreakspace {} Thresholding}{56}{subsubsection.6.3.2}
+\contentsline {subsubsection}{\numberline {6.3.3}\nobreakspace {}DO\nobreakspace {} Stabilisation of background}{56}{subsubsection.6.3.3}

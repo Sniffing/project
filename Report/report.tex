@@ -571,9 +571,10 @@ depending on how sensitive you want the operation to be.
 \end{figure}
 
 
-\subsubsection{Closing}
+\subsubsection{Morphological Closing}
+\label{sec:morphologicalclosing}
 \begin{center}
-Closing is Dilation followed by Erosion.
+Morphological Closing is Dilation followed by Erosion.
 \end{center}
 Closing is very similar to dilation but it aims to preserve more information.
 The Closing operation is no different to erosion or dilation in that we
@@ -1301,11 +1302,24 @@ support users. OpenGL interacts with GPUs to create computer graphics
 ArUco is a C++ Augmented Reality library that offers wrappers and methods
 based around OpenCV (versions 2.1 and above) that simplify the procedure
 of identifying fiducial markers in an image. The library is under the BSD
-license, created by the University of Cordoba in Spain. Release in 2014,
-this library is now ar version 1.2.5.\\
+license, created by the University of Cordoba in Spain. I am using the
+most recent release of the library: version 1.2.5.\\
 \\
 ArUco has been used in a multitude of projects already with success and 
-has helped me immensely in the creation of this project. 
+has helped me immensely in the creation of this project. The library 
+allowed me to easily integrate a fiducial marker into the landscape map
+and then detect this marker. Using properties of the marker, it was easy
+to identify where orientation of the landscape map. The library is also 
+pretty fast, however, it is worth noting that if this were to be ported
+to mobile applications, ArUco currently performs slower, taking
+around 100 milliseconds to detect a marker, about 20 times slower than
+on a substandard processor like a Pentium 4.
+
+\\
+The ArUco library is also sufficiently documented, although more work can
+be done in this area, it was enough to get me started. In addition, they
+had a couple of exemplar programs, some integrating with OpenGL which 
+allowed me to easily
 ............................MORE
 
 \subsection{Capturing the Landscape map}
@@ -1314,7 +1328,7 @@ part of the Augmented Reality pipeline which is to conduct Computer
 Vision algorithms of the scene the camera is capturing. This corresponds to
 reading in the video feed of the landscape map that the user has drawn.
 
-\subsubsection{~DO~ Drawing the map}
+\subsubsection{Drawing the map}
 During the implementation of the project, to initially start working 
 with contour detection and landscape maps. I asked 2 friends along with
 myself to draw potential landscape maps. I used these to test the
@@ -1324,10 +1338,11 @@ black biro pen. The reason for using black biro pen is that it is the most
 common utensil for the average person to use to draw or write things. Other utensils
 considered were pencils and black marker pens. Pencils will allow erasing parts
 of the scene, however, there will be gradient changes due to smudges and 
-the effects of rubbing out pencil drawings. I decided to leave this for a 
-part later in the project. Black marker pens are much thicker and thus easier
-to detect by vision techniques, however, I did not want to limit users to just
-black markers as they are not as commonplace as black biros.\\
+the effects of rubbing out pencil drawings. I decided to leave this 
+scenario for a point later in the project or in an extension. 
+Black marker pens are much thicker and thus easier
+to detect by vision techniques, however, I did not want to limit users
+to just black markers as they are not as commonplace as black biros.\\
 \\
 The images were drawn in specific ways, they can be viewed in Figure 
 \ref{fig:landscapeMaps}. \\
@@ -1545,6 +1560,7 @@ private:
 I keep this hierarchy as a global object in the program that is used
 whenever there is anything concerning contour manipulation as well as when
 creating the 3D scene which is explained later within this report.
+
 \subsubsection{~DO~ Joining Contours}
 Joining contours is a key part of this project. As can be seen in the
 section \ref{sec:hierarchytree}, the landscape map in Figure 
@@ -1559,14 +1575,67 @@ contours is inacccurate. Our primary goal now becomes to join contours
 before analysing any hierarchical data.\\
 \\
 The first step to join contours is to perform morphological closing on 
-the image. 
+the image. In Section \ref{sec:morphologicalclosing}, morphological closing 
+was described as dilation followed by erosion. I do it in the opposite
+way this time because we want the \textit{darker} areas (pen!) to expand
+rather than the typical brighter areas to dilate.
+
+\begin{lstlisting}
+void morph_Closing(Mat* image, float elementSize, Mat* output){
+  Mat structuringElement = getStructuringElement(MORPH_ELLIPSE,
+	Size(elementSize,elementSize),
+	Point(ceil(elementSize/2.0f), ceil(elementSize/2.0f)));
+  Mat erodedImage(image->rows, image->cols,DataType<float>::type);
+  
+  erode(image, erodedImage, element);
+  dilate(erodedImage,output,element);
+}
+\end{lstlisting}
 
 The next step is realising that sometimes, a single contour is split into
 two but since they actually are both from the same contour, their end and
 start points are very close. With this in mind, I implemented a 
-\texttt{naiveContourJoin} function. 
+\texttt{naiveContourJoin} function. The function call is shown below and
+the corresponding algorithm shown in Algorithm \ref{algo:naivecontourjoin}.
 
-.........................MORE
+\begin{lstlisting}
+vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, 
+		vector<vector<Point> >* joinedList)
+\end{lstlisting}
+
+\begin{algorithm}
+\DontPrintSemicolon
+\Begin{
+contourList is a vector of all contours, each contour is a vector of\;
+points which make up the contour.\;
+joinedList is the vector of returned contours.\;
+\;
+currentContour $\longleftarrow$ first contour in contours\;
+\For{contour $in$ contours[1..$length($contours$-1])$}{
+	\If{$adjacent($currentContour$,$contour$)$}{
+		$join($currentContour$,$contour$)$\;
+	}\Else{
+		add currentContour to joinedList\;
+		currentContour $\longleftarrow$ contour
+	}
+	add currentContour to joinedList\;
+	update the Hiearchy Tree\;
+}
+
+}
+\caption{Joining contours based on proximity of start and end points.}
+\label{algo:naivecontourjoin}
+\end{algorithm}
+
+The function \texttt{naiveContourJoin} works by traversing the list of 
+contours and examining in turn whether two contoursare adjacent, due to 
+the nature in which OpenCV identifies contours, we can safely consider 
+contours adjacent to each other in the list to check their adjacency. 
+Adjacency is determined by whether the start or end of one contour is within
+a certain area of the strat or end of another contour. If it is, the 
+contours are joined, if not, we move on down the list.
+
+.........................MORE(other methods)
 
 \subsection{Generating the 3D scene}
 After the initial Computer Vision aspect of the program has been completed,
@@ -1597,6 +1666,7 @@ basic interpolation function that assigns a height as described in the
 pseudocode in Algorithm \ref{algo:assignHeights}.
 
 \begin{algorithm}
+\DontPrintSemicolon
 \Begin{
 \For{$h\in imageHeight$}{
 	\For{$w \in imageWidth$}{
@@ -1627,6 +1697,7 @@ algorithm, seen in Algorithm \ref{algo:assignHeights2}
 
 .......................DO BELOW
 \begin{algorithm}
+\DontPrintSemicolon
 \Begin{
 \For{$h\in imageHeight$}{
 	\For{$w \in imageWidth$}{
@@ -1679,11 +1750,37 @@ out to determine whether significant change has been taken place. After a
 threshold point, the Base can be considered to have changed and a new Base 
 Frame will be stored. 
 
-\subsubsection{~DO~ Introducing change}
+\subsubsection{Introducing change}
+Change in the landscape map occurs in two ways, they may simultaenously
+happen. The first way is by physically editing the landscape map. A user
+can add and remove contours by drawing them in or erasing them from the 
+scene. Removal of contours, however, will probably cause detection of
+the other type of change which is positional change. When a user erases
+a contour, they will likely shift the paper, when the user is not
+erasing a contour, they may also rotate or move the paper around the camera
+view.\\
+\\
+With each of these types of change, the scene has to be redrawn. Change
+can also be introduced in other ways, some include obsuring of the scene
+or the fiducial marker, drastic changes in illumination, objects
+moving into the scene etc. However, with regards to 
+Section \ref{sec:assumptions}, I assume that such unlikely and controllable
+factors by the user will not occur and thus not cause problems in
+change detection.\\
+\\
+However, I had to consider the event of small changes. This means slight
+changes in the scene, i.e. say the user accidentally bumped the table on
+which their camera sat, this causes a small misalignment in the camera.
+Another scenario is that the user accidentally brushes the landscape map
+with their hand and ever-so-slightly moves it from it's original position.
+In cases similar to these, the change is so insignifcant that it hardly
+demands a re-render of the scene and thus should not. Thus, to counter
+this, I introduce various change thresholds which any change in the scene 
+must surpass to count as adequate change for a redraw.
 
+...................MORE (DO THE PICTURE TESTS AND THRESHOLDS)
 
-
-\subsubsection{~DO~ Determining Stabilisation}
+\subsubsection{Determining Stabilisation}
 The key part of creating the dynamic, self-updating environment
 is determining when it is time to update. The reason for this
 is that there should be an interval between a scene update that is 
@@ -1755,7 +1852,7 @@ between the two images, pixels with a difference higher than
 
 \subsubsection{~DO~ Tracking the Fiducial Marker}
 
-\subsubsection{~DO~ Detecting Stabilisation}
+\subsubsection{Detecting Stabilisation}
 After figuring out how to detect change, all that remains is to use those
 as ways to indicate stabilisation. Due to the sparse spread of code
 for the project, I have instead included the pseudocode algorithm I 
@@ -1763,6 +1860,7 @@ used to detect stabilisation in the image, seen in
 Algorithm \ref{algo:stabilisation}. 
 
 \begin{algorithm}
+\DontPrintSemicolon
 BaseFrame is an image,\\
 PotentialNewFrame starts off as equal to BaseFrame,\\
 PotentialChange is a global flag,\\
@@ -1774,12 +1872,12 @@ StabilisedCounter is a global counter of frames.
 	differenceImg $\longleftarrow getDifferenceImage(BaseFrame,thisFrame)$\;
 	changedPixels $\longleftarrow countNonZero(differenceImg)$\;
 	
-	\uIf{changesPixels $> FRAME\_CHANGE\_THRESHOLD$}{
+	\If{changedPixels $>$ frame\_change\_threshold}{
 		PotentialNewFram $\longleftarrow$ thisFrame\;
 		PotentialChange $\longleftarrow true$\;
-	}\uElseIf{PotentialChange is false}{
+	}\ElseIf{PotentialChange is false}{
 		StabilisedCounter++\;
-		\If{StabilisedCounter $\> CHANGE\_REQUIREMENT$}{
+		\If{StabilisedCounter $> $change\_requirement}{
 			StabilisedCounter $\longleftarrow 0$\;
 			BaseFrame $\longleftarrow$ PotentialNewFrame\;
 			PotentialChange $\longleftarrow false$\;
@@ -1792,9 +1890,21 @@ StabilisedCounter is a global counter of frames.
 \label{algo:stabilisation}
 \end{algorithm}
 
-The logic behind the algorithm is rather simple. From the base frame,
-each subsequent frame has the potential to become the new base frame should
-there be enough change between the two.
+The logic behind the algorithm is as follows, from the base frame
+each subsequent frame has the potential to become the new base frame, should
+there be enough change between the two. Every time there is a significant 
+difference between the last potential base frame and the next frame, the
+potential base fram egets updated. If there are frames after the potential
+base frame has been set that show change \textit{underneath} the threshold
+then the stabilisation counter, \texttt{StabilisedCounter}, will be 
+incremented. When \texttt{Stabilised Counter} has surpassed a set threshold
+value, it indicates that there is high posibility that the scene has
+settled from the last potential base frame update. What this transates
+into is that it is likel the user has now moved their hand out of shot of the
+paper and finisehd their change to the scene. When stability has been
+achieved, a re-render of the scene and recaluclation of the hierarchy tree 
+and height maps need to be done. Other stabilisation variables are reset for
+next time a change might occur.
 
 \subsection{~DO~ Restructure and regenerating the 3D scene}
 After substantial difference has been identified by the program, there is

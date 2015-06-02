@@ -16,7 +16,7 @@
 \BOOKMARK [3][-]{subsubsection.3.3.6}{Mathematical Morphology}{subsection.3.3}% 16
 \BOOKMARK [3][-]{subsubsection.3.3.7}{Erosion}{subsection.3.3}% 17
 \BOOKMARK [3][-]{subsubsection.3.3.8}{Dilation}{subsection.3.3}% 18
-\BOOKMARK [3][-]{subsubsection.3.3.9}{Closing}{subsection.3.3}% 19
+\BOOKMARK [3][-]{subsubsection.3.3.9}{Morphological Closing}{subsection.3.3}% 19
 \BOOKMARK [3][-]{subsubsection.3.3.10}{Image Differencing}{subsection.3.3}% 20
 \BOOKMARK [3][-]{subsubsection.3.3.11}{Simple Intensity Differencing}{subsection.3.3}% 21
 \BOOKMARK [3][-]{subsubsection.3.3.12}{Image Ratioing}{subsection.3.3}% 22
@@ -38,7 +38,7 @@
 \BOOKMARK [3][-]{subsubsection.4.2.4}{ DO \040OpenGL}{subsection.4.2}% 38
 \BOOKMARK [3][-]{subsubsection.4.2.5}{ DO \040ArUco}{subsection.4.2}% 39
 \BOOKMARK [2][-]{subsection.4.3}{Capturing the Landscape map}{section.4}% 40
-\BOOKMARK [3][-]{subsubsection.4.3.1}{ DO \040Drawing the map}{subsection.4.3}% 41
+\BOOKMARK [3][-]{subsubsection.4.3.1}{Drawing the map}{subsection.4.3}% 41
 \BOOKMARK [3][-]{subsubsection.4.3.2}{Detecting Contours}{subsection.4.3}% 42
 \BOOKMARK [3][-]{subsubsection.4.3.3}{Generating the Hierarchy Tree}{subsection.4.3}% 43
 \BOOKMARK [3][-]{subsubsection.4.3.4}{ DO \040Joining Contours}{subsection.4.3}% 44
@@ -48,11 +48,11 @@
 \BOOKMARK [3][-]{subsubsection.4.4.3}{ DO \040Landscape Generation}{subsection.4.4}% 48
 \BOOKMARK [2][-]{subsection.4.5}{Detecting change in the scene}{section.4}% 49
 \BOOKMARK [3][-]{subsubsection.4.5.1}{Generating the Base image}{subsection.4.5}% 50
-\BOOKMARK [3][-]{subsubsection.4.5.2}{ DO \040Introducing change}{subsection.4.5}% 51
-\BOOKMARK [3][-]{subsubsection.4.5.3}{ DO \040Determining Stabilisation}{subsection.4.5}% 52
+\BOOKMARK [3][-]{subsubsection.4.5.2}{Introducing change}{subsection.4.5}% 51
+\BOOKMARK [3][-]{subsubsection.4.5.3}{Determining Stabilisation}{subsection.4.5}% 52
 \BOOKMARK [3][-]{subsubsection.4.5.4}{Generating a Difference Image}{subsection.4.5}% 53
 \BOOKMARK [3][-]{subsubsection.4.5.5}{ DO \040Tracking the Fiducial Marker}{subsection.4.5}% 54
-\BOOKMARK [3][-]{subsubsection.4.5.6}{ DO \040Detecting Stabilisation}{subsection.4.5}% 55
+\BOOKMARK [3][-]{subsubsection.4.5.6}{Detecting Stabilisation}{subsection.4.5}% 55
 \BOOKMARK [2][-]{subsection.4.6}{ DO \040Restructure and regenerating the 3D scene}{section.4}% 56
 \BOOKMARK [1][-]{section.5}{Evaluation}{}% 57
 \BOOKMARK [2][-]{subsection.5.1}{ DO \040Test Measures}{section.5}% 58
