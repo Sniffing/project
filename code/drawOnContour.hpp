@@ -35,6 +35,8 @@ using namespace aruco;
 
 Size TheGlWindowSize;
 
+#define WIN_SIZE 256
+
 int upperthresh = 2000;
 int lowerthresh = 900;
 int NEIGHBOURHOOD = 5;
@@ -150,17 +152,17 @@ void checkForChange(Mat* thisFrame){
       createLandscape();
     } else if(NEW_BASE_THRESHOLD < pixelsChanged){
       //IF threshold is passed, mark this frame up for potential new base
-      cout << "new potential found" << endl;
+      //cout << "new potential found" << endl;
       POTENTIAL_NEW_BASEFRAME = *thisFrame;
       potentialChange = true;
       changedFrameCounter = 0;
     } else if(potentialChange){   
       //If there is a potential new base and the threshold was not passed,
       //start counting to see if it is stabilised.
-      cout << "incrementing" << endl;
+      //cout << "incrementing" << endl;
       changedFrameCounter++;
       if(changedFrameCounter > STABILISATION_REQUIREMENT) {
-	cout << "STABILISED" << endl;
+	//cout << "STABILISED" << endl;
 	changedFrameCounter = 0;
 	potentialChange = false;
 	BASEFRAME = POTENTIAL_NEW_BASEFRAME;
@@ -201,24 +203,24 @@ GLuint makeBackground(Mat* image){
   return BG_TEXTURE;
 }
 
-// void drawBackground(GLuint temp_texture){
-//   glMatrixMode(GL_PROJECTION);
+void drawBackground(GLuint temp_texture){
+  glMatrixMode(GL_PROJECTION);
 
-//   glLoadIdentity();
-//   //Background being drawn at depth z=0 so anything +ve clips it
-//   glOrtho(-(WIN_SIZE/2.0f),WIN_SIZE/2.0f,-(WIN_SIZE/2.0f),WIN_SIZE/2.0f,0.0f,10.0f);
-//   glEnable(GL_TEXTURE_2D);
-//   glBindTexture(GL_TEXTURE_2D,temp_texture);
+  glLoadIdentity();
+  //Background being drawn at depth z=0 so anything +ve clips it
+  glOrtho(-(WIN_SIZE/2.0f),WIN_SIZE/2.0f,-(WIN_SIZE/2.0f),WIN_SIZE/2.0f,0.0f,10.0f);
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D,temp_texture);
   
-//   glBegin( GL_QUADS ); 
-//   glTexCoord2f( 0.0f, 0.0f );glVertex2f( -(WIN_SIZE/2.0f), -(WIN_SIZE/2.0f));
-//   glTexCoord2f( 0.0f, 1.0f );glVertex2f( -(WIN_SIZE/2.0f),(WIN_SIZE/2.0f) );
-//   glTexCoord2f( 1.0f, 1.0f );glVertex2f( (WIN_SIZE/2.0f),(WIN_SIZE/2.0f) );
-//   glTexCoord2f( 1.0f, 0.0f );glVertex2f( (WIN_SIZE/2.0f), -(WIN_SIZE/2.0f));
-//   glEnd();
-//   glDisable(GL_TEXTURE_2D);
+  glBegin( GL_QUADS ); 
+  glTexCoord2f( 0.0f, 0.0f );glVertex2f( -(WIN_SIZE/2.0f), -(WIN_SIZE/2.0f));
+  glTexCoord2f( 0.0f, 1.0f );glVertex2f( -(WIN_SIZE/2.0f),(WIN_SIZE/2.0f) );
+  glTexCoord2f( 1.0f, 1.0f );glVertex2f( (WIN_SIZE/2.0f),(WIN_SIZE/2.0f) );
+  glTexCoord2f( 1.0f, 0.0f );glVertex2f( (WIN_SIZE/2.0f), -(WIN_SIZE/2.0f));
+  glEnd();
+  glDisable(GL_TEXTURE_2D);
   
-// }
+}
 
 
 float findDistanceToNearestChild(vector<TreeNode*>* children,vector<vector<Point> >*contours, Point p){
@@ -259,7 +261,7 @@ TreeNode* getContainingContour(TreeNode* currNode, Point p, vector<vector<Point>
 float assignHeight(int baseLevel, int topLevel, vector<vector<Point> >*contours, TreeNode* contourNode, Point p){
   if(baseLevel <= 0) {
     //If outside, don't give it anything
-    return 0.000001;
+    return -1;
   } else {
     float distanceToContainer = fabs(pointPolygonTest(contours->at(contourNode->getID()),p,true));   
     float distanceToNext;

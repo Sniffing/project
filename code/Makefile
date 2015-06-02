@@ -102,6 +102,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named drawOnContour
+
+# Build rule for target.
+drawOnContour: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 drawOnContour
+.PHONY : drawOnContour
+
+# fast build rule for target.
+drawOnContour/fast:
+	$(MAKE) -f CMakeFiles/drawOnContour.dir/build.make CMakeFiles/drawOnContour.dir/build
+.PHONY : drawOnContour/fast
+
+#=============================================================================
 # Target rules for targets named landscapeCreator
 
 # Build rule for target.
@@ -113,6 +126,30 @@ landscapeCreator: cmake_check_build_system
 landscapeCreator/fast:
 	$(MAKE) -f CMakeFiles/landscapeCreator.dir/build.make CMakeFiles/landscapeCreator.dir/build
 .PHONY : landscapeCreator/fast
+
+drawOnContour.o: drawOnContour.cpp.o
+.PHONY : drawOnContour.o
+
+# target to build an object file
+drawOnContour.cpp.o:
+	$(MAKE) -f CMakeFiles/drawOnContour.dir/build.make CMakeFiles/drawOnContour.dir/drawOnContour.cpp.o
+.PHONY : drawOnContour.cpp.o
+
+drawOnContour.i: drawOnContour.cpp.i
+.PHONY : drawOnContour.i
+
+# target to preprocess a source file
+drawOnContour.cpp.i:
+	$(MAKE) -f CMakeFiles/drawOnContour.dir/build.make CMakeFiles/drawOnContour.dir/drawOnContour.cpp.i
+.PHONY : drawOnContour.cpp.i
+
+drawOnContour.s: drawOnContour.cpp.s
+.PHONY : drawOnContour.s
+
+# target to generate assembly for a file
+drawOnContour.cpp.s:
+	$(MAKE) -f CMakeFiles/drawOnContour.dir/build.make CMakeFiles/drawOnContour.dir/drawOnContour.cpp.s
+.PHONY : drawOnContour.cpp.s
 
 landscapeCreator.o: landscapeCreator.cpp.o
 .PHONY : landscapeCreator.o
@@ -144,9 +181,13 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... drawOnContour"
 	@echo "... edit_cache"
 	@echo "... landscapeCreator"
 	@echo "... rebuild_cache"
+	@echo "... drawOnContour.o"
+	@echo "... drawOnContour.i"
+	@echo "... drawOnContour.s"
 	@echo "... landscapeCreator.o"
 	@echo "... landscapeCreator.i"
 	@echo "... landscapeCreator.s"
