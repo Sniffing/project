@@ -102,41 +102,41 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named drawOnContour
+# Target rules for targets named landscapeCreator
 
 # Build rule for target.
-drawOnContour: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 drawOnContour
-.PHONY : drawOnContour
+landscapeCreator: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 landscapeCreator
+.PHONY : landscapeCreator
 
 # fast build rule for target.
-drawOnContour/fast:
-	$(MAKE) -f CMakeFiles/drawOnContour.dir/build.make CMakeFiles/drawOnContour.dir/build
-.PHONY : drawOnContour/fast
+landscapeCreator/fast:
+	$(MAKE) -f CMakeFiles/landscapeCreator.dir/build.make CMakeFiles/landscapeCreator.dir/build
+.PHONY : landscapeCreator/fast
 
-drawOnContour.o: drawOnContour.cpp.o
-.PHONY : drawOnContour.o
+landscapeCreator.o: landscapeCreator.cpp.o
+.PHONY : landscapeCreator.o
 
 # target to build an object file
-drawOnContour.cpp.o:
-	$(MAKE) -f CMakeFiles/drawOnContour.dir/build.make CMakeFiles/drawOnContour.dir/drawOnContour.cpp.o
-.PHONY : drawOnContour.cpp.o
+landscapeCreator.cpp.o:
+	$(MAKE) -f CMakeFiles/landscapeCreator.dir/build.make CMakeFiles/landscapeCreator.dir/landscapeCreator.cpp.o
+.PHONY : landscapeCreator.cpp.o
 
-drawOnContour.i: drawOnContour.cpp.i
-.PHONY : drawOnContour.i
+landscapeCreator.i: landscapeCreator.cpp.i
+.PHONY : landscapeCreator.i
 
 # target to preprocess a source file
-drawOnContour.cpp.i:
-	$(MAKE) -f CMakeFiles/drawOnContour.dir/build.make CMakeFiles/drawOnContour.dir/drawOnContour.cpp.i
-.PHONY : drawOnContour.cpp.i
+landscapeCreator.cpp.i:
+	$(MAKE) -f CMakeFiles/landscapeCreator.dir/build.make CMakeFiles/landscapeCreator.dir/landscapeCreator.cpp.i
+.PHONY : landscapeCreator.cpp.i
 
-drawOnContour.s: drawOnContour.cpp.s
-.PHONY : drawOnContour.s
+landscapeCreator.s: landscapeCreator.cpp.s
+.PHONY : landscapeCreator.s
 
 # target to generate assembly for a file
-drawOnContour.cpp.s:
-	$(MAKE) -f CMakeFiles/drawOnContour.dir/build.make CMakeFiles/drawOnContour.dir/drawOnContour.cpp.s
-.PHONY : drawOnContour.cpp.s
+landscapeCreator.cpp.s:
+	$(MAKE) -f CMakeFiles/landscapeCreator.dir/build.make CMakeFiles/landscapeCreator.dir/landscapeCreator.cpp.s
+.PHONY : landscapeCreator.cpp.s
 
 # Help Target
 help:
@@ -144,12 +144,12 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... drawOnContour"
 	@echo "... edit_cache"
+	@echo "... landscapeCreator"
 	@echo "... rebuild_cache"
-	@echo "... drawOnContour.o"
-	@echo "... drawOnContour.i"
-	@echo "... drawOnContour.s"
+	@echo "... landscapeCreator.o"
+	@echo "... landscapeCreator.i"
+	@echo "... landscapeCreator.s"
 .PHONY : help
 
 

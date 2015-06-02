@@ -16,72 +16,6 @@
 // }
 
 
-bool baseMarkerChange(Marker m){
-  double nTLx, nTLy, nTRx, nTRy, 
-    nBLx, nBLy, nBRx, nBRy;
-  nTLx = m[0].x; nTLy = m[0].y;
-  nTRx = m[1].x; nTRy = m[1].y;
-  nBLx = m[2].x; nBLy = m[2].y;
-  nBRx = m[3].x; nBRy = m[3].y;
-
-  if(enoughChange(nTLx, nTLy, nTRx, nTRy, nBLx, nBLy, nBRx, nBRy)){
-    cout << "Significant Change" << endl;
-    TLx = nTLx; TLy = nTLy;
-    TRx = nTRx; TRy = nTRy;
-    BLx = nBLx; BLy = nBLy;
-    BRx = nBRx; BRy = nBRy;
-  }
-}
-
-void checkForChange(Mat* thisFrame){  
-  Mat* diffFrame = new Mat(BASEFRAME.rows, BASEFRAME.cols,DataType<float>::type) ;
-  absdiff(POTENTIAL_NEW_BASEFRAME, *thisFrame, *diffFrame);	
-  threshold(*diffFrame, *diffFrame, CHANGE_THRESHOLD, MAX_COLOUR_VAL, THRESH_BINARY);
-  int pixelsChanged = countNonZero(*diffFrame > 0);
-
-  //readCameraParameters();
-  vector<Marker> markers;
-  markerDetector.detect(*thisFrame,markers,camParams);
-
-  if(markers.size() > 1) {
-    cout << "Multiple Markers found" << endl;
-  } else if (markers.empty()) {
-    //cout << "Marker not in view" << endl;
-  } else {
-    if (BASEMARKER.isValid()){
-      BASEMARKER = markers[0];
-      assignCorners();
-    }
-  }
-
-  //There should only be one marker in the scene, if there are multiple,
-  //only find the first one. Thus the markers vector HAS TO BE AT LEAST 1
-  if(markers.size() > 0){
-    if(baseMarkerChange(markers[0])){
-      changedFrameCounter = 0;
-      BASEFRAME = *thisFrame;
-      createLandscape();
-    } else if(NEW_BASE_THRESHOLD < pixelsChanged){
-      //IF threshold is passed, mark this frame up for potential new base
-      cout << "new potential found" << endl;
-      POTENTIAL_NEW_BASEFRAME = *thisFrame;
-      potentialChange = true;
-      changedFrameCounter = 0;
-    } else if(potentialChange){   
-      //If there is a potential new base and the threshold was not passed,
-      //start counting to see if it is stabilised.
-      cout << "incrementing" << endl;
-      changedFrameCounter++;
-      if(changedFrameCounter > STABILISATION_REQUIREMENT) {
-	cout << "STABILISED" << endl;
-	changedFrameCounter = 0;
-	potentialChange = false;
-	BASEFRAME = POTENTIAL_NEW_BASEFRAME;
-	createLandscape();
-      }
-    }
-  }
-}
 
 
 void UndistortImage(Mat* image, Mat* undImage){
@@ -200,35 +134,6 @@ void reshape(int x, int y)
   win_height = y;
 }
 
-void createLandscape(){
-  Mat scaledImage(WIN_SIZE,WIN_SIZE, DataType<float>::type);
-  resize(BASEFRAME,scaledImage,scaledImage.size(),0,0,INTER_LINEAR);
-  
-  //erosion then dilation since we want the darker (pen) regions to close
-  erode(scaledImage,erodedImage,element);
-  dilate(erodedImage,dilatedImage,element);
-
-  Canny(dilatedImage,contourImage,lowerthresh,upperthresh,5);
-  findContours( contourImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_NONE, Point(0, 0) );
-
-
-  if(contours.size() > 0) {
-    vector<vector<Point> >* joinedContours = new vector<vector<Point> >();
-    //vector<vector<Point> >* approximatedContours = new vector<vector<Point> >();
-    time(&tree_start);
-    h_tree = createHierarchyTree(&hierarchy);
-    time(&tree_end);
-
-    naiveContourJoin(&contours, joinedContours, h_tree);
-    joinedContours = nubContours(joinedContours); 
-    //naiveDoubleRemoval(joinedContours, h_tree);
-    cout << h_tree->getSize() << " contours found" << endl;
-  
-    int map[WIN_SIZE][WIN_SIZE];
-
-    createHeightMap(joinedContours, h_tree, WIN_SIZE,WIN_SIZE);
-  }
-}
 
 int main(int argc, char** argv){
 
@@ -242,7 +147,7 @@ int main(int argc, char** argv){
   element = getStructuringElement( MORPH_ELLIPSE,
 				     Size( 5, 5 ),
 				     Point( ceil(5.0f/2.0), ceil(5.0f/2.0) ) );
-  readCameraParameters(argv[1]);
+  //readCameraParameters(argv[1]);
   //BASEFRAME = imread("testpics/simple.jpg",CV_LOAD_IMAGE_GRAYSCALE);
  
   int check = 0;
@@ -256,7 +161,6 @@ int main(int argc, char** argv){
   cam >> frame;
   cvtColor(frame, BASEFRAME,CV_BGR2GRAY);
   POTENTIAL_NEW_BASEFRAME = BASEFRAME;
-  //GLWINDOW_SIZE = frame.size();
   createLandscape();
 
 

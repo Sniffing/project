@@ -11,7 +11,16 @@
 #include <aruco/cvdrawingutils.h>
 #include <stack>
 
-#define WIN_SIZE 256
+#include <fstream>
+#include <sstream>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/gl.h>
+#include <GL/glut.h>
+#endif
+
+
 #define MAX_COLOUR_VAL 255
 #define CHANGE_THRESHOLD 100
 #define NEW_BASE_THRESHOLD 200
@@ -24,6 +33,8 @@ using namespace cv;
 using namespace std;
 using namespace aruco;
 
+Size TheGlWindowSize;
+
 int upperthresh = 2000;
 int lowerthresh = 900;
 int NEIGHBOURHOOD = 5;
@@ -32,7 +43,10 @@ vector<vector<Point> > contours;
 vector<Vec4i> hierarchy;
 Tree* h_tree;
 
-float hmap[WIN_SIZE][WIN_SIZE];
+
+const int WIN_WIDTH = 640;
+const int WIN_HEIGHT = 480;
+float hmap[WIN_HEIGHT][WIN_WIDTH];
 
 GLuint BG_TEXTURE = 0;
 
@@ -47,8 +61,8 @@ int changedFrameCounter = 0;
 Mat contourImage;
 MarkerDetector markerDetector;
 
-Mat erodedImage(WIN_SIZE,WIN_SIZE,DataType<float>::type);
-Mat dilatedImage(WIN_SIZE,WIN_SIZE,DataType<float>::type);
+Mat erodedImage;
+Mat dilatedImage;
 Mat element;
 
 clock_t height_map_start, height_map_end;
@@ -58,10 +72,7 @@ clock_t drawing_start, drawing_end;
 clock_t singlepptest_start, singlepptest_end;
 clock_t containing_start,containing_end;
 
-Size GLWINDOW_SIZE;
-
 int globalFPS;
-VideoCapture cam = VideoCapture(0);
 CameraParameters camParams;
 
 //////////////////////////////////////////////////////////
@@ -74,21 +85,92 @@ void init(void)
 }
 
 
-void readCameraParameters(String cameraFile){
-  
-  // FileStorage fs2(cameraFile, FileStorage::READ);
-  // Mat intrinsics, distortionCoefficients,extrinsics;
-  // fs2["camera_matrix"] >> intrinsics;
-  // fs2["distortion_coefficients"] >> distortionCoefficients;
-  // fs2["extrinsic_parameters"] >> extrinsics;
-
-  // cout << intrinsics << endl;
-  // cout << extrinsics << endl;
-  // cout << distortionCoefficients << endl;
-
-  //fs2.release();
-  camParams.readFromXMLFile(cameraFile);
+void assignCorners(){
+  TLx = BASEMARKER[0].x; TLy = BASEMARKER[0].y;
+  TRx = BASEMARKER[1].x; TRy = BASEMARKER[1].y;
+  BLx = BASEMARKER[2].x; BLy = BASEMARKER[2].y;
+  BRx = BASEMARKER[3].x; BRy = BASEMARKER[3].y;
 }
+
+
+bool enoughChange(double nTLx,double nTLy,double nTRx, double nTRy,
+		  double nBLx,double nBLy,double nBRx, double nBRy) {
+  double totalDiff = abs(nTLx-TLx) + abs(nTLy-TLy) +
+                     abs(nTRx-TRx) + abs(nTRy-TRy) + 
+                     abs(nBLx-BLx) + abs(nBLy-BLy) +
+                     abs(nBRx-BRx) + abs(nBRy-BRy);
+  return(totalDiff > MARKER_MOVEMENT_LIMIT*8);
+}
+
+
+
+bool baseMarkerChange(Marker m){
+  double nTLx, nTLy, nTRx, nTRy, 
+    nBLx, nBLy, nBRx, nBRy;
+  nTLx = m[0].x; nTLy = m[0].y;
+  nTRx = m[1].x; nTRy = m[1].y;
+  nBLx = m[2].x; nBLy = m[2].y;
+  nBRx = m[3].x; nBRy = m[3].y;
+
+  if(enoughChange(nTLx, nTLy, nTRx, nTRy, nBLx, nBLy, nBRx, nBRy)){
+    cout << "Significant Change" << endl;
+    TLx = nTLx; TLy = nTLy;
+    TRx = nTRx; TRy = nTRy;
+    BLx = nBLx; BLy = nBLy;
+    BRx = nBRx; BRy = nBRy;
+  }
+}
+
+void checkForChange(Mat* thisFrame){  
+  Mat* diffFrame = new Mat(BASEFRAME.rows, BASEFRAME.cols,DataType<float>::type) ;
+  absdiff(POTENTIAL_NEW_BASEFRAME, *thisFrame, *diffFrame);	
+  threshold(*diffFrame, *diffFrame, CHANGE_THRESHOLD, MAX_COLOUR_VAL, THRESH_BINARY);
+  int pixelsChanged = countNonZero(*diffFrame > 0);
+
+  vector<Marker> markers;
+  markerDetector.detect(*thisFrame,markers,camParams);
+
+  if(markers.size() > 1) {
+    cout << "Multiple Markers found" << endl;
+  } else if (markers.empty()) {
+    //cout << "Marker not in view" << endl;
+  } else {
+    if (BASEMARKER.isValid()){
+      BASEMARKER = markers[0];
+      assignCorners();
+    }
+  }
+
+  //There should only be one marker in the scene, if there are multiple,
+  //only find the first one. Thus the markers vector HAS TO BE AT LEAST 1
+  if(markers.size() > 0){
+    if(baseMarkerChange(markers[0])){
+      changedFrameCounter = 0;
+      BASEFRAME = *thisFrame;
+      createLandscape();
+    } else if(NEW_BASE_THRESHOLD < pixelsChanged){
+      //IF threshold is passed, mark this frame up for potential new base
+      cout << "new potential found" << endl;
+      POTENTIAL_NEW_BASEFRAME = *thisFrame;
+      potentialChange = true;
+      changedFrameCounter = 0;
+    } else if(potentialChange){   
+      //If there is a potential new base and the threshold was not passed,
+      //start counting to see if it is stabilised.
+      cout << "incrementing" << endl;
+      changedFrameCounter++;
+      if(changedFrameCounter > STABILISATION_REQUIREMENT) {
+	cout << "STABILISED" << endl;
+	changedFrameCounter = 0;
+	potentialChange = false;
+	BASEFRAME = POTENTIAL_NEW_BASEFRAME;
+	createLandscape();
+      }
+    }
+  }
+}
+
+
 
 GLuint makeBackground(Mat* image){
   if (image->empty()) {
@@ -119,41 +201,24 @@ GLuint makeBackground(Mat* image){
   return BG_TEXTURE;
 }
 
-void assignCorners(){
-  TLx = BASEMARKER[0].x; TLy = BASEMARKER[0].y;
-  TRx = BASEMARKER[1].x; TRy = BASEMARKER[1].y;
-  BLx = BASEMARKER[2].x; BLy = BASEMARKER[2].y;
-  BRx = BASEMARKER[3].x; BRy = BASEMARKER[3].y;
-}
+// void drawBackground(GLuint temp_texture){
+//   glMatrixMode(GL_PROJECTION);
 
-bool enoughChange(double nTLx,double nTLy,double nTRx, double nTRy,
-		  double nBLx,double nBLy,double nBRx, double nBRy) {
-  double totalDiff = abs(nTLx-TLx) + abs(nTLy-TLy) +
-                     abs(nTRx-TRx) + abs(nTRy-TRy) + 
-                     abs(nBLx-BLx) + abs(nBLy-BLy) +
-                     abs(nBRx-BRx) + abs(nBRy-BRy);
-  return(totalDiff > MARKER_MOVEMENT_LIMIT*8);
-}
-
-
-void drawBackground(GLuint temp_texture){
-  glMatrixMode(GL_PROJECTION);
-
-  glLoadIdentity();
-  //Background being drawn at depth z=0 so anything +ve clips it
-  glOrtho(-(WIN_SIZE/2.0f),WIN_SIZE/2.0f,-(WIN_SIZE/2.0f),WIN_SIZE/2.0f,0.0f,10.0f);
-  glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D,temp_texture);
+//   glLoadIdentity();
+//   //Background being drawn at depth z=0 so anything +ve clips it
+//   glOrtho(-(WIN_SIZE/2.0f),WIN_SIZE/2.0f,-(WIN_SIZE/2.0f),WIN_SIZE/2.0f,0.0f,10.0f);
+//   glEnable(GL_TEXTURE_2D);
+//   glBindTexture(GL_TEXTURE_2D,temp_texture);
   
-  glBegin( GL_QUADS ); 
-  glTexCoord2f( 0.0f, 0.0f );glVertex2f( -(WIN_SIZE/2.0f), -(WIN_SIZE/2.0f));
-  glTexCoord2f( 0.0f, 1.0f );glVertex2f( -(WIN_SIZE/2.0f),(WIN_SIZE/2.0f) );
-  glTexCoord2f( 1.0f, 1.0f );glVertex2f( (WIN_SIZE/2.0f),(WIN_SIZE/2.0f) );
-  glTexCoord2f( 1.0f, 0.0f );glVertex2f( (WIN_SIZE/2.0f), -(WIN_SIZE/2.0f));
-  glEnd();
-  glDisable(GL_TEXTURE_2D);
+//   glBegin( GL_QUADS ); 
+//   glTexCoord2f( 0.0f, 0.0f );glVertex2f( -(WIN_SIZE/2.0f), -(WIN_SIZE/2.0f));
+//   glTexCoord2f( 0.0f, 1.0f );glVertex2f( -(WIN_SIZE/2.0f),(WIN_SIZE/2.0f) );
+//   glTexCoord2f( 1.0f, 1.0f );glVertex2f( (WIN_SIZE/2.0f),(WIN_SIZE/2.0f) );
+//   glTexCoord2f( 1.0f, 0.0f );glVertex2f( (WIN_SIZE/2.0f), -(WIN_SIZE/2.0f));
+//   glEnd();
+//   glDisable(GL_TEXTURE_2D);
   
-}
+// }
 
 
 float findDistanceToNearestChild(vector<TreeNode*>* children,vector<vector<Point> >*contours, Point p){
@@ -303,6 +368,39 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
   }
   height_map_end=clock();
 }
+
+void createLandscape(){
+  Mat scaledImage(TheGlWindowSize.height,TheGlWindowSize.width, DataType<float>::type);
+  resize(BASEFRAME,scaledImage,scaledImage.size(),0,0,INTER_LINEAR);
+
+  cout << "i died cos of resize" << endl;
+  //erosion then dilation since we want the darker (pen) regions to close
+  erodedImage = (TheGlWindowSize.height,TheGlWindowSize.width,DataType<float>::type);
+  dilatedImage = (TheGlWindowSize.height,TheGlWindowSize.width,DataType<float>::type);
+  erode(scaledImage,erodedImage,element);
+  dilate(erodedImage,dilatedImage,element);
+
+  Canny(dilatedImage,contourImage,lowerthresh,upperthresh,5);
+  findContours( contourImage, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_NONE, Point(0, 0) );
+
+
+  if(contours.size() > 0) {
+    vector<vector<Point> >* joinedContours = new vector<vector<Point> >();
+    //vector<vector<Point> >* approximatedContours = new vector<vector<Point> >();
+    time(&tree_start);
+    h_tree = createHierarchyTree(&hierarchy);
+    time(&tree_end);
+
+    naiveContourJoin(&contours, joinedContours, h_tree);
+    joinedContours = nubContours(joinedContours); 
+    //naiveDoubleRemoval(joinedContours, h_tree);
+    cout << h_tree->getSize() << " contours found" << endl;
+  
+    createHeightMap(joinedContours, h_tree, TheGlWindowSize.height,TheGlWindowSize.width);
+  }
+  cout << "but i finished though" << endl;
+}
+
 
 
 void printContourAreas(vector<vector<Point> >* contours){

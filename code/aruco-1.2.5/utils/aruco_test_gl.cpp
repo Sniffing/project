@@ -252,9 +252,12 @@ void vDrawScene()
         //glTranslatef(-(realZeroX+TheMarkerSize/2),-(realZeroY+TheMarkerSize/2),0);
         glTranslatef(-(TheMarkerSize/2.0f), -(TheMarkerSize/2.0f),0);
 	glPushMatrix();
+	
+	double lol = (TheMarkerSize/20.0f)*(TheGlWindowSize.width);// * scaleMarker);
+	double lol1 = (TheMarkerSize/15.0f)*(TheGlWindowSize.height);// * scaleMarker);
 
-	double lol = TheMarkerSize/20.0f;
-	double lol1 = TheMarkerSize/15.0f;
+	double newx = (tl.x*scaleMarker);
+	double newy = (tl.y*scaleMarker);
 
         //glutWireCube( TheMarkerSize );
         //glutSolidTeapot(TheMarkerSize);
@@ -263,10 +266,10 @@ void vDrawScene()
                 glBegin(GL_QUADS);        // Draw The Cube Using quads
                 glColor3f(0.0f,1.0f/heightMap[i][j],0.0f);    // Color Blue
 
-                glVertex3f( i*lol1,j*lol, pow(heightMap[i][j]*2,2)*lol);
-                glVertex3f( (i+1)*lol1,(j)*lol, pow(heightMap[i+1][j]*2,2)*lol);
-                glVertex3f( (i+1)*lol1,(j+1)*lol, pow(heightMap[i+1][j+1]*2,2)*lol);
-                glVertex3f(   i*lol1, (j+1)*lol, pow(heightMap[i][j+1]*2,2)*lol);
+                glVertex3f( i*lol1 - newx ,j*lol - newy, pow(heightMap[i][j]*2,2)*lol);
+                glVertex3f( (i+1)*lol1 - newx,(j)*lol -newy, pow(heightMap[i+1][j]*2,2)*lol);
+                glVertex3f( (i+1)*lol1 - newx,(j+1)*lol - newy, pow(heightMap[i+1][j+1]*2,2)*lol);
+                glVertex3f(   i*lol1 - newx, (j+1)*lol - newy, pow(heightMap[i][j+1]*2,2)*lol);
                 glEnd();
         }
         }

@@ -222,8 +222,8 @@ void CameraParameters::readFromXMLFile(string filePath)throw(cv::Exception)
  */
 void CameraParameters::glGetProjectionMatrix( cv::Size orgImgSize, cv::Size size,double proj_matrix[16],double gnear,double gfar,bool invert   )throw(cv::Exception)
 {
-
-    if (cv::countNonZero(Distorsion)!=0) std::cerr<< "CameraParameters::glGetProjectionMatrix :: The camera has distortion coefficients " <<__FILE__<<" "<<__LINE__<<endl;
+	//commented out for debug purposes
+    //if (cv::countNonZero(Distorsion)!=0) std::cerr<< "CameraParameters::glGetProjectionMatrix :: The camera has distortion coefficients " <<__FILE__<<" "<<__LINE__<<endl;
     if (isValid()==false) throw cv::Exception(9100,"invalid camera parameters","CameraParameters::glGetProjectionMatrix",__FILE__,__LINE__);
 
     //Deterime the rsized info
