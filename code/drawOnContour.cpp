@@ -1,19 +1,19 @@
 #include "drawOnContour.hpp"
 
-void vResize( GLsizei iWidth, GLsizei iHeight )
-{
-    GLWINDOW_SIZE=Size(iWidth,iHeight);
-    //not all sizes are allowed. OpenCv images have padding at the end of each line in these that are not aligned to 4 bytes
-    if (iWidth*3%4!=0) {
-        iWidth+=iWidth*3%4;//resize to avoid padding
-        vResize(iWidth,GLWINDOW_SIZE.height);
-    }
-    else {
-        //resize the image to the size of the GL window
-        if (TheUndInputImage.rows!=0)
-            cv::resize(TheUndInputImage,TheResizedImage,TheGlWindowSize);
-    }
-}
+// void vResize( GLsizei iWidth, GLsizei iHeight )
+// {
+//     GLWINDOW_SIZE=Size(iWidth,iHeight);
+//     //not all sizes are allowed. OpenCv images have padding at the end of each line in these that are not aligned to 4 bytes
+//     if (iWidth*3%4!=0) {
+//         iWidth+=iWidth*3%4;//resize to avoid padding
+//         vResize(iWidth,GLWINDOW_SIZE.height);
+//     }
+//     else {
+//         //resize the image to the size of the GL window
+//         if (TheUndInputImage.rows!=0)
+//             cv::resize(TheUndInputImage,TheResizedImage,TheGlWindowSize);
+//     }
+// }
 
 
 bool baseMarkerChange(Marker m){
@@ -35,7 +35,7 @@ bool baseMarkerChange(Marker m){
 
 void checkForChange(Mat* thisFrame){  
   Mat* diffFrame = new Mat(BASEFRAME.rows, BASEFRAME.cols,DataType<float>::type) ;
-  absdiff(BASEFRAME, *thisFrame, *diffFrame);	
+  absdiff(POTENTIAL_NEW_BASEFRAME, *thisFrame, *diffFrame);	
   threshold(*diffFrame, *diffFrame, CHANGE_THRESHOLD, MAX_COLOUR_VAL, THRESH_BINARY);
   int pixelsChanged = countNonZero(*diffFrame > 0);
 
@@ -62,12 +62,21 @@ void checkForChange(Mat* thisFrame){
       BASEFRAME = *thisFrame;
       createLandscape();
     } else if(NEW_BASE_THRESHOLD < pixelsChanged){
-      //CHANGE THIS SHIT THIS IS WRONG
+      //IF threshold is passed, mark this frame up for potential new base
+      cout << "new potential found" << endl;
       POTENTIAL_NEW_BASEFRAME = *thisFrame;
+      potentialChange = true;
+      changedFrameCounter = 0;
+    } else if(potentialChange){   
+      //If there is a potential new base and the threshold was not passed,
+      //start counting to see if it is stabilised.
+      cout << "incrementing" << endl;
       changedFrameCounter++;
       if(changedFrameCounter > STABILISATION_REQUIREMENT) {
+	cout << "STABILISED" << endl;
 	changedFrameCounter = 0;
-	BASEFRAME = *thisFrame;
+	potentialChange = false;
+	BASEFRAME = POTENTIAL_NEW_BASEFRAME;
 	createLandscape();
       }
     }
@@ -112,8 +121,8 @@ void drawMap(void)
 
   //Background Render  
   glColor3f(1.0f,1.0f,1.0f);
-  //getBackgroundFromCamera(&cam);
-  //drawBackground(BG_TEXTURE);
+  getBackgroundFromCamera(&cam);
+  drawBackground(BG_TEXTURE);
   
   glMatrixMode(GL_MODELVIEW);
   
@@ -122,64 +131,53 @@ void drawMap(void)
   glLoadIdentity();
 
   
-  glOrtho(0,GLWINDOW_SIZE.width,0, GLWINDOW_SIZE.height,-1.0,1.0);
-  cout << "1" <<endl;
-  glViewport(0,0,GLWINDOW_SIZE.width,GLWINDOW_SIZE.height);
-  cout << "2" << endl;
-  glPixelZoom(1,-1);
-  cout << "3" << endl;
-  glRasterPos3f(0,GLWINDOW_SIZE.height -0.5,-1.0);
-  cout << "4" << endl;
-  glDrawPixels(GLWINDOW_SIZE.width, GLWINDOW_SIZE.height, GL_BGR, GL_UNSIGNED_BYTE,BASEFRAME.ptr(0));
-  cout << "5" << endl;
-  //glMatrixMode(GL_PROJECTION);  
-  //glLoadIdentity();
-  //glOrtho(0, WIN_SIZE, 0, WIN_SIZE, -1.0, 1.0);
-  //glViewport(0,0,WIN_SIZE,WIN_SIZE);  //Use the whole window for rendering   
-  //GLdouble aspectRatio = (GLdouble)WIN_SIZE/(GLdouble)WIN_SIZE;
-  //gluPerspective(0.0,aspectRatio,0.01,512.0);
+  glMatrixMode(GL_PROJECTION);  
+  glLoadIdentity();
+  glOrtho(0, WIN_SIZE, 0, WIN_SIZE, -1.0, 1.0);
+  glViewport(0,0,WIN_SIZE,WIN_SIZE);  //Use the whole window for rendering   
+  GLdouble aspectRatio = (GLdouble)WIN_SIZE/(GLdouble)WIN_SIZE;
+  gluPerspective(0.0,aspectRatio,0.01,512.0);
 
-  //glTranslatef(move_x, move_y, 0.0);
-  //glRotatef(rotate_x, 1.0, 0.0, 0.0);
-  //glRotatef(rotate_y, 0.0, 1.0, 0.0);
-  //gluLookAt(WIN_SIZE/2.0f,WIN_SIZE/2.0f,-2.0f,WIN_SIZE/2.0f,WIN_SIZE/2.0f,0.0f,0.0f,1.0f,0.0f);
+  glTranslatef(move_x, move_y, 0.0);
+  glRotatef(rotate_x, 1.0, 0.0, 0.0);
+  glRotatef(rotate_y, 0.0, 1.0, 0.0);
+  gluLookAt(WIN_SIZE/2.0f,WIN_SIZE/2.0f,-2.0f,WIN_SIZE/2.0f,WIN_SIZE/2.0f,0.0f,0.0f,1.0f,0.0f);
   //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   
   
-  // for(int i=1; i<WIN_SIZE; i++) {
-  //   glBegin(GL_QUADS);        // Draw The Cube Using quads
-  //   for(int j=1; j<WIN_SIZE; j++) {
-      
-  //     glColor3f(0.0f,(1.0f/hmap[i][j]),0.0f);          
-  //     glVertex3f( i, j,hmap[i][j]);
-  //     glVertex3f( i, j+1,hmap[i][j+1]);
-  //     glVertex3f( i+1, j+1,hmap[i+1][j+1]);
-  //     glVertex3f( i+1, j,hmap[i+1][j]);
-  //   }
-  //     glEnd();
-  // }
+  for(int i=1; i<WIN_SIZE; i++) {
+    glBegin(GL_QUADS);        // Draw The Cube Using quads
+    for(int j=1; j<WIN_SIZE; j++) {    
+      glColor3f(0.0f,(1.0f/hmap[i][j]),0.0f);          
+      glVertex3f( i, j,hmap[i][j]);
+      glVertex3f( i, j+1,hmap[i][j+1]);
+      glVertex3f( i+1, j+1,hmap[i+1][j+1]);
+      glVertex3f( i+1, j,hmap[i+1][j]);
+    }
+      glEnd();
+  }
 
-  //glPopMatrix();
+  glPopMatrix();
 
-  cout << BASEFRAME.size() << endl;
+  // cout << BASEFRAME.size() << endl;
 
-   glMatrixMode(GL_PROJECTION);
-   double proj_matrix[16];
-   camParams.glGetProjectionMatrix(BASEFRAME.size(),BASEFRAME.size(),proj_matrix,0.05,10);   
-   glLoadIdentity(); 
-   glLoadMatrixd(proj_matrix);
+  //  glMatrixMode(GL_PROJECTION);
+  //  double proj_matrix[16];
+  //  camParams.glGetProjectionMatrix(BASEFRAME.size(),BASEFRAME.size(),proj_matrix,0.05,10);   
+  //  glLoadIdentity(); 
+  //  glLoadMatrixd(proj_matrix);
    
 
-   double modelview_matrix[16];
-   BASEMARKER.glGetModelViewMatrix(modelview_matrix);
-   glMatrixMode(GL_MODELVIEW);
-   glLoadIdentity();
-   glLoadMatrixd(modelview_matrix);
-  // glPushMatrix();
-   glTranslatef(0,0,0.025/2);
-   glutSolidTeapot(20);
+  //  double modelview_matrix[16];
+  //  BASEMARKER.glGetModelViewMatrix(modelview_matrix);
+  //  glMatrixMode(GL_MODELVIEW);
+  //  glLoadIdentity();
+  //  glLoadMatrixd(modelview_matrix);
+  // // glPushMatrix();
+  //  glTranslatef(0,0,0.025/2);
+  //  glutSolidTeapot(20);
 
-   glPopMatrix();
+  //  glPopMatrix();
 
   drawing_end = clock();
   glutSwapBuffers();
@@ -190,9 +188,9 @@ void reshape(int x, int y)
 {
   //Set a new projection matrix
 
-  //glMatrixMode(GL_PROJECTION);  
-  // glLoadIdentity();
-  //glOrtho(0, x, 0, y, -1.0, 1.0);
+  glMatrixMode(GL_PROJECTION);  
+  glLoadIdentity();
+  glOrtho(0, x, 0, y, -1.0, 1.0);
   glViewport(0,0,x,y);  //Use the whole window for rendering   
   GLdouble aspectRatio = (GLdouble)x/(GLdouble)y;
   gluPerspective(0.0,aspectRatio,0.01,512.0);
@@ -257,7 +255,8 @@ int main(int argc, char** argv){
   Mat frame;
   cam >> frame;
   cvtColor(frame, BASEFRAME,CV_BGR2GRAY);
-  GLWINDOW_SIZE = frame.size();
+  POTENTIAL_NEW_BASEFRAME = BASEFRAME;
+  //GLWINDOW_SIZE = frame.size();
   createLandscape();
 
 
