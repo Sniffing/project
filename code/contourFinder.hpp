@@ -37,9 +37,26 @@ namespace std{
   };
 }
 
+void printContour(vector<Point>* vector){
+  for(int i = 0; i < vector->size(); i++){
+    cout << vector->at(i) << ", ";
+  }
+}
+
 vector<Point>* removeContourDuplicates(vector<Point>* contour){
-  unordered_set<Point>* contourSet = new unordered_set<Point>(contour->begin(), contour->end());
-  vector<Point>* nonDupContour = new vector<Point>(contourSet->begin(),contourSet->end());
+  // unordered_set<Point>* contourSet = new unordered_set<Point>(contour->begin(), contour->end());
+  vector<Point>* nonDupContour = new vector<Point>();
+  unordered_set<Point>*contourSet = new unordered_set<Point>();
+
+  contourSet->emplace(*(contour->begin()));
+  vector<Point>::iterator it = contour->begin() + 1;
+  while(it != contour->end()){
+    if(!contourSet->count(*it)){
+      contourSet->emplace(*it);
+      nonDupContour->push_back(*it);
+    }
+    it++;
+  }
   return nonDupContour;
 }
 
@@ -48,7 +65,9 @@ vector<vector<Point> >* nubContours(vector<vector<Point> >*contours){
   vector<vector<Point> >* nonDupContours = new vector<vector<Point> >();
   for(vector<vector<Point> >::const_iterator it = contours->begin(); it != contours->end(); it++){
     vector<Point> c = *it;
+    cout << "contour was of size: " << c.size();
     vector<Point>* newVec = removeContourDuplicates(&c);
+    cout << " but is reduced to: " << newVec->size() << endl;
     nonDupContours->push_back(*newVec);
   }
   return nonDupContours;

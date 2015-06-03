@@ -47,20 +47,6 @@ static Mat* findAndDrawContours( Mat* image, bool debug, bool join )
     naiveContourJoin(&contours,&joinedContours,HIERARCHY_TREE);
     //naiveDoubleRemoval(&joinedContours,HIERARCHY_TREE);
     contours = *nubContours(&joinedContours);
-
-    // vector<RotatedRect>* rectangles = new vector<RotatedRect>();
-    // cout << "contours size is:" << contours.size() << endl;
-    // for(int i =0; i< contours.size(); i++){
-    //   vector<Point> contour = contours.at(i);
-    //   rectangles->push_back(fitEllipse(Mat(contour)));
-    // }
-
-    // Point p(218,128);
-    //  for(int i =0 ; i<rectangles->size(); i++){
-    //    //cout << "Is in rect " << i << " :" << isInRectangle((*rectangles)[i],p)<<endl;
-    //  }
-    
-     //approxContours(&joinedContours,&joinedContours);
   }
   
  
@@ -98,12 +84,8 @@ void printContours(vector<vector<Point> >* contours) {
   for (vector<vector<Point> >::const_iterator it = contours->begin(); it != contours->end(); it++) {
     cout << "(contour " + to_string(contourNumber) +"): ";
     Point start = it->front();
-    Point end = it->back();
-  
+    Point end = it->back(); 
     cout << "has " << it->size() << " points";
-    //for (vector<Point>::const_iterator itp = it->begin(); itp != it->end(); itp++) {
-      //cout << "Point("+to_string(itp->x)+","+to_string(itp->y)+") ";
-    //}
     cout << "; " << endl;
     contourNumber++;
   }
@@ -123,8 +105,6 @@ bool isInRectangle(RotatedRect rec,Point p){
   Point2f c = pointsList[2];
   Point2f d = pointsList[3];
 
-  // double w = sqrt( pow((b.x-a.x),2), pow((b.y-a.y),2));
-  // double l = sqrt( pow((c.x-a.x),2), pow((c.y-a.y),2));
   double w = norm(a-b);
   double l = norm(a-c);
 
@@ -151,14 +131,8 @@ int main(int argc, char* argv[])
 
     //Mat image = imread(argv[1], 1);
     Mat image = imread(argv[1],CV_LOAD_IMAGE_GRAYSCALE);
-    //GaussianBlur(image,image,Size(3,3),1,1,BORDER_CONSTANT);
-
     Mat scaledImage(512,512, DataType<float>::type);
     resize(image,scaledImage,scaledImage.size(),0,0,INTER_LINEAR);
- 
-    // Mat finalImage;
-    // finalImage = *(findAndDrawContours(&scaledImage,DEBUG_FLAG,false));
-    
 
     Mat erodedImage(256,256,DataType<float>::type);
     Mat dilatedImage(256,256,DataType<float>::type);
@@ -169,24 +143,6 @@ int main(int argc, char* argv[])
     dilate(erodedImage,dilatedImage,element);
     
     Mat closedFinal = *(findAndDrawContours(&dilatedImage,DEBUG_FLAG,JOIN_FLAG));    
-
-    //dilate(closedFinal,closedFinal,element);
-    //closedFinal = *(findAndDrawContours(&closedFinal,false,false));
-    // vector<Vec4i> hierarchy;
-    // vector<vector<Point> >newContours;
-    // Mat finalfinal = Mat::zeros(closedFinal.size(), CV_8UC1 );
-    // cout << "fuck" << endl;
-    // threshold(closedFinal,finalfinal,200,255,THRESH_BINARY);
-    // cout << "fuck1" << endl;
-    // cout << "finalfinal size" << finalfinal.size() << endl;
-    
-    // findContours(closedFinal,newContours,hierarchy,CV_RETR_TREE,CV_CHAIN_APPROX_NONE,Point(0,0));
-    // cout << "fuck3" << endl;
-
-    // Mat newfinal;
-    // for(int i =0 ; i<newContours.size(); i++){
-    //   drawContours(newfinal,newContours,i,Scalar(255,255,255),-1,CV_AA,hierarchy,0,Point(0,0));
-    // }
     imshow("MORPHEDLINES",closedFinal);
 
     int c = waitKey();
