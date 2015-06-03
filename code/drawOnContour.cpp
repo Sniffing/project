@@ -192,10 +192,10 @@ void drawMap(void)
     for(int j=1; j<WIN_SIZE; j++) {
       
       glColor3f(0.0f,(1.0f/hmap[i][j]),0.0f);          
-      glVertex3f( i / 2.0f, j/2.0f,hmap[i][j] * 5);
-      glVertex3f( i / 2.0f, (j+1)/2.0f,hmap[i][j+1] * 5);
-      glVertex3f( i+1 / 2.0f, (j+1)/2.0f,hmap[i+1][j+1] * 5);
-      glVertex3f( i+1 / 2.0f, j/2.0f,hmap[i+1][j] * 5);
+      glVertex3f( i / 2.0f, j/2.0f,hmap[i][j] * 5.0f);
+      glVertex3f( i / 2.0f, (j+1)/2.0f,hmap[i][j+1] * 5.0f);
+      glVertex3f( i+1 / 2.0f, (j+1)/2.0f,hmap[i+1][j+1] * 5.0f);
+      glVertex3f( i+1 / 2.0f, j/2.0f,hmap[i+1][j] * 5.0f);
     }
       glEnd();
   }
@@ -234,36 +234,36 @@ float findDistanceToNearestChild(vector<TreeNode*>* children,vector<vector<Point
 }
 
 
-TreeNode* getContainingContour(TreeNode* currNode, Point p, vector<vector<Point> >* contours, Tree* hierarchy){
-  bool hasNext = true;
+// TreeNode* getContainingContour(TreeNode* currNode, Point p, vector<vector<Point> >* contours, Tree* hierarchy){
+//   bool hasNext = true;
 
-  while(hasNext) {
-    vector<Point> currContour = contours->at(currNode->getID());
-    int state = pointPolygonTest(currContour,p,false);
+//   while(hasNext) {
+//     vector<Point> currContour = contours->at(currNode->getID());
+//     int state = pointPolygonTest(currContour,p,false);
 
-    if(state == 1) { //Is in the contour
-	if(currNode->getChildren()->empty()) {
-	  return currNode;
-	} else {
-	  return getContainingContour(currNode->getChildren()->at(0), p, contours, hierarchy);
-	} 
-    } else {
-      TreeNode* nextNode = currNode->getNext();
-      if(!nextNode) {
-	hasNext = false;
-      } else {
-	currNode = nextNode;
-      }
-    }
-  }
-  return currNode;
-}
+//     if(state == 1) { //Is in the contour
+// 	if(currNode->getChildren()->empty()) {
+// 	  return currNode;
+// 	} else {
+// 	  return getContainingContour(currNode->getChildren()->at(0), p, contours, hierarchy);
+// 	} 
+//     } else { 
+//       TreeNode* nextNode = currNode->getNext();
+//       if(!nextNode) {
+// 	hasNext = false;
+//       } else {
+// 	currNode = nextNode;
+//       }
+//     }
+//   }
+//   return currNode;
+// }
 
 //Pass Base height, Upper height, list of contours, containing contour, point
 float assignHeight(int baseLevel, int topLevel, vector<vector<Point> >*contours, TreeNode* contourNode, Point p){
   if(baseLevel <= 0) {
     //If outside, don't give it anything
-    return 0;
+    return -1;
   } else {
     float distanceToContainer = fabs(pointPolygonTest(contours->at(contourNode->getID()),p,true));   
     float distanceToNext;
@@ -278,6 +278,9 @@ float assignHeight(int baseLevel, int topLevel, vector<vector<Point> >*contours,
     if(distanceToNext < 0.001f || distanceToContainer < 0.001f){
       return (float)topLevel;
     } else {
+      cout << "dist to next is " << distanceToNext;
+      cout << " dist to container is " << distanceToContainer;
+      cout << " fraction is " << distanceToNext / (distanceToNext + distanceToContainer) << endl;
       float height = (float)baseLevel + (distanceToNext / (distanceToNext + distanceToContainer));
       return height;
     }
@@ -285,7 +288,9 @@ float assignHeight(int baseLevel, int topLevel, vector<vector<Point> >*contours,
   }
 }
 
-//
+//Uses a mode filter approach, where there are obvious defects with the 
+//height calcualtion caused by tangental contour boundaries, this will remove
+//most of the noise
 void correctTangents(vector<int>* iList,int height, int width, int highest){
   vector<int> rows = *iList;
   int mode;
@@ -296,12 +301,22 @@ void correctTangents(vector<int>* iList,int height, int width, int highest){
       int L = (int)hmap[max(0,rows[i]-1)][j];
       int BL = (int)hmap[max(0,rows[i]-1)][min(j+1,width-1)];
 
+      int NTL = (int)hmap[max(0,rows[i]-2)][max(0,j-1)];
+      int NL = (int)hmap[max(0,rows[i]-2)][j];
+      int NBL = (int)hmap[max(0,rows[i]-2)][min(j+1,width-1)];
+
       int TR = (int)hmap[min(height-1,rows[i]+1)][max(0,j-1)];
       int R = (int)hmap[min(height,rows[i]+1)][j];
       int BR = (int)hmap[min(height-1,rows[i]+1)][min(j+1,width-1)];
       
+      int NTR = (int)hmap[min(height-1,rows[i]+2)][max(0,j-1)];
+      int NR = (int)hmap[min(height,rows[i]+2)][j];
+      int NBR = (int)hmap[min(height-1,rows[i]+2)][min(j+1,width-1)];
+
       heightCount[TL]++; heightCount[L]++; heightCount[BL]++;
+      heightCount[NTL]++; heightCount[NL]++; heightCount[NBL]++;
       heightCount[TR]++; heightCount[R]++; heightCount[BR]++;
+      heightCount[NTR]++; heightCount[NR]++; heightCount[NBR]++;
 
       mode = -1;
       int highestTotal = 0;
@@ -317,7 +332,6 @@ void correctTangents(vector<int>* iList,int height, int width, int highest){
 	if(runningtotal == 6)
 	  break;
       }
-
       hmap[rows[i]][j] = mode;
     }
   }
@@ -348,7 +362,6 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
     baseLevel = 0;
     topLevel = 1;
 
-    cout << " STACK CLEARED " << endl;
     nodeStack = new stack<TreeNode*>();
 
     for(j = 0; j < width; j++){
@@ -357,9 +370,6 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
       if(i == 10 && j == 20) { singlepptest_start=clock();containing_start=clock();}
       if(i == 10 && j == 20) { containing_end=clock(); }
    
-      //TreeNode* contour = getContainingContour(c, p, contours, hierarchy);      
-      //baseLevel = contour->getLevel();
-
       // TreeNode* contour = storeAndGoContainingContainer(c, p, contours, baseLevel); 
       //Find if we are on a pixel which is part of a contour
       //If the point is on the contou we are currently within, we've reached the boundary
@@ -369,34 +379,11 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
       if (!isEmpty && pointPolygonTest(contours->at(nodeStack->top()->getID()),p,false) == 0){
 	contourNode = nodeStack->top();
 	
-	cout << "popped " << contourNode->getID() << endl;
 	nodeStack->pop();
 	baseLevel--;
 	topLevel--;
 	
-	contourFoundNow = true;
-
-	// if(!nodeStack->empty()){
-	//   contourNode = nodeStack->top();
-	// } else {
-	//   contourNode = hierarchy->getRoot();
-	// }
-	//   if(pointPolygonTest(contours->at(nodeStack->top()->getID()),p,false)==0){
-	//     //If the point is actually on the contour below, then we saw a tangent 
-	//     //sequence before and so should correct our assigned heights
-	//     cout << "dyin" << endl;
-	//     cout << "tempj: " << tempj << endl;
-	//     while(tempj <= j) {
-	//       cout << "am i here" << endl;
-	//       hmap[i][tempj] = assignHeight(baseLevel, topLevel, contours, contourNode, Point(i, tempj));
-	//       tempj++;
-	//     }
-	//     baseLevel--;
-	//     topLevel--;
-	//   }
-	// } else {
-	// }
-	
+	contourFoundNow = true;	
       } else {
 	//If stack is empty then must get the base nodes to check
 	if (isEmpty){
@@ -412,7 +399,6 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	while(examining) { //For all contours on this level
 	  //If on contour
 	  if(pointPolygonTest(contours->at(examining->getID()),p,false) == 0){
-	    cout << "pushed " << examining->getID() << endl;
 	    nodeStack->push(examining);  //make current Node this one
 	    
 	    //Must check the next pixels along, incase they are part of the current 
@@ -510,11 +496,9 @@ void createLandscape(){
     //naiveDoubleRemoval(joinedContours, h_tree);
     cout << h_tree->getSize() << " contours found" << endl;
     //printContourAreas(joinedContours);
-  
-    int map[WIN_SIZE][WIN_SIZE];
 
     createHeightMap(joinedContours, h_tree, WIN_SIZE,WIN_SIZE);
-    
+
     Mat* image = draw(joinedContours, &hierarchy);
     imwrite("contourImages/contour.png",*image);
     ofstream txt;
@@ -553,6 +537,12 @@ int main(int argc, char** argv){
 
   createLandscape();
 
+  // for(int i = 0; i<WIN_SIZE; i++){
+  //   for(int j = 0; j<WIN_SIZE; j++){
+  //     cout << hmap[i][j] << ",";
+  //   }
+  //   cout << endl;
+  // }
 
   if(TIME_FLAG){
 
