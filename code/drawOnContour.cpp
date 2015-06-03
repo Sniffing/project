@@ -285,10 +285,51 @@ float assignHeight(int baseLevel, int topLevel, vector<vector<Point> >*contours,
   }
 }
 
+//
+void correctTangents(vector<int>* iList,int height, int width, int highest){
+  vector<int> rows = *iList;
+  int mode;
+  for (int i = 0 ; i < rows.size(); i++){
+    vector<int> heightCount(highest,0);
+    for(int j = 0; j<width; j++){
+      int TL = (int)hmap[max(0,rows[i]-1)][max(0,j-1)];
+      int L = (int)hmap[max(0,rows[i]-1)][j];
+      int BL = (int)hmap[max(0,rows[i]-1)][min(j+1,width-1)];
+
+      int TR = (int)hmap[min(height-1,rows[i]+1)][max(0,j-1)];
+      int R = (int)hmap[min(height,rows[i]+1)][j];
+      int BR = (int)hmap[min(height-1,rows[i]+1)][min(j+1,width-1)];
+      
+      heightCount[TL]++; heightCount[L]++; heightCount[BL]++;
+      heightCount[TR]++; heightCount[R]++; heightCount[BR]++;
+
+      mode = -1;
+      int highestTotal = 0;
+      int runningtotal = 0;
+      for(int k = 0; k< highest; k++){
+	if (highestTotal < heightCount[k]){
+	  mode = k; 
+	  highestTotal = heightCount[k];
+	  runningtotal += heightCount[k];
+	}
+	
+	//only 6 neighbours considered
+	if(runningtotal == 6)
+	  break;
+      }
+
+      hmap[rows[i]][j] = mode;
+    }
+  }
+}
+
 void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int height, int width) {
   height_map_start=clock();
   TreeNode* root = hierarchy->getRoot();
   TreeNode* examining;
+
+  //List of rows that contain wrong heights
+  vector<int>* iList = new vector<int>();
 
   int baseLevel;
   int topLevel;
@@ -296,7 +337,7 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
   stack<TreeNode*>* nodeStack = new stack<TreeNode*>();
 
   //Used to help identify if the point is on a tangent
-  stack<int>* indexStack = new stack<int>();
+  stack<pair<int,int>>* indexStack = new stack<pair<int,int>>();
 
   int i, j;
   TreeNode* contourNode;
@@ -400,8 +441,8 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	  hmap[i][j+jplus] = assignHeight(baseLevel, topLevel, contours, contourNode, Point(i, j+jplus));
 	} else {
 	  //If no longer on point just give up here
-	  int tempj = j+jplus;
-	  indexStack->push(tempj);
+	  //int tempj = j+jplus;
+	  //indexStack->push(tempj);
 	  break;
 	}
 	jplus++;
@@ -416,20 +457,13 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
     }
     //At the end of the row, if we haven't popped everything, we met a tangent along the way
     //must go back and correct the pixels
-    while(!nodeStack->empty()){
-      int currCorrectionPoint = indexStack->top();
-      cout << "HAD TO CORRECT HERE" << endl;
-      baseLevel--;
-      topLevel--;
-      
-      while(tempj != j){
-	hmap[i][tempj] = assignHeight(baseLevel, topLevel, contours, contourNode, Point(i, tempj));
-	tempj++;
-      }
-      nodeStack->pop();
-      indexStack->pop();
+    if(!nodeStack->empty()){
+      iList->push_back(i);
     }
   }
+
+  correctTangents(iList,height, width,hierarchy->getSize());
+
   height_map_end=clock();
 }
 
