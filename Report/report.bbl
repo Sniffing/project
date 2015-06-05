@@ -1,7 +1,7 @@
 \begin{thebibliography}{10}
 
 \bibitem{09gr820}
-09ggr820.
+09gr820.
 \newblock Canny edge detection.
 \newblock Indian Institute of Technology Delhi, Department of Computer Science
   and Engineeering, March 2009.
@@ -17,13 +17,6 @@ Ronald~T. Azuma.
 \newblock A {S}urvey {O}f {A}ugmented {R}eality.
 \newblock Technical report, Hughes Research Laboratories, August 1997.
 
-\bibitem{Bassily14}
-D.~Bassily, C.~Georgoulas, J.~Guettler, T.~Linner, and T.~Bock.
-\newblock Intuitive and adaptive robotic arm manipulation using the leap motion
-  controller.
-\newblock In {\em ISR/Robotik 2014}, volume Proceedings of 41st International
-  Symposium on Robotics, pages 1 -- 7. VDE, June 2014.
-
 \bibitem{Canny86}
 John Canny.
 \newblock A computational approach to edge detection.
@@ -35,12 +28,11 @@ Lijun Ding and Ardeshir Goshtasby.
 \newblock On the canny edge detector.
 \newblock {\em Pattern Recognition}, 34:721--725, 2001.
 
-\bibitem{Weichert13}
-Bartholomäus~Rudak Frank~Weichert, Daniel~Bachmann and Denis Fisseler.
-\newblock Analysis of the accuracy and robustness of the leap motion
-  controller.
-\newblock Technical report, Department of Computer Science VII, Technical
-  University Dortmund, May 2013.
+\bibitem{Ferrari}
+V.~Ferrari, T.~Tuytelaars, and L.~Van Gool.
+\newblock Markerless augmented reality with a real-time affine region tracker.
+\newblock Technical report, Computer Vision Group (BIWI), ETH Zuerich,
+  Switzerland and ESAT-PSI, University of Leuven, Belgium.
 
 \bibitem{Mackay}
 Wendy~E. Mackay.
@@ -53,6 +45,11 @@ Wendy~E. Mackay.
 Raman Maini and Dr.~Himanshu Aggarwal.
 \newblock Study and comparison of various image edge detection techniques.
 \newblock {\em International Journal of Image Processing (IJIP)}, 3(1):1--12.
+
+\bibitem{Pulli12}
+Kari Pulli, Anatoly Baksheev, Kirill Kornyakov, and Victor Eruhimov.
+\newblock Real-time computer vision with opencv.
+\newblock {\em Communications of the ACM}, 55(6):61--69, June 2012.
 
 \bibitem{Radke04}
 R.~J. Radke, S.~Andra, O.~Al-Kofahi, and B.~Roysam.
@@ -70,8 +67,8 @@ S.~Reed, O.~Kreylos, S.~Hsi, L.~Kellogg, G.~Schladow, M.B. Yikilmaz, H.~Segale,
   J.~Silverman, S.~Yalowitz, and E.~Sato.
 \newblock Shaping watersheds exhibit: An interactive, augmented reality sandbox
   for advancing earth science education.
-\newblock University of California, Davis and American Geophysical Union (AGU)
-  Fall Meeting 2014, 2014.
+\newblock Oral Presentation, American Geophysical Union (AGU) Fall Meeting
+  2014, 2014.
 
 \bibitem{Rosin}
 Paul~L. Rosin.
@@ -84,5 +81,17 @@ G.~T Shrivakshan and Dr.~C Chandrasekar.
   processing.
 \newblock {\em IJCSI International Journal of Computer Science Issues},
   9(5):269--276, September 2012.
+
+\bibitem{Singh88}
+Ashbindu Singh.
+\newblock Review article digital change detection techniques using
+  remotely-sensed data.
+\newblock {\em International Journal of Remote Sending}, 10(6):989--1003, 1989.
+
+\bibitem{Kim14}
+Kim Yu~Doo, Park Jin~Tae, Moon Il~Young, and Oh~Chang~Heon.
+\newblock Performance analysis of orb image matching based on android.
+\newblock {\em International Journal of Software Engineering and Its
+  Applications}, 8(3):11--20, 2014.
 
 \end{thebibliography}

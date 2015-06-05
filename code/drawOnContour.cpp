@@ -27,7 +27,16 @@ vector<vector<Point> > contours;
 vector<Vec4i> hierarchy;
 Tree* h_tree;
 
-float hmap[WIN_SIZE][WIN_SIZE];
+//holds level the pixels belong to
+int hmap[WIN_SIZE][WIN_SIZE];
+//holds whether pixel has been explored
+bool foundMap[WIN_SIZE][WIN_SIZE] = { {false} };
+//holds the explosion count
+int explosionMap[WIN_SIZE][WIN_SIZE] = { {0} };
+//the final height map
+float finalHeightMap[WIN_SIZE][WIN_SIZE];
+
+unordered_set<Point>* bitMap;
 
 GLuint BG_TEXTURE = 0;
 
@@ -233,32 +242,6 @@ float findDistanceToNearestChild(vector<TreeNode*>* children,vector<vector<Point
   return distance;
 }
 
-
-// TreeNode* getContainingContour(TreeNode* currNode, Point p, vector<vector<Point> >* contours, Tree* hierarchy){
-//   bool hasNext = true;
-
-//   while(hasNext) {
-//     vector<Point> currContour = contours->at(currNode->getID());
-//     int state = pointPolygonTest(currContour,p,false);
-
-//     if(state == 1) { //Is in the contour
-// 	if(currNode->getChildren()->empty()) {
-// 	  return currNode;
-// 	} else {
-// 	  return getContainingContour(currNode->getChildren()->at(0), p, contours, hierarchy);
-// 	} 
-//     } else { 
-//       TreeNode* nextNode = currNode->getNext();
-//       if(!nextNode) {
-// 	hasNext = false;
-//       } else {
-// 	currNode = nextNode;
-//       }
-//     }
-//   }
-//   return currNode;
-// }
-
 //Pass Base height, Upper height, list of contours, containing contour, point
 float assignHeight(int baseLevel, int topLevel, vector<vector<Point> >*contours, TreeNode* contourNode, Point p){
   if(baseLevel <= 0) {
@@ -292,6 +275,8 @@ float assignHeight(int baseLevel, int topLevel, vector<vector<Point> >*contours,
 //height calcualtion caused by tangental contour boundaries, this will remove
 //most of the noise
 void correctTangents(vector<int>* iList,int height, int width, int highest){
+  //int newHmap[WIN_SIZE][WIN_SIZE];
+  //copy(&hmap[0][0], &hmap[0][0]+WIN_SIZE*WIN_SIZE,&newHmap[0][0]);
   vector<int> rows = *iList;
   int mode;
   for (int i = 0 ; i < rows.size(); i++){
@@ -322,23 +307,180 @@ void correctTangents(vector<int>* iList,int height, int width, int highest){
       int highestTotal = 0;
       int runningtotal = 0;
       for(int k = 0; k< highest; k++){
-	if (highestTotal < heightCount[k]){
-	  mode = k; 
-	  highestTotal = heightCount[k];
-	  runningtotal += heightCount[k];
-	}
+      	if (highestTotal < heightCount[k]){
+      	  mode = k; 
+      	  highestTotal = heightCount[k];
+      	  runningtotal += heightCount[k];
+      	}
 	
-	//only 6 neighbours considered
-	if(runningtotal == 6)
-	  break;
+      	//only 6 neighbours considered
+      	if(runningtotal == 6)
+      	  break;
       }
       hmap[rows[i]][j] = mode;
+      
+      // int lowest = 0;
+      // while(heightCount[lowest] <= 0){
+      // 	lowest++;
+      // }
+      // hmap[i][j] = lowest;
+      //copy(&newHmap[0][0], &newHmap[0][0]+WIN_SIZE*WIN_SIZE,&hmap[0][0]);
     }
+  }
+}
+
+void GaussianBlurHmap(vector<int>* iList,int height, int width, int highest){
+  vector<int> rows = *iList;
+  unordered_set<int>iMap(rows.begin(),rows.end());
+  
+  float fON1, fON2;
+  float sON;
+  float self;
+  
+  int mode;
+  for (int i = 0 ; i < rows.size(); i++){
+    vector<int> heightCount(highest,0);
+    for(int j = 0; j<width; j++){
+      cout << "does the next row occur in map? " << iMap.count(rows[i]+1) << endl; 
+      fON1 = (iMap.count(rows[i]+1) > 0) ? 1.0/3.0f : 1.0/6.0f;
+      fON2 = (iMap.count(rows[i]+1) > 0) ? 0 : 1.0/6.0f;
+      sON = 0.0f;
+      self = 0.0f;
+      
+      float TL = hmap[max(0,rows[i]-1)][max(0,j-1)] * fON1;
+      float L = hmap[max(0,rows[i]-1)][j] * fON1;
+      float BL = hmap[max(0,rows[i]-1)][min(j+1,width-1)] * fON1;
+
+      // float NTL = hmap[max(0,rows[i]-2)][max(0,j-1)]*fON1;
+      // float NL = hmap[max(0,rows[i]-2)][j]*fON1;
+      // float NBL = hmap[max(0,rows[i]-2)][min(j+1,width-1)]*fON1;
+
+      float TR = hmap[min(height-1,rows[i]+1)][max(0,j-1)] * fON2;
+      float R = hmap[min(height,rows[i]+1)][j] * fON2;
+      float BR = hmap[min(height-1,rows[i]+1)][min(j+1,width-1)] * fON2;
+      
+      // float NTR = hmap[min(height-1,rows[i]+2)][max(0,j-1)] * fON2;
+      // float NR = hmap[min(height,rows[i]+2)][j] * fON2;
+      // float NBR = hmap[min(height-1,rows[i]+2)][min(j+1,width-1)] * fON2;
+
+      float T =  hmap[max(i-1,0)][j] * sON;
+      float B = hmap[min(i+1,height)][j] * sON;
+      
+      
+      float gaussianTotal = TL+L+BL+TR+R+BR+T+B + hmap[i][j]*self;
+      //gaussianTotal += (NTL+NL+NBL+NTR+NR+NBR);
+
+      hmap[rows[i]][j] = (int) (gaussianTotal + 0.5f);
+    }
+  }
+}
+
+
+
+
+void initBitMap(){
+  bitMap = new unordered_set<Point>();
+  for(int i = 0; i < WIN_SIZE; i++){
+    for(int j = 0; j < WIN_SIZE; j++){
+      if(hmap[i][j] > 0)
+	bitMap->emplace(Point(i,j));
+    }
+  }
+}
+
+void findPoint(int i, int j){
+  bitMap->erase(Point(i,j));
+  foundMap[i][j] = true;
+}
+
+bool allFound(){
+  return bitMap->empty();
+}
+
+bool foundLevel(int level){
+  for(int i = 0; i < WIN_SIZE; i++){
+    for(int j = 0; j < WIN_SIZE; j++){
+      if(hmap[i][j] == level && !foundMap[i][j])
+	return false;
+    }
+  }
+  return true;
+}
+
+void assess(int myLevel, int level, int i, int j){
+  if(myLevel == level){
+    findPoint(i,j);
+  }
+}
+
+void setFoundNeighbours(int i, int j, int height, int width, int level){
+  int indexI, indexJ;
+
+  indexI = max(0,i-1);
+  indexJ = max(0,j-1);
+  int TL = hmap[indexI][indexJ];
+  assess(TL, level, indexI, indexJ);
+
+  indexI = max(0,i-1);
+  indexJ = j;
+  int L = hmap[max(0,i-1)][j];
+  assess(L,level,indexI, indexJ);
+
+  indexI = max(0,i-1);
+  indexJ = min(width-1,j+1);
+  int BL = hmap[max(0,i-1)][min(j+1,width-1)];
+  assess(BL,level,indexI,indexJ);
+  
+  indexI = min(height-1,i+1);
+  indexJ = max(0,j-1);
+  int TR = hmap[min(height-1,i+1)][max(0,j-1)];
+  assess(TR, level,indexI,indexJ);
+
+  indexI = min(height,i+1);
+  indexJ = j;
+  int R = hmap[min(height,i+1)][j];
+  assess(R,level,indexI,indexJ);
+
+  indexI = min(height-1,i+1);
+  indexJ = min(width-1,j+1);
+  int BR = hmap[min(height-1,i+1)][min(j+1,width-1)];
+  assess(BR,level,indexI,indexJ);
+
+  indexI = max(0,i-1);
+  indexJ = j;
+  int T =  hmap[max(i-1,0)][j];
+  assess(T,level,indexI,indexJ);
+
+  indexI = min(height-1,i+1);
+  indexJ = j;
+  int B = hmap[min(height-1,i+1)][j];  
+  assess(B,level,indexI,indexJ);
+}
+
+void explode(){
+  int currLevel = 1;
+  //int iteration = 1;
+  while(!allFound()){
+    for(int i = 0; i < WIN_SIZE; i++){
+      for(int j = 0; j < WIN_SIZE; j++){
+	if((hmap[i][j] == currLevel) && foundMap[i][j]){
+	  setFoundNeighbours(i,j, WIN_SIZE, WIN_SIZE,currLevel);
+	  explosionMap[i][j] += 1;
+	}
+      }
+    }
+    
+    if(foundLevel(currLevel)){
+      currLevel++;
+      //iteration = 1;
+    }
+    //iteration++;
   }
 }
 
 void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int height, int width) {
   height_map_start=clock();
+
   TreeNode* root = hierarchy->getRoot();
   TreeNode* examining;
 
@@ -382,8 +524,9 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	nodeStack->pop();
 	baseLevel--;
 	topLevel--;
-	
+    
 	contourFoundNow = true;	
+	//findPoint(i,j);
       } else {
 	//If stack is empty then must get the base nodes to check
 	if (isEmpty){
@@ -404,8 +547,9 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	    //Must check the next pixels along, incase they are part of the current 
 	    //bit of the contour, which will cause inaccuracies in boundary crossing counts
 	    contourFoundNow = true;
-
-	    baseLevel++;// nodeStack->top()->getLevel();
+	    //findPoint(i,j);
+	    
+	    baseLevel++;
 	    topLevel++;
 	    break;//found node so stop
 	  } 
@@ -414,7 +558,7 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	contourNode = (nodeStack->empty()) ? root : nodeStack->top();
       }
 
-      hmap[i][j] = assignHeight(baseLevel, topLevel, contours, contourNode, p);
+      hmap[i][j] = baseLevel;
 
       //Will continue assigning until there is at least one pixel seen that is not part of
       //the contour
@@ -424,21 +568,16 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
       while(contourFoundNow && (j+jplus < width)){
 	double stillOnPoint = pointPolygonTest(contours->at(contourNode->getID()),Point(i, j+jplus),false);
 	if (stillOnPoint == 0) {
-	  hmap[i][j+jplus] = assignHeight(baseLevel, topLevel, contours, contourNode, Point(i, j+jplus));
+	  //findPoint(i,j+jplus);
+	  hmap[i][j+jplus] = baseLevel;
 	} else {
-	  //If no longer on point just give up here
-	  //int tempj = j+jplus;
-	  //indexStack->push(tempj);
 	  break;
 	}
 	jplus++;
       }
       j += (jplus-1);
-      //Should never be large
-      //cout << "JPLUS WAS: " << jplus << endl;
       contourFoundNow = false;
       
-      //printf("%1.4f ",hmap[i][j]);
       if(i == 10 && j == 20) { singlepptest_end=clock(); }
     }
     //At the end of the row, if we haven't popped everything, we met a tangent along the way
@@ -448,7 +587,48 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
     }
   }
 
-  correctTangents(iList,height, width,hierarchy->getSize());
+
+  Mat hmapRe = Mat(WIN_SIZE,WIN_SIZE,CV_8UC3);
+  for(int i = 0; i< WIN_SIZE; i++){
+    for(int j = 0; j< WIN_SIZE; j++){
+      int c = (hmap[i][j] > 0)?(int)255/hmap[i][j]:0;
+      hmapRe.at<Vec3b>(Point(i,j)) = Vec3b(255,c,255);
+    }
+  }
+  imwrite("hmap1.png", hmapRe);
+  
+  //cout << "here" << endl;
+  //correctTangents(iList,height, width,hierarchy->getSize());
+  GaussianBlurHmap(iList,height, width,hierarchy->getSize());
+
+  Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8UC3);
+  for(int i = 0; i< WIN_SIZE; i++){
+    for(int j = 0; j< WIN_SIZE; j++){
+      int c = (hmap[i][j] > 0)?(int)255/hmap[i][j]:0;
+      hmapRep.at<Vec3b>(Point(i,j)) = Vec3b(255,c,255);
+    }
+  }
+  imwrite("hmap.png", hmapRep);
+  
+  initBitMap();
+
+  
+  
+  for(vector<vector<Point> >::const_iterator it = contours->begin(); it != contours->end(); it++){
+    for(vector<Point>::const_iterator i = (*it).begin(); i != (*it).end(); i++){
+      Point p = *i;
+      findPoint(p.x,p.y);
+    }				
+  }
+
+  explode();
+
+  for(int i = 0; i< WIN_SIZE; i++){
+    for(int j = 0; j<WIN_SIZE; j++){
+      cout << explosionMap[i][j] << " ";
+    }
+    cout << endl;
+  }
 
   height_map_end=clock();
 }
@@ -497,6 +677,9 @@ void createLandscape(){
     cout << h_tree->getSize() << " contours found" << endl;
     //printContourAreas(joinedContours);
 
+    // for (int i =0; i< h_tree->getSize(); i++){
+    //   cout << "number points in contour " << i << " is " << (joinedContours->at(i)).size()<<endl;
+    // }
     createHeightMap(joinedContours, h_tree, WIN_SIZE,WIN_SIZE);
 
     Mat* image = draw(joinedContours, &hierarchy);
@@ -516,10 +699,6 @@ int main(int argc, char** argv){
   glutInitWindowPosition(200, 200);
   glutCreateWindow(argv[0]);
   init();
-
-  //cam = VideoCapture(argv[1]);
- 
-
   element = getStructuringElement( MORPH_ELLIPSE,
 				     Size( 5, 5 ),
 				     Point( ceil(5.0f/2.0), ceil(5.0f/2.0) ) );
@@ -531,18 +710,8 @@ int main(int argc, char** argv){
     if (check > 50) 
       break;
   }
-  //Mat frame;
-  //cam >> frame;
-  //cvtColor(frame, BASEFRAME,CV_BGR2GRAY);
 
   createLandscape();
-
-  // for(int i = 0; i<WIN_SIZE; i++){
-  //   for(int j = 0; j<WIN_SIZE; j++){
-  //     cout << hmap[i][j] << ",";
-  //   }
-  //   cout << endl;
-  // }
 
   if(TIME_FLAG){
 

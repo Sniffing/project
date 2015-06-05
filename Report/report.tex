@@ -15,6 +15,7 @@
 \usepackage{amsmath}
 \usepackage{color}
 \usepackage[ruled,vlined]{algorithm2e}
+\usepackage{pdflscape}
 
 \linespread{1.1} % Line spacing
 \usepackage[total={6in, 8in}]{geometry}
@@ -30,17 +31,40 @@
 }
 
 \begin{document}
-\title{An Interactive Creative environment through dynamically 
-changing Augmented Reality Landscapes}
+\title{Self-Updating Augmented Reality Landscapes in Dynamic Environments}
 \author{Terence Tse \\
 		Supervisor: Benjamin Glocker\\
 		Second Marker: Abhijeet Ghosh}
 \maketitle
+
+\newpage
+\section*{~DO~ Abstract}
+\newpage
+\section*{Acknowledgements}
+Through the course of this project I have received help and advice, as
+well as ideas, from numerous people and would like to take this space
+to thank them for their contributions, in no particular order:
+\begin{itemize}
+	\item Dr. Ben Glocker, my project supervisor, for his enthusiasm
+		  to supervise me for this project, putting up with me every 
+		  in every meeting we had and for his advice and patience.
+	\item Dr. Abhijeet Ghosh, my second marker, for his advice with
+		  this report and for his inspiration into some potential
+		  directions of this project through his lectured course on
+		  Advanced Computer Graphics.
+	\item Jifei Ma, in tandem with Ben to help spur ideas during the
+		  phase of this project I had to take a different approach than
+		  I had originally envisioned.
+	\item "Group BJ" for their support along the way: \\
+		  Jo Skelmper and Felix deSideman for their help when devising
+		  algorithms all the way until we approached the deadline.\\
+		  Juto Yu for his help with all things C++ and being on edge.
+	\item My family and friends for understanding I can't see them as I
+		  have a final project to work on.
+\end{itemize}
+
 \newpage
 \tableofcontents
-\newpage
-\section{~DO~ Abstract}
-Oh
 \newpage
 
 \section{~DO~ Introduction}
@@ -177,17 +201,43 @@ are:
 		  through user testing.
 \end{itemize}
 
+\subsection{Report Structure}
+Section \ref{chapter:background} will introduce the background to this
+project, explaining the concepts of Augmented Reality and Computer
+Vision. In this section, I also take a look into existing
+projects that are doing similar things to what this project proposes.\\
+\\
+Section \ref{chapter:implementation} outlines the methods and various
+approaches I took to completing this piece of software, along with
+some of the challenges met along the way.\\
+\\
+Section \ref{chapter:evaluation} takes the system shows how it performs.
+I also take time to assesses how it
+performs, looking into whether it meets the current standards of 
+Augmented Reality applications and to what the project can be used in.\\
+\\
+Section \ref{chapter:extensions} outlines ideas I had floating around in my
+mind as the deadline for the project approached. With regard to existing
+Augmented Reality applications, the original big picture and other
+sources of inspiration, this section lists how I would extend and improve
+the project, opening the scope to a larger audience in addition to range
+of potential use cases.\\
+\\
+Finally, Section \ref{chapter:userguide} holds a user guide, should anyone
+reading this report would like to take the program and have a play around.
+
 \newpage
 \section{Background}
+\label{chapter:background}
 
 \subsection{Augmented Reality}
 \begin{center}
 What is Augmented Reality(AR) and why should we be interested in it? \\
 \end{center}
-In recent years, it becomes harder and harder to concisely describe what
-constitutes as Augmented Reality. The reason for this being that as technology
-improves more and more things are being achieve that allow users to extend
-their perceived reality with extra data.\\ 
+In recent years, it has become harder to concisely describe what,exactly, 
+constitutes Augmented Reality. The reason for this is that as technology
+improves, more and more functionality is being achieved that allows 
+users to extend their perceived reality.\\ 
 
 Simply put, Augmented Reality is when the environment around you can be 
 extneded by combining both real and virtual data components. Azuma's 
@@ -199,9 +249,10 @@ describes AR as having the following three characteristics:
 	\item Registered in 3D
 \end{enumerate}
 
-While these are the basic things that constitute AR, there are three ways, 
-outlined in Mackay's paper\cite{Mackay}, \textit{Augmented reality: linking 
-real and virtual worlds: a new paradigm for interacting with computers},
+While these are the fundamental attributes of an AR system, there are 
+three ways, outlined in Mackay's paper\cite{Mackay}, 
+\textit{Augmented reality: linking real and virtual worlds: 
+A new paradigm for interacting with computers},
 in which you can augment reality.\\
 These are:
 \begin{enumerate}
@@ -211,11 +262,11 @@ These are:
 \end{enumerate}
 
 \subsubsection{Augment the User} 
-Augmenting the user is having the user carrying, wearing or using a device
-that provide the user with extra information. When we talk about augmenting
+Augmenting the user is having the user carry, wear or use a device
+that provides the user with extra information. When we talk about augmenting
 the user, the devices we talk about are usually
 heads-up displays (HUDS) which the user will have a screen in front of their
-eyes in some shape or form. One example of this is Google Glass, allows
+eyes in some shape or form. One example of this is the Google Glass; it allows
 users to project information about what they see or their GPS location onto
 parts of the glass. If the user was looking at the Eiffel Tower through their 
 glass, with GPS coordinates and a scan of the shape of the Eiffel Tower, 
@@ -273,6 +324,10 @@ landscape in real time to provide an interactive augmented environment! Sarah
 Reed from the University of California lead the authoring of the persentation
 about this piece of tehnology\cite{Reed14}.
 
+\subsection{~DO~ How Augmented Reality works}
+\subsubsection{~DO~ Markerless AR}
+\subsubsection{~DO~ AR with Fiducial Markers}
+
 \subsection{Construction of AR scenes.}
 Augmented Reality has two main parts to it; Computer Vision and Computer Graphics.
 There may also be all sort of other computer science topics melded in, for
@@ -294,11 +349,149 @@ nor do I intended, to stray from this basic pipeline where data processing in
 the middle will be minimal.
 
 \subsection{Computer Vision and Image Processing}
-A key part of this project is the Computer Vision aspect. The field of
-Computer Vision involves the understanding of data from images and pictures.
-"Understanding" is a broad term that encompasses many ways of manipulating or
-processing images in order to extract features or points of interest that
-can be then used by the computer.
+Computer Vision is a massive topic in the field of Computer Science. It
+involves taking an image and performing various algorithms on it so that
+the image can be better understood by the computer. For example,
+passing in a simple photograph and having the computer output a box
+around the recognised faces in the photograph. This is exactly the
+functionality we see in most modern day smart phone cameras! Computer
+vision is everywhere and is a widely studied area.\\
+\\
+Computer Vision is not limited to pictures, we can extend it to 
+computer generated images and video! Anything we can see, we can pass to 
+the computer in some form to represent in a way it can understand and
+store! The field also finds itself intertwined with other areas of
+Computer Science due to its range of applicability and its plethora
+of possible use cases! Some areas include Machine Learning, Robotics,
+Medical surgery and Imaging, the list goes on.\\
+\\
+The topic of Computer Vision is so large that it can be split into
+many subdisciplines. There's Image manipulation, Segmentation, 
+Transformation, Filtering, Feature Extraction, Image Registration,
+Tracking and more. Due to the sheer size of this field, I will only 
+introduce the main topic used in Augmented Reality, which is Feature 
+Recognition and Extraction, along with Image Manipulation.
+
+\subsection{Image Manipulation/Processing}
+Image Manipulation involves taking an image, be it a photograph or 
+computer generated image, representing it in a way that is understood
+by the computer and then performing actions on this prepresentation.\\
+\\
+In Augmented Reality, Image Manipulation is typically used to help in
+Feature Extraction and Regonition to further highlight points that should
+be identified. For example, an Image may be converted to black and white
+(or the pixels in dark areas made darker and the bright areas brighter),
+where the white areas are areas of interest and the black areas are places
+which do not need to be considered. Other manipulation techniques will
+involve looking for colour values and gaining some understanding of
+the picture based off it and changing the picture depending on that 
+knowledge.
+
+\subsubsection{An Image in the computer}
+A computer will display a picture with \textit{pixels}. A pixel is the
+smallest unit of an image. A 2D array of pixels will make up an image.
+The more pixels you can fit into an area, the better quality a picture
+you can show on the screen.\\
+\\
+Pixels hold values which describe how they look, this is
+essentially the colour of a pixel. There are many \textit{colour spaces} that
+an image can be represented in. What this means is that there are
+various ways to represent the value of a pixel, the most common colour
+space is the RGB model, where each pixel is given a Red, Green and Blue
+colour value, which when combined will give the resultant colour of the
+pixel. The ranges of these values are typicall 0 to 255. 
+For example, \texttt{(0,0,255)} indicates a completely blue pixel. 
+Figure \ref{fig:pixels} shows a few more examples. However, there are 
+also different colours spaces, such as BGR (where B and R values are
+switched), Grayscale which has one value per pixel (0-255), and Binary
+colour space (pixels are either black or white).
+An image is a 2D array of these pixels.
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.9]{pics/pixels.png}
+	\caption{Pixel values and colours in RGB space.}
+	\label{fig:pixels}
+\end{figure}
+
+\subsubsection{Image masks and operating on an Image}
+To manipulate an image, the computer applies functions to images,
+these functions typically iterate over each pixel in the provided image and
+make changes to the image at the pixel level.\\
+\\
+Images can be aligned to each other (Image Registration), where pixels
+will be matched to obtain an optimal alignment. Images can also
+be rotated, translated, sheered etc. (Image Transformation) to shift
+the pixel values to different pixels. \\
+\\
+Using Image masks is one way of applying a function across an image.
+Some uses of masks involve edge detection or blurring an image. In
+Computer Vision literature, masks are also known as \textit{kernels},
+or \textit{convolution matrices}. A mask is typically square in shape,
+of an odd number in length. For example, a 3x3 mask or a 5x5 mask. 
+Masks are then convoluted with the image, which itself is considered as
+a matrix of values. Depending on the values in the mask and the convolution
+algorithm, new pixels can be assigned the to middle pixel.\\
+\\
+To explain convolution, the peusdoalgorithm in Algorithm 
+\ref{algo:gaussianblur}, and Algorithm \ref{algo:blur}, is used as an example.
+The values of the kernel can be seen in Figure \ref{fig:gaussiankernel} .
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{pics/gaussiankernel.jpg}
+	\caption{The Gaussian Kernel for blurring}
+	\label{fig:gaussiankernel}
+\end{figure}
+
+\begin{algorithm}
+\DontPrintSemicolon
+$gMask$ is the 3x3 convolution matrix\;
+Img is the image being blurred\;
+blurredImg is the new blurred image with the same dimensions as Img\;
+\Begin{
+$newValue \longleftarrow 0$\;
+	\For{pixel($i,j$) under $gMask(h,w$)}{
+		newValue $\longleftarrow$ newValue + getPixelValue($Img,i,j)$ * $gMask(h,w)$\; 		
+	}
+	Set value of blurredImg pixel under the centre of $gMask$ to newValue\;
+}
+\caption{The Blurring Algorithm}
+\label{algo:blur}
+\end{algorithm}
+
+\begin{algorithm}
+\DontPrintSemicolon
+$gMask$ is the 3x3 convolution matrix\;
+Img is the image being blurred\;
+blurredImg is the new blurred image with the same dimensions as Img\;
+\Begin{
+	\For{pixel($i,j$) $in$ Img}{
+		align centre of $gMask$ with the first pixel in Img and blurredImg\;
+		apply The Blurring Algorithm\;
+	}
+}
+\caption{Convoluting a Gaussian kernel with an image to blur it.}
+\label{algo:gaussianblur}
+\end{algorithm}
+
+\subsection{Feature Recognition and Extraction}
+Feature Recognition and Extraction is the other important Computer Vision
+topic that will come into play in Augmented Reality. As Computer Vision can
+be separated into many differet topics and sub topics, from this point
+onward, when I refer to Feature Recognition and Extraction, I also refer
+to Object extraction (which is sometimes classed as a subtopic of
+visual recognition). A feature in an image is a particular thing which
+may be of importance to track. This could be anything, a shape, a corner,
+a certain pattern etc. For Augmented Reality and the purposes of this project
+the areas of interest to us are particularly Edge detection, 
+Corner Detection and Object Extraction.\\
+\\
+In markerless Augmented Reality, there is need to identify implicit
+markers, this is usually solved by Object Extraction. In Augmented Reality
+applications that do utilise a marker, corner and edge detection is used
+to locate the marker in the scene. However, to begin Object Extraction, 
+there is usually need to perform Edge detection first.
 
 \subsubsection{Edge Detection}
 % Detecting lines and edges of paper, for registration
@@ -370,6 +563,364 @@ change of gradient sign, which occurs when second order derivative is 0,
 indicates that the intensity of the observed pixels begins changing also. This
 method can be coupled with a Gaussian kernel which serves to de-noise the
 image by smoothing out the pixel intensities. 
+
+\subsubsection{~DO~ Corner Detection}
+
+\subsubsection{~DO~ Object Detection}
+
+\subsection{Contours and Ordnance Survey Maps}
+Ordnance Survey(OS) are an agency for Great Britain that specialise in
+making maps. The agency was formed all the way back around 1791 and has
+been producing maps for Britain since. Ordnance Maps are, of course, 2D and
+are produced on paper, long before our online maps which we use so much 
+today. OS maps were a staple to any adventurer travelling Britain's
+landscape. Below in Figure \ref{OSmap} is a segment of a typical OS Map.
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.7]{pics/OSmap.png}
+	\caption{OS Map snippet}
+	\label{OSmap}
+\end{figure}
+
+The curved lines which have numbers on them are contour lines. These contour
+lines dictate the height of the land above sea level at that point. All points
+along the contour are of equal (the stated) height. The OS map standard is 
+that every next contour is a difference of 10m from the last. In addition, every 
+50m has a thicker contour. As a result, OS maps accurately depict hills, mountains
+and elevated land. The contours used for landscape maps in this project are 
+heavily based off of OS map contours. A possible advanced use for this project
+is to turn OS maps into 3D representations. This would allow travellers who are
+out in the field with no internet reception for their favourite map application to
+simply hold view a 3D version of the OS map they should have taken on their journey.
+Of course, there are many other factors invovled, such as extracting other lines
+which may represent road of river and determining what is actually a land contour, 
+this idea is one to keep in mind, however.\\
+\\
+Another trait to notice aobut contour lines is that their closeness to each other
+also indicates how steep the slope of the area is. If contours are close, such as
+near the peak of the Slieve	na Callaigh in Figure \ref{OSmap}, then the land is 
+steep. If you compare this to somewhere such as near Ballinvally, the contours 
+are much further apart, indicating a flatter, less steeply increasing/decreasing 
+slopes. 
+
+\subsection{Existing AR Projects}
+Within this section, I outline a couple of existing Augmented Reality 
+applications which perform similar functions to what my project is 
+proposing to do.
+
+\subsubsection{LandscapAR}
+\label{LandscapAR}
+Looking into the Augmented reality scene and looking for potential similar
+applications brought me across the mobile application \textit{LandscapAR},
+made by Stapps. The premise of the application is that it is aimed at
+graphic/landscape designers and turns drawn contour lines into an augmented
+reality environment you can view through your phone screen. \\
+\\
+The application imposes several restrictions upon the user, however. The user
+must use a thick black pen for the app to successfully identify contours. 
+In addition, the user must make sure that every conour is properly connected
+and closed. Already, this limits some things that the user is able to do, they
+have to take the time to be precise and also must make sure they have the 
+correct equipment to start creating their work. In addition, the application
+requires the user to place white paper over a dark background/table otherwise
+the scene may not be recognised. Even if the paper is on a dark table, it 
+does not guarantee the paper is identified, this may be due to illumination
+differences of the whole paper not being fully captured, as in 
+Figure \ref{fig:landscapeARNoPaper1} and \ref{fig:landscapeARNoPaper2}.This 
+is likely because they use 
+the paper edges/corners as anchor points upon which they can align the 
+augmented scene and use registration to align the output. In addition, it
+is possible for the paper to be "too far" away from the camera, when I
+myself tested this, it caused a good several minutes of frustration trying
+to align the phone camera and the paper such that the application could 
+function seen in Figure \ref{fig:landscapeARNoTooFar}. 
+Finally when all this is done, the user must press the "Scan" button
+which can cause them to lose their hard-sought alignment! An original
+topdown view is generated, see Figure \ref{fig:landscapeARtopdown}, on
+the first scan. After, the user can choose a free camera mode where they 
+can move the camera around to view the scene in 3D, 
+Figure \ref{fig:landscapeARangled}, though the ability to steadily
+keep this image on the screen is lackluster in some scenarios.  \\
+
+\begin{figure}[!ht]
+	\centering
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/landscapeARNoPaper.png}
+		\caption{The user must align their paper properly}
+		\label{fig:landscapeARNoPaper1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/landscapeARNoPaper2.png}
+		\caption{The user must align their paper properly}
+		\label{fig:landscapeARNoPaper2}
+	\end{subfigure}
+	
+	
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/landscapeARTooFar.png}
+		\caption{The range of detection is limited.}
+		\label{fig:landscapeARNoTooFar}
+	\end{subfigure}
+
+	
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/landscapeARtopdown.png}
+		\caption{Output from a simple scan produces a top down image}
+		\label{fig:landscapeARtopdown}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/landscapeARangled.png}
+		\caption{After scanning it is possible to move the camera}
+		\label{fig:landscapeARangled}
+	\end{subfigure}
+	\caption{Testing LandscapAR}
+	\label{landscapAR}
+\end{figure}
+
+There are several ways that this application can be improved. For example,
+currently the user has to draw their contours on a piece of paper and then
+scan paper using their mobile device. The scanning process itself is quite 
+cumbersome as trying to get the system to detect paper can be hit and miss.
+The scan analyses the image and overlays a 3D scene onto it quite well, however
+the downfall with this is that to make updates to the scene, ou use has to
+re-scan the image after addition, adding more cumbersome steps. For users
+who want to make several small changes here and there, this will consume a lot
+of time and effort on their part.
+\\
+\subsubsection{The AR Sandbox}
+The University of California, Davis along with the Lawrance Hall of Science 
+and ECHO Lake Aquarium and Science centre contribute to a project called the
+Augmented Reality Sandbox\cite{Reed14}. The project allows users to turn a 
+typical sandbox
+into a creative landscape environment, much akin the goal of this project.
+The system uses a Microsoft Kinect 3D camera and a projector to perform its 
+magic. Both are positioned above the sandbox and the depth camera on the Kinect
+will measure the local relative depths of the sand in the sandbox. If the
+user has created mounds on the sanbox they will  be closer to the camera, these
+will be converted into mountains/hills. Areas lower than a certain threshold 
+depth will be converted into water. The input from the 3D camera will pass 
+the data to a computer and project subsequent land/water colours onto the
+corresponding areas of the sandbox.\\
+\\
+The Augmented Reality Sandbox also has a variety of other functionalities, such
+as creating rain over the Augmented environment by hovering a hand ofer the 
+area of rainfall. The whole project aims to teach people, particularly children,
+about landscapes, watersheds and catchment areas that you can physically 
+change, interact with, and get real-time response from. The project has gained 
+quite a bit of interest, with alternate versions being built by others and
+is something that helped in the motivation for this project. The sandbox
+can be seen in Figure \ref{arsandbox}. \\
+
+\begin{figure}[!Ht]
+	\centering
+	\includegraphics[scale=0.8]{pics/sandbox.jpg}
+	\caption{Children learn about watersheds with Augmented Reality.}
+	\label{arsandbox}
+\end{figure}
+
+The AR Sandbox is a great tool for creativity, however it is very hard to do
+on a small, personal scale. Institutions and education centres can easily set
+up and manage such a project but the cost and maintenance is hard for an
+individual. In addition, the purpose is very limited and geared towards those
+of the younger generation to learn simple concepts of geography. In this project,
+I will be using the ideas the AR Sandbox has put forward to offer an
+improved, alternate version which is geared towards a much larger audience, with
+less of a specific goal and more of an environment for creativity with less
+requirement for special equipment.
+
+\section{Hardware Investigation}
+\subsection{Microsoft Kinect V2}
+\subsubsection{Background \& History}
+The Microsoft Kinect(V1) was original released as an extra piece of hardware
+for Microsoft's Xbox360 in 2010. The Kinect for windows (V2) was released
+in 2012 and offered a range of improved statistics from its ancestor,
+V1. Since its introduction into the market, the Kinect has received a lot of
+attention from developers and there have been many applications for it put
+forward. Many large companies have caught onto its capabilities and work 
+alongside Microsoft and the Kinect.\\ 
+\\
+The Kinect V2 offers users the ability to track their
+whole body with reasonable accuracy. In addition, the V2 can track up to 6 individuals
+at one time with 25 body joints able to be placed onto the captured images.
+This opens up a whole new range of applications
+that the Kinect can be used for and this is apparent in the amount of interest in the
+Kinect, along with the amount of published papers and success stories of different
+uses of it. Some of the possible fields this device can be used include 
+Augmented Reality, Entertainment and Games, Retail, Education and much more.\\
+\\ 
+"Evaluation of the Spatial Resolution Accuracy of the Face 
+tracking system for Kinect For Windows V1 and V2" \cite{AmonFuhrmann14}
+explores in more detail the increase in performance and capability
+of the V2 and shows that is beats V1 in every aspect. 
+\\ \\
+\subsubsection{How it works} 
+The V2 allows us to take infrared images along with 1080p colour images. It 
+also has depth sensors to produce depth images. Inside the V2 are 3 infrared
+emitters along with a colour camera, an infrared camera and some microphones.
+These internal components can be seen in figure \ref{kinectinternal}. The
+microphones are along the bottom.
+\begin{center}
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.5]{pics/kinectinternal}
+				\caption{Inside the Kinect V2 for Windows}
+				\label{kinectinternal}
+		\end{center}
+	\end{figure}
+\end{center}
+
+The Kinect V2 differs from the V1 majorly in the way it produces depth maps.
+V1 uses structured light while the V2 utilises Time-Of-Flight. Time-of-Flight
+involves emitting many short bursts of infrared light (strobing it) and then
+collecting it back through its camera. 
+The technique involves splitting a pixel in half and collecting infrared light
+on the pixel. However, they are on at different times, while one half is on, 
+the other is off and depending on the ratio of how much light is collected 
+by each half (ratio since it accounts for light absorption by objects in the scene),
+the relative depth of objects can be inferred. \\
+\\
+The V2 also accounts for over exposure and saturation of pixels. This scenario
+occurs when there are alternative sources of infrared light, i.e. in an outdoor
+environment! The V2 can reset pixel values in the middle of an exposure, also
+explained in Daniel Lau's blog mentioned above. This then
+allows it to be used outside where the V1 wouldn't account for this and cause
+all kinds of strange behaviour; this of course means that the scope for using
+the V2 and its applications is significantly larger than it ancestor.
+\\ \\
+\subsubsection{My investigations} 
+I investigated the Kinect for Windows first hand. In figure \ref{KinectDepth} 
+you can see an example of the depth sensing capability of V2. On the right,
+circled in blue, is myself. I sat around 40cm away from the camera. As I highlight 
+in the limitations section below, this is reported as the minimum distance 
+performance can be guaranteed by the V2. My friend, Juto Yu, is circled in 
+yellow, he say slightly outside the view of the camera, giving me a rough 
+indication on how wide the capture region is. The green circled object is a 
+pillar in the central library of Imperial College, it is definitely more than 
+3m away from the V2 which is reported as the range before objects become 
+"too far". Whether it being detected is because the device can actually 
+handle larger caption depths or due to the pillar being white and thus 
+more reflective will need to be further looked in to.
+\begin{center}
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.5]{pics/KinectDepth}
+				\caption{Depth image from Kinect V2}
+				\label{KinectDepth}
+		\end{center}
+	\end{figure}
+\end{center}
+
+I also looked into the colour camera's performance. The camera has a 1080p HD
+video taking capability and is of a good quality. In addition, as seen in 
+figure \ref{KinectColour}. The body tracking is pretty good and can make rather
+accurate implications of people's limbs even when they are sitting down and are
+obscured as shown. I was sitting at a desk but the V2 could make some guesses
+as to where my legs would be. It is also clear that multiple tracking can be done
+in real time at a speed that is responsive.
+\begin{center}
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[scale=0.5]{pics/KinectColor}
+				\caption{Colour Camera (with body tracking)}
+				\label{KinectColour}
+		\end{center}
+	\end{figure}
+\end{center}
+
+The V2 is definitely a great alternative to some of the more expensive depth 
+sensors on the market. As highlighted in the paper
+"Low-cost commodity depth sensor comparison and accuracy analysis" by
+Timo Breuer, Christoph Bodensteiner, Michael Arens. Some of the other sensors
+that out perform it are upwards of £3000 while the V2 costs just around £150.
+This means that it will be accessible to a much larger audience, something
+definitely needed if an Augmented Reality game is to be successful.\\ 
+\\
+\subsubsection{Limitations and pitfalls}
+The cameras of the V2 have a set range of values that it works well within.
+This is reported by Microsoft to be from 0.4m to 3m
+Anywhere beyond that seems to be too
+far to determine the depth of objects. There is also a notion of being too near
+to the device to! If we are working with the device, say, next to our laptop or
+in a space nearby, there may be complications with how the sensor performs, 
+anything closer than 0.4m produces unknown behaviour with the depth sensor.\\ 
+\\
+A pitfall I expect to encounter is when developing with the Kinect SDK. I have
+experience in C++ which is one of the languages that can be used to write Kinect 
+applications. However, it seems a lot of the colour camera tutorials are written
+in C\# which will could cause problems for me if I had to pick up the language 
+or translate it into the C++ equivalents. However, this should only be a small
+pitfall and cause minor hindrance to the progression of the project.
+
+\newpage
+
+\section{Implementation}
+\label{chapter:implementation}
+In this section I will briefly outline the main steps I took to in
+the creation of this project to tackle various problems.
+\subsection{Assumptions and Restrictions of the User}
+\label{sec:assumptions}
+At the beginning of this project I had many ideas and aspirations on
+what the final product could do. However, I quickly realised that most
+of these ambitions were unattainable in the time frame and at my level
+of expertise. As a result, some restrictions have been imposed on the
+user when they use the program. In addition, I have designed my
+program with a set of assumptions in mind that simplify the problem from
+one that could merit several research projects if broken down and 
+investigated in depth, into one of reduced difficulty but still 
+contributes what it set out to do. In this section, I list these
+assumptions and restrictions. 
+
+\subsubsection{Assumptions}
+\begin{itemize}
+    \item The user draws perfect connected contours or near 
+    	  perfect contours
+    \item Light in the environment is stable and is not
+    	  changing drastically over short time periods
+    \item The user only draws contours
+    \item The user draws reasonably sized landscape maps and contours
+    \item The user doesn't draw an extremely deep tree of nested contours
+\end{itemize}
+
+I believe the assumptions I have developed this project with are reasonable,
+firstly, it would be very demanding if a user drew an incoherent landscape
+map and hope for the program to understand it. In addition, it will be
+unlikely a person will be drawing the landscape map in an environment
+with rapidly changing light. If the user draws other shapes or triangles,
+they will be interpreted as contours as this program only accommodates contours.
+It should also be reasonable to think that the user will not draw a 
+miniscule landscape map as it becomes hard for both themselves and the camera.
+The case of a large map is fine as the restriction of seeing the ARuco 
+marker keeps the scale within reason. The reason we do not want a deep
+tree is due to the amount of contour level traversal in the program. This
+should only become a problem if the user begins at the very edges of the paper
+and draws containing contours just one or two millimetres apart all the
+way until they fill the paper, which i a rather uninteresting landscape map
+anyway!
+
+
+
+
+
+
+
+
+
+
+\subsection{Computer Vision and Image Processing -- MOVE}
+A key part of this project is the Computer Vision aspect. The field of
+Computer Vision involves the understanding of data from images and pictures.
+"Understanding" is a broad term that encompasses many ways of manipulating or
+processing images in order to extract features or points of interest that
+can be then used by the computer.
+
 
 
 \subsubsection{Canny Edge Detector}
@@ -816,7 +1367,7 @@ From a mathematical standpoint, there are .........SEE ARUCO EXPLANATION
 
 .................MORE (Using checkerboards)
 
-\subsection{Computer Graphics}
+\subsection{Computer Graphics -- MOVE}
 The next key part of this project is the Computer Graphics side, it is the
 final stage of te AR pipeline, taking data which has been processed and
 manipulated from the Computer Vision step and transforming it into something
@@ -824,356 +1375,16 @@ the user can view.
 \subsubsection{~DO~}
 \subsubsection{~DO~}
 
-\subsection{Ordnance Survey Maps}
-Ordnance Survey(OS) are an agency for Great Britain that specialise in
-making maps. The agency was formed all the way back around 1791 and has
-been producing maps for Britain since. Ordnance Maps are, of course, 2D and
-are produced on paper, long before our online maps which we use so much 
-today. OS maps were a staple to any adventurer travelling Britain's
-landscape. Below in Figure \ref{OSmap} is a segment of a typical OS Map.
-
-\begin{figure}
-	\centering
-	\includegraphics[scale=0.7]{pics/OSmap.png}
-	\caption{OS Map snippet}
-	\label{OSmap}
-\end{figure}
-
-The curved lines which have numbers on them are contour lines. These contour
-lines dictate the height of the land above sea level at that point. All points
-along the contour are of equal (the stated) height. The OS map standard is 
-that every next contour is a difference of 10m from the last. In addition, every 
-50m has a thicker contour. As a result, OS maps accurately depict hills, mountains
-and elevated land. The contours used for landscape maps in this project are 
-heavily based off of OS map contours. A possible advanced use for this project
-is to turn OS maps into 3D representations. This would allow travellers who are
-out in the field with no internet reception for their favourite map application to
-simply hold view a 3D version of the OS map they should have taken on their journey.
-Of course, there are many other factors invovled, such as extracting other lines
-which may represent road of river and determining what is actually a land contour, 
-this idea is one to keep in mind, however.\\
-\\
-Another trait to notice aobut contour lines is that their closeness to each other
-also indicates how steep the slope of the area is. If contours are close, such as
-near the peak of the Slieve	na Callaigh in Figure \ref{OSmap}, then the land is 
-steep. If you compare this to somewhere such as near Ballinvally, the contours 
-are much further apart, indicating a flatter, less steeply increasing/decreasing 
-slopes. 
-
-\subsection{Existing Projects}
-
-\subsubsection{LandscapAR}
-\label{LandscapAR}
-Looking into the Augmented reality scene and looking for potential similar
-applications brought me across the mobile application \textit{LandscapAR},
-made by Stapps. The premise of the application is that it is aimed at
-graphic/landscape designers and turns drawn contour lines into an augmented
-reality environment you can view through your phone screen. \\
-\\
-The application imposes several restrictions upon the user, however. The user
-must use a thick black pen for the app to successfully identify contours. 
-In addition, the user must make sure that every conour is properly connected
-and closed. Already, this limits some things that the user is able to do, they
-have to take the time to be precise and also must make sure they have the 
-correct equipment to start creating their work. In addition, the application
-requires the user to place white paper over a dark background/table otherwise
-the scene may not be recognised. Even if the paper is on a dark table, it 
-does not guarantee the paper is identified, this may be due to illumination
-differences of the whole paper not being fully captured, as in 
-Figure \ref{fig:landscapeARNoPaper1} and \ref{fig:landscapeARNoPaper2}.This 
-is likely because they use 
-the paper edges/corners as anchor points upon which they can align the 
-augmented scene and use registration to align the output. In addition, it
-is possible for the paper to be "too far" away from the camera, when I
-myself tested this, it caused a good several minutes of frustration trying
-to align the phone camera and the paper such that the application could 
-function seen in Figure \ref{fig:landscapeARNoTooFar}. 
-Finally when all this is done, the user must press the "Scan" button
-which can cause them to lose their hard-sought alignment! An original
-topdown view is generated, see Figure \ref{fig:landscapeARtopdown}, on
-the first scan. After, the user can choose a free camera mode where they 
-can move the camera around to view the scene in 3D, 
-Figure \ref{fig:landscapeARangled}, though the ability to steadily
-keep this image on the screen is lackluster in some scenarios.  \\
-
-\begin{figure}[!ht]
-	\centering
-	\begin{subfigure}[t]{.4\textwidth}
-		\centering
-		\includegraphics[scale=0.3]{pics/landscapeARNoPaper.png}
-		\caption{The user must align their paper properly}
-		\label{fig:landscapeARNoPaper1}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{.4\textwidth}
-		\centering
-		\includegraphics[scale=0.3]{pics/landscapeARNoPaper2.png}
-		\caption{The user must align their paper properly}
-		\label{fig:landscapeARNoPaper2}
-	\end{subfigure}
-	
-	
-	\begin{subfigure}[t]{.4\textwidth}
-		\centering
-		\includegraphics[scale=0.3]{pics/landscapeARTooFar.png}
-		\caption{The range of detection is limited.}
-		\label{fig:landscapeARNoTooFar}
-	\end{subfigure}
-
-	
-	\begin{subfigure}[t]{.4\textwidth}
-		\centering
-		\includegraphics[scale=0.3]{pics/landscapeARtopdown.png}
-		\caption{Output from a simple scan produces a top down image}
-		\label{fig:landscapeARtopdown}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{.4\textwidth}
-		\centering
-		\includegraphics[scale=0.3]{pics/landscapeARangled.png}
-		\caption{After scanning it is possible to move the camera}
-		\label{fig:landscapeARangled}
-	\end{subfigure}
-	\caption{Testing LandscapAR}
-	\label{landscapAR}
-\end{figure}
-
-There are several ways that this application can be improved. For example,
-currently the user has to draw their contours on a piece of paper and then
-scan paper using their mobile device. The scanning process itself is quite 
-cumbersome as trying to get the system to detect paper can be hit and miss.
-The scan analyses the image and overlays a 3D scene onto it quite well, however
-the downfall with this is that to make updates to the scene, ou use has to
-re-scan the image after addition, adding more cumbersome steps. For users
-who want to make several small changes here and there, this will consume a lot
-of time and effort on their part.
-\\
-\subsubsection{The AR Sandbox}
-The University of California, Davis along with the Lawrance Hall of Science 
-and ECHO Lake Aquarium and Science centre contribute to a project called the
-Augmented Reality Sandbox\cite{Reed14}. The project allows users to turn a 
-typical sandbox
-into a creative landscape environment, much akin the goal of this project.
-The system uses a Microsoft Kinect 3D camera and a projector to perform its 
-magic. Both are positioned above the sandbox and the depth camera on the Kinect
-will measure the local relative depths of the sand in the sandbox. If the
-user has created mounds on the sanbox they will  be closer to the camera, these
-will be converted into mountains/hills. Areas lower than a certain threshold 
-depth will be converted into water. The input from the 3D camera will pass 
-the data to a computer and project subsequent land/water colours onto the
-corresponding areas of the sandbox.\\
-\\
-The Augmented Reality Sandbox also has a variety of other functionalities, such
-as creating rain over the Augmented environment by hovering a hand ofer the 
-area of rainfall. The whole project aims to teach people, particularly children,
-about landscapes, watersheds and catchment areas that you can physically 
-change, interact with, and get real-time response from. The project has gained 
-quite a bit of interest, with alternate versions being built by others and
-is something that helped in the motivation for this project. The sandbox
-can be seen in Figure \ref{arsandbox}. \\
-
-\begin{figure}[!Ht]
-	\centering
-	\includegraphics[scale=0.8]{pics/sandbox.jpg}
-	\caption{Children learn about watersheds with Augmented Reality.}
-	\label{arsandbox}
-\end{figure}
-
-The AR Sandbox is a great tool for creativity, however it is very hard to do
-on a small, personal scale. Institutions and education centres can easily set
-up and manage such a project but the cost and maintenance is hard for an
-individual. In addition, the purpose is very limited and geared towards those
-of the younger generation to learn simple concepts of geography. In this project,
-I will be using the ideas the AR Sandbox has put forward to offer an
-improved, alternate version which is geared towards a much larger audience, with
-less of a specific goal and more of an environment for creativity with less
-requirement for special equipment.
-
-%\subsection{Look at this below. What is this?}
-%Nowadays, technology is obsessed with being more interactive, especially in 
-%the realm of games and education. With the emergence of hardware such as
-%Google Glass and the Oculus Rift, augmented and virtual reality is becoming
-%a hot and exciting field in which to make technological advances. Emphasis
-%has been made on "immersing ourselves" within the game or environment that
-%we are interacting with, in order to get a much more stimulating experience
-%which leaves a great impression upon us. I myself had taken a liking to 
-%Augmented Reality (AR) sometime before applying for my M.Eng Computing degree
-%at Imperial College London. This original interest provided most of the 
-%motivation for taking up this project.
 
 
-\subsubsection{Microsoft Kinect V2}
-\underline{Background \& History}\\
-The Microsoft Kinect(V1) was original released as an extra piece of hardware
-for Microsoft's Xbox360 in 2010. The Kinect for windows (V2) was released
-in 2012 and offered a range of improved statistics from its ancestor,
-V1. Since its introduction into the market, the Kinect has received a lot of
-attention from developers and there have been many applications for it put
-forward\footnote{http://www.microsoft.com/en-us/kinectforwindows/meetkinect/gallery.aspx?searchv=entertainment}.
-Many large companies have caught onto its capabilities and work 
-alongside Microsoft and the Kinect.
-\\ \\
-In contrast to the Leap Motion, the Kinect V2 offers users the ability to track their 
-whole body with reasonable accuracy. In addition, the V2 can track up to 6 individuals
-at one time with 25 body joints able to be placed onto the captured images.
-This opens up a whole new range of applications
-that the Kinect can be used for and this is apparent in the amount of interest in the
-Kinect, along with the amount of published papers and success stories of different
-uses of it. Some of the possible fields this device can be used include 
-Augmented Reality, Entertainment and Games, Retail, Education and much more. The 
-Microsoft Kinect website highlights some of these interesting projects in more detail
-\footnote{http://www.microsoft.com/en-us/kinectforwindows/meetkinect/default.aspx}.
-\\ \\ 
-The paper "Evaluation of the Spatial Resolution Accuracy of the Face 
-tracking system for Kinect For Windows V1 and V2" \cite{AmonFuhrmann14}
-explores in more detail the increase in performance and capability
-of the V2 and shows that is beats V1 in every aspect. 
-\\ \\
-\underline{How it works} \\ 
-The V2 allows us to take infrared images along with 1080p colour images. It 
-also has depth sensors to produce depth images. Inside the V2 are 3 infrared
-emitters along with a colour camera, an infrared camera and some microphones.
-These internal components can be seen in figure \ref{kinectinternal}. The
-microphones are along the bottom but will not be used within my project. 
-\begin{center}
-	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[scale=0.5]{pics/kinectinternal}
-				\caption{Inside the Kinect V2 for Windows}
-				\label{kinectinternal}
-		\end{center}
-	\end{figure}
-\end{center}
 
-The Kinect V2 differs from the V1 majorly in the way it produces depth maps.
-V1 uses structured light while the V2 utilises Time-Of-Flight. Time-of-Flight
-involves emitting many short bursts of infrared light (strobing it) and then
-collecting it back through its camera. A very thorough discussion of how this
-determines the depth of objects in the captured image is present on Daniel
-Lau's blog \footnote{http://www.gamasutra.com/blogs/DanielLau/20131127/205820/The\_Science\_Behind\_Kinects\_or\_Kinect\_10\_versus\_20.php}.
-The technique involves splitting a pixel in half and collecting infrared light
-on the pixel. However, they are on at different times, while one half is on, 
-the other is off and depending on the ratio of how much light is collected 
-by each half (ratio since it accounts for light absorption by objects in the scene),
-the relative depth of objects can be inferred. 
-\\ \\
-The V2 also accounts for over exposure and saturation of pixels. This scenario
-occurs when there are alternative sources of infrared light, i.e. in an outdoor
-environment! The V2 can reset pixel values in the middle of an exposure, also
-explained in Daniel Lau's blog mentioned above. This then
-allows it to be used outside where the V1 wouldn't account for this and cause
-all kinds of strange behaviour; this of course means that the scope for using
-the V2 and its applications is significantly larger than it ancestor.
-\\ \\
-\underline{My investigations} \\ \\
-I investigated the Kinect for Windows first hand. In figure \ref{KinectDepth} 
-you can see an example of the depth sensing capability of V2. On the right,
-circled in blue, is myself. I sat around 40cm away from the camera. As I highlight 
-in the limitations section below, this is reported as the minimum distance 
-performance can be guaranteed by the V2. My friend, Juto Yu, is circled in 
-yellow, he say slightly outside the view of the camera, giving me a rough 
-indication on how wide the capture region is. The green circled object is a 
-pillar in the central library of Imperial College, it is definitely more than 
-3m away from the V2 which is reported as the range before objects become 
-"too far". Whether it being detected is because the device can actually 
-handle larger caption depths or due to the pillar being white and thus 
-more reflective will need to be further looked in to.
-\begin{center}
-	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[scale=0.5]{pics/KinectDepth}
-				\caption{Depth image from Kinect V2}
-				\label{KinectDepth}
-		\end{center}
-	\end{figure}
-\end{center}
 
-I also looked into the colour camera's performance. The camera has a 1080p HD
-video taking capability and is of a good quality. In addition, as seen in 
-figure \ref{KinectColour}. The body tracking is pretty good and can make rather
-accurate implications of people's limbs even when they are sitting down and are
-obscured as shown. I was sitting at a desk but the V2 could make some guesses
-as to where my legs would be. It is also clear that multiple tracking can be done
-in real time at a speed that is responsive.
-\begin{center}
-	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[scale=0.5]{pics/KinectColor}
-				\caption{Colour Camera (with body tracking)}
-				\label{KinectColour}
-		\end{center}
-	\end{figure}
-\end{center}
 
-The V2 is definitely a great alternative to some of the more expensive depth 
-sensors on the market. As highlighted in the paper
-"Low-cost commodity depth sensor comparison and accuracy analysis" by
-Timo Breuer, Christoph Bodensteiner, Michael Arens. Some of the other sensors
-that out perform it are upwards of £3000 while the V2 costs just around £150.
-This means that it will be accessible to a much larger audience, something
-definitely needed if an Augmented Reality game is to be successful.
-\\ \\
-\underline{Limitations and pitfalls}\\
-The cameras of the V2 have a set range of values that it works well within.
-This is reported by Microsoft to be from 0.4m to 3m
-\footnote{https://msdn.microsoft.com/en-us/library/hh973078.aspx\#Depth\_Ranges}.
-Anywhere beyond that seems to be too
-far to determine the depth of objects. There is also a notion of being too near
-to the device to! If we are working with the device, say, next to our laptop or
-in a space nearby, there may be complications with how the sensor performs, 
-anything closer than 0.4m produces unknown behaviour with the depth sensor.
-\\ \\
-A pitfall I expect to encounter is when developing with the Kinect SDK. I have
-experience in C++ which is one of the languages that can be used to write Kinect 
-applications. However, it seems a lot of the colour camera tutorials are written
-in C\# which will could cause problems for me if I had to pick up the language 
-or translate it into the C++ equivalents. However, this should only be a small
-pitfall and cause minor hindrance to the progression of the project.
 
-\newpage
 
-\section{Implementation}
-In this section I will briefly outline the main steps I took to in
-the creation of this project to tackle various problems.
-\subsection{Assumptions and Restrictions of the User}
-\label{sec:assumptions}
-At the beginning of this project I had many ideas and aspirations on
-what the final product could do. However, I quickly realised that most
-of these ambitions were unattainable in the time frame and at my level
-of expertise. As a result, some restrictions have been imposed on the
-user when they use the program. In addition, I have designed my
-program with a set of assumptions in mind that simplify the problem from
-one that could merit several research projects if broken down and 
-investigated in depth, into one of reduced difficulty but still 
-contributes what it set out to do. In this section, I list these
-assumptions and restrictions. 
 
-\subsubsection{Assumptions}
-\begin{itemize}
-    \item The user draws perfect connected contours or near 
-    	  perfect contours
-    \item Light in the environment is stable and is not
-    	  changing drastically over short time periods
-    \item The user only draws contours
-    \item The user draws reasonably sized landscape maps and contours
-    \item The user doesn't draw an extremely deep tree of nested contours
-\end{itemize}
 
-I believe the assumptions I have developed this project with are reasonable,
-firstly, it would be very demanding if a user drew an incoherent landscape
-map and hope for the program to understand it. In addition, it will be
-unlikely a person will be drawing the landscape map in an environment
-with rapidly changing light. If the user draws other shapes or triangles,
-they will be interpreted as contours as this program only accommodates contours.
-It should also be reasonable to think that the user will not draw a 
-miniscule landscape map as it becomes hard for both themselves and the camera.
-The case of a large map is fine as the restriction of seeing the ARuco 
-marker keeps the scale within reason. The reason we do not want a deep
-tree is due to the amount of contour level traversal in the program. This
-should only become a problem if the user begins at the very edges of the paper
-and draws containing contours just one or two millimetres apart all the
-way until they fill the paper, which i a rather uninteresting landscape map
-anyway!
+
 
 \subsubsection{Restrictions}
 \begin{itemize}
@@ -1586,7 +1797,7 @@ public:
   //Methods and contructors removed
 private:
   unordered_map<int,TreeNode*>* allNodes; //all nodes in this tree
-  void insertNode(int,TreeNode*);
+  void insertNode(int TreeNode*);
 };
 \end{lstlisting}
 
@@ -1764,6 +1975,8 @@ in the previous step, all that remains is a simple 1-to-1 map of each
 entry in the 2D array to a pixel point on the screen. I made use of
 the openGL primitive, Quads, to generate the landscape. The code snippet
 below shows how I take use the height map to assign ..............MORE
+
+
 \subsection{Detecting change in the scene}
 To provide the user inputless functionality that is the focus of this
 project, there has to be some way to indentify when it is time to 
@@ -1986,12 +2199,28 @@ achieved, a re-render of the scene and recaluclation of the hierarchy tree
 and height maps need to be done. Other stabilisation variables are reset for
 next time a change might occur.
 
-\subsection{~DO~ Restructure and regenerating the 3D scene}
+\subsection{Restructure and regenerating the 3D scene}
 After substantial difference has been identified by the program, there is
-now need to restructure and re-render the scene.
-
+now need to restructure and re-render the scene. This part of
+the implementation did not require much work. All that needed to be done was
+to take the new base frame that was obtained from the stabilisation
+stage and create the new landscape from that. This is all encapsulated 
+within one function call \texttt{createLandscape()} which changes
+the global parameters, i.e. the height map and the hierarchy tree.\\
+\\
+The program is always in a continuous loop due to the \texttt{glutMainLoop()}
+call. Since the scene is always rendered from the heightmap in each 
+loop, once there has been a change and the new heightmap has been created,
+the new scene will show to the user.\\
+\\
+Thus, with minimal extra work, the restructuring of the scene is done
+after the stabilisation has occurred. By using two threads, one that
+computes the new landscape after a base framme change, and the other
+that runs the main glut loop, there is seamless update of the new
+scene!
 
 \section{Evaluation}
+\label{chapter:evaluation}
 In this section, I assess the outcomes of this project, trying to 
 give numerical representation to its overall successes and failures.
 
@@ -2003,15 +2232,19 @@ unit of measurement in which I quantify the trait being assessed.
 The expected results correspond to what I originally considered the 
 minimum result to be considered a success in that trait.
 
+\newpage
+\begin{landscape}
 \begin{table}[h]
-\begin{tabular}{lllll}
+\begin{tabular}{p{.2\textwidth}|p{.2\textwidth}|p{.4\textwidth}|p{.25\textwidth}|p{.25\textwidth}}
+\hline \hline
 Trait to measure & Unit of Measurement & Reason & Expected Result & Actual Result \\
 \hline \hline
-Contour Detection&  Number of contours & A successful program will be able to 
+Contour Detection &  Number of contours & A successful program will be able to 
 										distinguish close to the real amount of 
 										contours in order to accurately represent the	
 										landscape map the user 
 													has made      & Equal to drawing&  			  \\
+\hline
 Landscape Generation
 	Accuracy     & By observation	   & Since the accuracy of the generation both
 										 depends on how the end 3D scene looks in 
@@ -2021,12 +2254,14 @@ Landscape Generation
 										        & Quite Smooth landscape,
 										          all with heights as described by
 										          the landscape map &  			  \\
+\hline
 Program Responsiveness &  Seconds      & Being real-time is a key part of Augmented
 									  	 reality and so the response time between 
 									  	 when the user has drawn the scene and when it
 									  	 renders should be sufficeintly low to 
 									  	 provide a real-time response
-									  	        &     2 seconds       &  			  \\
+									  	        &    $<$ 2 seconds       &  			  \\
+\hline
 Base Frame 
    Stabilisation & By Observation	   & We want the program to re-render the scene
    										 only when an adequate amount of change has 
@@ -2040,13 +2275,18 @@ Base Frame
 \end{tabular}
 \label{fig:TestMeasureTable}
 \end{table}
-
+\end{landscape}
+\newpage
 \subsection{~DO~ Indicators of Success}
 
 \subsection{~DO~ User Testing}
-Being a creative, Augmented Reality environment for people to bring their 
-landscape creations to life, to assess its worth, there has to be feedback
-from the users.
+%Being a creative, Augmented Reality environment for people to bring their 
+%landscape creations to life, to assess its worth, there has to be feedback
+%from the users. I chose an assortment of people from the Imperial College
+%Computing Department to help test my application. In addition, I also
+%got the younger siblings of my friends and peers to lend a hand as well! 
+%I also looked to get feedback from those who are in the arts field,
+%getting feedback from a handful
 
 
 
@@ -2060,7 +2300,8 @@ trying out this program.
 
 \subsection{~DO~ Overall Evaluation}
 
-\section{~DO~ Extensions}
+\section{Extensions}
+\label{chapter:extensions}
 Having implemented an environment for dynamic creative Augmented Reality,
 content, there are many obvious improvements that can be made to transform 
 this project into a much larger and better application. \\
@@ -2105,13 +2346,23 @@ measure which will allow classification of the considered pixels to the
 closest colour. From there, generation of the 3D scene will be a switch case 
 between different terrains base on the result of the classification.
 
-\subsubsection{Other markers}
+\subsubsection{~DO~ Removal of the Calibration Marker Points}
+Currently, with the fiducial marker in place to aide with camera
+calibration, it means there is always an additional piece of data on the 
+landscape map. Naturally, the when contour detection is done on the
+landscape map, the fiducial marker is also picked up. This means that the 
+marker will create undesired contours in the 3D scene. 
+...................DO IF CANNOT REMOVE
+
+\subsubsection{Other implicit markers}
 A marker is something on the paper or creative environment that will be 
 detected and understood by the program. Right now, the only markers we have
 at the user's disposal are contour lines which are converted into land with
-different elevation levels. While it is very easy to add special computer
-generated markers ......................MORE...................
- 						it removes from the creative experience of the application
+different elevation levels, and the fiducial marker used for helping
+with camera pose and scene orientation. While it is very easy to add 
+special computer generated markers ......................MORE...................
+ 				
+ 		it removes from the creative experience of the application
 as there is less interaction with pen and paper. \\
 \\
 To have other markers which represent other objects would greatly enhance the
@@ -2261,7 +2512,7 @@ depth, some simple approaches have been taken to reach a suitable solution
 that will fulfil the needs of this project. The main areas which I think would
 benefit from more extensive testing are highlighted in this section.
 
-\subsubsection{~DO~ Contour closing}
+\subsubsection{Contour joining, closing and detection}
 Contour closing is a pretty large topic in the field of Computer Vision as 
 it is the basis for segmentation. As a result, it plays \texttt{the} main role
 in many applications of computer vision. As a result of this there are 
@@ -2273,12 +2524,34 @@ and then the user correct the segmentation, causing updates to the program's
 segmentation algorithm. Over time, this would hopefully improve the performance
 of the program when identifying contours in roughly similar images. \\
 \\
-In this project, contour closing has been dealt with through a naive approach.
-Firstly, morphological closing helps connect very cloase contours, however, there
-were still contours that were very close that weren't caught by this transform.
-The next approach was to join contours that have start and end points which
-neighboured the start/end point of another contour.
-....................MORE
+In this project, contour closing has been dealt with through 
+a naive approach. Firstly, morphological closing helps connect 
+very close contours, however, there were still contours that were 
+very close that weren't caught by this transform. The next approach 
+was to join contours that have start and end points which
+neighboured the start/end point of another contour. This was pretty much
+the extent of closing contours in this project. As I mentioned early on
+in this project, accurate contour closing could itself be a whole
+research topic due to its importance. It can also be intertwined with 
+machine learning to yield better results. However, when joining contours,
+it is important to realise that the time to do this matters immensely in 
+Augmented Reality as there is need to be interactive in real-time.\\
+\\
+I would definitely have liked to continue experimenting with contour closing.
+Right now, the weakness of my closing algorithms, along with how OpenCV
+behaves when detecting contours after using the Canny detection algorithm, 
+has imposed limits on the types of drawing utensils the user has to use to
+obtain good performance from the program. It would be much
+better to allow the user to use any thickness of utensil and still 
+accurately detect and close contours.\\
+\\
+One test I would have liked to immediately implement is instead of using
+the Canny detector, just go straight to the thresholding stage to produce
+and image of potential contours. This itself would require a lot of
+threshod testing to make sure it behaves optimally. However, it could be
+possible that this method is faster than using Canny. However,
+there would need to be extensive tesing into thresholding to make sure that
+it performs well on the average case as well as some of the edge cases.
 
 \subsubsection{~DO~ Thresholding}
 Computer Vision is heavily dependent on aesthetics. A successful Computer
@@ -2297,13 +2570,145 @@ in an attempt to better segment and divide parts of the image. Some areas includ
 contour detection, 
 .......................MORE
 
-\subsubsection{~DO~ Stabilisation of background}
-To determine if there was any change in the landscape map, we implemented an
-algorithm which takes a base frame and the current frame and calculates a change
-measure. The base frame was considered the "Background" and any change was the
-"Foreground". 
+\subsubsection{Stabilisation of background}
+To determine if there was any change in the landscape map, I implemented an
+algorithm (Algorithm \ref{algo:stabilisation} which takes a base frame 
+and the current frame and calculates a change measure. The base 
+frame was considered the "Background" and any change was the
+"Foreground". If the change measure surpassed an empirically determined 
+threshold, the scene was deemed to have changed.\\
+\\
+Since the threshold was empirically determined, given more time I would
+have put more extensive tesing into finding out the optimal value for 
+this threshold. The threshold should also be adaptive, depending on what
+utensil the user is wielding. For example, a thin leaded pencil, or one where
+it is of colour harder to distinguish from the colour of the creative 
+surface will produce a small change image. On the other hand, a 
+much thicker, black permanent marker will produce a larger change image and
+thus need a higher threshold to properly capture an adequate amount of 
+change.\\
+\\
+The threshold for this project was determined on changes to a landscape
+map brought on by a user using a standard black biro pen. So while it
+may work to a certain accuracy with that and indeed some things thicker,
+for other drawing utensils, it may not perform well, if at all. Thus,
+allowing the user to choose their utensil and adapt the thresholding 
+level based on that is an extension I'd like to see completed. The
+writing utensil type then removes itself as a restriction on the user.
 
-...........MORE
+\newpage
+\section{~DO~ User Guide}
+\label{chapter:userguide}
+\subsection{~DO~ Obtaining the Code}
+\label{guide:obtainingcode}
+
+\subsection{Generating your ArUco marker}
+This section explains how to get an ArUco marker which will be used 
+by the program to orientate the scene. 
+
+\subsubsection*{Producing your marker}
+The first step is to head over to the website:
+
+\begin{center}
+http://terpconnect.umd.edu/~jwelsh12/enes100/markergen.html
+\end{center}
+
+You will be presented with three entry boxes, shown below in
+Figure \ref{guide:markergeneration}. The Marker ID must be an integer
+and can be any number you want it to be. 
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.8]{userguide/markersite.png}
+	\caption{Generating the ArUco marker}
+	\label{guide:markergeneration}
+\end{figure}
+
+Follow the rest of the instructions on the webpage and print the marker.
+You can alternatively save the image and attach it to the corner of a
+blank document and print these out. \textit{Remember the size of the marker
+you have printed!}
+
+\subsubsection*{Placing the marker}
+With the marker printed out, you can attach this to the surface of 
+whatever it is you are going to draw your landscape map on. Pay
+attention not to damage the marker, obscure it with stains etc. It
+is best to place the marker at a point not too far away from your
+drawing but also at a point that doesn't prevent you from drawing.
+It is best not to place the marker in the middle of a contour,
+place it separate to the parent contour you draw as the behaviour
+otherwise is undefined!\\
+\\
+Alternatively, if you have printed off the marker on the corner of 
+a blank document, you have nothing further else to do before moving onto 
+the next step in the next section.
+
+\subsection{Calibrating your camera}
+With the code you obtained in Section \ref{guide:obtainingcode}, you
+will realise it came with a file called "calibration". Navigate your way 
+into this file.
+
+\subsubsection*{The Checkerboard}
+The first step is to print off the checkerboard which is used for 
+calibration. The checkerboard should be print out in full  on an
+A4 piece of paper. Supplied to you is the A4 checkerboard pdf,
+"checkerboard.pdf" as well as the original checkerboard image,
+"checkerboard.png".\\
+\\
+Having print this out, you now need to stick the board, face up, to 
+a sturdy piece of material, such as cardboard, so the checkboard
+does not bend easily. When this is done, you may move onto the 
+actual calibration.
+
+\subsubsection*{Running the Calibration}
+There is a shell script in the "calibration" file. Simply run
+
+\begin{verbatim}
+	bash calibrate_camera.sh
+\end{verbatim}
+
+
+to start the camera calibration. You will be presented with a 
+window which shows what your current camera sees. Place your 
+mounted checkerboard in full view of your camera. Move the 
+checkerboard about, moving it closer, further away, across such
+that it still remains in view of the camera. Try to rotate
+the checkboard about all three axes to achieve a better calibration.
+The program will take 10 pictures to determine distortion in your 
+camera and will tell you when calibration has finished. 
+Press the "ESC" key when this is done to close the calibration program.
+
+\subsubsection*{Using the Camera Parameters}
+Upon successfully calibrating with 10 captured images from the 
+calibration program. A new file will be generated, "camera\_parameters.yml".
+You will have to use this file later on when running the program.
+This calibration step has to be done only once, however, if you
+use a new camera at any point, you must go through this calibration 
+step once more to obtain the distortion values for the new piece of
+hardware.
+
+\subsection{~DO~ Using the program}
+
+\subsubsection{Calling the program}
+After making the project, all you need to do is run the program. This
+is made simple for you, once again, through a bash script called
+"generate\_landscapes.sh". Simply type out the following into
+your terminal and the program will begin running.
+
+\begin{verbatim}
+	bash generate_landscapes.sh
+\end{verbatim}
+
+\subsubsection{Restrictions and rules}
+
+
+\subsubsection{Finishing up}
+Taking into consideration the restrictions and rules outlined by the
+section above, you are ready to start drawing your landscape map.
+Preferably use a thick marker pen or a black biro and draw your
+contours as smooth as possible. Experiment and see what works and what
+doesn't. To provide feedback, please leave a comment on the project
+Github!
 
 \newpage
 
