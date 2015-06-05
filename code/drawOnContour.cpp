@@ -7,7 +7,7 @@
 #include <fstream>
 #include <stack>
 
-#define WIN_SIZE 256
+#define WIN_SIZE 200
 #define MAX_COLOUR_VAL 255
 #define CHANGE_THRESHOLD 100
 #define NEW_BASE_THRESHOLD 200
@@ -31,6 +31,7 @@ Tree* h_tree;
 int hmap[WIN_SIZE][WIN_SIZE];
 //holds whether pixel has been explored
 bool foundMap[WIN_SIZE][WIN_SIZE] = { {false} };
+bool tempFoundMap[WIN_SIZE][WIN_SIZE] = { {false} };
 //holds the explosion count
 int explosionMap[WIN_SIZE][WIN_SIZE] = { {0} };
 //the final height map
@@ -70,11 +71,6 @@ void readCameraParameters(String cameraFile){
   fs2["camera_matrix"] >> intrinsics;
   fs2["distortion_coefficients"] >> distortionCoefficients;
   fs2["extrinsic_parameters"] >> extrinsics;
-
-  // cout << intrinsics << endl;
-  // cout << extrinsics << endl;
-  // cout << distortionCoefficients << endl;
-
   fs2.release();
 }
 
@@ -200,11 +196,11 @@ void drawMap(void)
     glBegin(GL_QUADS);        // Draw The Cube Using quads
     for(int j=1; j<WIN_SIZE; j++) {
       
-      glColor3f(0.0f,(1.0f/hmap[i][j]),0.0f);          
-      glVertex3f( i / 2.0f, j/2.0f,hmap[i][j] * 5.0f);
-      glVertex3f( i / 2.0f, (j+1)/2.0f,hmap[i][j+1] * 5.0f);
-      glVertex3f( i+1 / 2.0f, (j+1)/2.0f,hmap[i+1][j+1] * 5.0f);
-      glVertex3f( i+1 / 2.0f, j/2.0f,hmap[i+1][j] * 5.0f);
+      glColor3f(0.0f,(1.0f/finalHeightMap[i][j]),0.0f);          
+      glVertex3f( i / 2.0f, j/2.0f,finalHeightMap[i][j] * 5.0f);
+      glVertex3f( i / 2.0f, (j+1)/2.0f,finalHeightMap[i][j+1] * 5.0f);
+      glVertex3f( i+1 / 2.0f, (j+1)/2.0f,finalHeightMap[i+1][j+1] * 5.0f);
+      glVertex3f( i+1 / 2.0f, j/2.0f,finalHeightMap[i+1][j] * 5.0f);
     }
       glEnd();
   }
@@ -275,8 +271,6 @@ float assignHeight(int baseLevel, int topLevel, vector<vector<Point> >*contours,
 //height calcualtion caused by tangental contour boundaries, this will remove
 //most of the noise
 void correctTangents(vector<int>* iList,int height, int width, int highest){
-  //int newHmap[WIN_SIZE][WIN_SIZE];
-  //copy(&hmap[0][0], &hmap[0][0]+WIN_SIZE*WIN_SIZE,&newHmap[0][0]);
   vector<int> rows = *iList;
   int mode;
   for (int i = 0 ; i < rows.size(); i++){
@@ -318,13 +312,6 @@ void correctTangents(vector<int>* iList,int height, int width, int highest){
       	  break;
       }
       hmap[rows[i]][j] = mode;
-      
-      // int lowest = 0;
-      // while(heightCount[lowest] <= 0){
-      // 	lowest++;
-      // }
-      // hmap[i][j] = lowest;
-      //copy(&newHmap[0][0], &newHmap[0][0]+WIN_SIZE*WIN_SIZE,&hmap[0][0]);
     }
   }
 }
@@ -341,7 +328,6 @@ void GaussianBlurHmap(vector<int>* iList,int height, int width, int highest){
   for (int i = 0 ; i < rows.size(); i++){
     vector<int> heightCount(highest,0);
     for(int j = 0; j<width; j++){
-      cout << "does the next row occur in map? " << iMap.count(rows[i]+1) << endl; 
       fON1 = (iMap.count(rows[i]+1) > 0) ? 1.0/3.0f : 1.0/6.0f;
       fON2 = (iMap.count(rows[i]+1) > 0) ? 0 : 1.0/6.0f;
       sON = 0.0f;
@@ -393,6 +379,11 @@ void findPoint(int i, int j){
   foundMap[i][j] = true;
 }
 
+void findPoint2(int i, int j){
+  bitMap->erase(Point(i,j));
+  tempFoundMap[i][j] = true;
+}
+
 bool allFound(){
   return bitMap->empty();
 }
@@ -400,7 +391,7 @@ bool allFound(){
 bool foundLevel(int level){
   for(int i = 0; i < WIN_SIZE; i++){
     for(int j = 0; j < WIN_SIZE; j++){
-      if(hmap[i][j] == level && !foundMap[i][j])
+      if(hmap[i][j] == level && !tempFoundMap[i][j])
 	return false;
     }
   }
@@ -409,7 +400,7 @@ bool foundLevel(int level){
 
 void assess(int myLevel, int level, int i, int j){
   if(myLevel == level){
-    findPoint(i,j);
+    findPoint2(i,j);
   }
 }
 
@@ -459,8 +450,17 @@ void setFoundNeighbours(int i, int j, int height, int width, int level){
 
 void explode(){
   int currLevel = 1;
-  //int iteration = 1;
+  Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8U);
+  int iteration = 1;
   while(!allFound()){
+
+    for(int i = 0; i<WIN_SIZE; i++){
+      for(int j = 0; j<WIN_SIZE; j++){
+	tempFoundMap[i][j] = foundMap[i][j] & true;
+      }
+    }
+
+
     for(int i = 0; i < WIN_SIZE; i++){
       for(int j = 0; j < WIN_SIZE; j++){
 	if((hmap[i][j] == currLevel) && foundMap[i][j]){
@@ -469,13 +469,46 @@ void explode(){
 	}
       }
     }
-    
+
+    for(int i = 0; i<WIN_SIZE; i++){
+      for(int j = 0; j<WIN_SIZE; j++){
+	foundMap[i][j] = tempFoundMap[i][j];
+      }
+    }
+
+    for(int i = 0; i< WIN_SIZE; i++){
+      for(int j = 0; j< WIN_SIZE; j++){
+	if(tempFoundMap[i][j])
+	  hmapRep.at<uchar>(Point(i,j)) = 255;
+      }
+    }
+
+    cout << "size: "<< bitMap->size()<<endl;
+    imwrite("tempMap/tempMapL"+to_string(currLevel)+"I"+to_string(iteration)+".png", hmapRep);
+
+    iteration++;
     if(foundLevel(currLevel)){
       currLevel++;
-      //iteration = 1;
+      iteration = 1;
     }
-    //iteration++;
+    
   }
+}
+
+void calculateFinalMap(){
+  for(int i = 0; i < WIN_SIZE; i++){
+    for(int j = 0; j < WIN_SIZE; j++){
+      int base = hmap[i][j];
+      if(base > 0 && explosionMap[i][j] > 0){
+	float height = (float)base + ( 1.0f / (float)explosionMap[i][j] );
+	finalHeightMap[i][j] = height;
+      } else {
+	finalHeightMap[i][j] = base;
+      }
+    }
+  }
+
+
 }
 
 void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int height, int width) {
@@ -489,7 +522,8 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 
   int baseLevel;
   int topLevel;
-  bool contourFoundNow = false;
+  bool contourStartFound = false;
+  bool contourEndFound = false;
   stack<TreeNode*>* nodeStack = new stack<TreeNode*>();
 
   //Used to help identify if the point is on a tangent
@@ -522,11 +556,8 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	contourNode = nodeStack->top();
 	
 	nodeStack->pop();
-	baseLevel--;
-	topLevel--;
     
-	contourFoundNow = true;	
-	//findPoint(i,j);
+	contourEndFound = true;	
       } else {
 	//If stack is empty then must get the base nodes to check
 	if (isEmpty){
@@ -546,8 +577,7 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	    
 	    //Must check the next pixels along, incase they are part of the current 
 	    //bit of the contour, which will cause inaccuracies in boundary crossing counts
-	    contourFoundNow = true;
-	    //findPoint(i,j);
+	    contourStartFound = true;
 	    
 	    baseLevel++;
 	    topLevel++;
@@ -565,7 +595,7 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
       int jplus=1;
       bool nextState = true;
 
-      while(contourFoundNow && (j+jplus < width)){
+      while((contourEndFound||contourStartFound) && (j+jplus < width)){
 	double stillOnPoint = pointPolygonTest(contours->at(contourNode->getID()),Point(i, j+jplus),false);
 	if (stillOnPoint == 0) {
 	  //findPoint(i,j+jplus);
@@ -576,7 +606,13 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 	jplus++;
       }
       j += (jplus-1);
-      contourFoundNow = false;
+      
+      if(contourEndFound) { 
+	baseLevel--;
+	topLevel--;
+      }
+      contourStartFound = false;
+      contourEndFound = false;
       
       if(i == 10 && j == 20) { singlepptest_end=clock(); }
     }
@@ -587,33 +623,21 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
     }
   }
 
-
-  Mat hmapRe = Mat(WIN_SIZE,WIN_SIZE,CV_8UC3);
-  for(int i = 0; i< WIN_SIZE; i++){
-    for(int j = 0; j< WIN_SIZE; j++){
-      int c = (hmap[i][j] > 0)?(int)255/hmap[i][j]:0;
-      hmapRe.at<Vec3b>(Point(i,j)) = Vec3b(255,c,255);
-    }
-  }
-  imwrite("hmap1.png", hmapRe);
-  
   //cout << "here" << endl;
   //correctTangents(iList,height, width,hierarchy->getSize());
   GaussianBlurHmap(iList,height, width,hierarchy->getSize());
 
-  Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8UC3);
-  for(int i = 0; i< WIN_SIZE; i++){
-    for(int j = 0; j< WIN_SIZE; j++){
-      int c = (hmap[i][j] > 0)?(int)255/hmap[i][j]:0;
-      hmapRep.at<Vec3b>(Point(i,j)) = Vec3b(255,c,255);
-    }
-  }
-  imwrite("hmap.png", hmapRep);
+  // Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8UC3);
+  // for(int i = 0; i< WIN_SIZE; i++){
+  //   for(int j = 0; j< WIN_SIZE; j++){
+  //     int c = (hmap[i][j] > 0)?(int)255/hmap[i][j]:0;
+  //     hmapRep.at<Vec3b>(Point(i,j)) = Vec3b(255,c,255);
+  //   }
+  // }
+  // imwrite("hmap.png", hmapRep);
   
   initBitMap();
 
-  
-  
   for(vector<vector<Point> >::const_iterator it = contours->begin(); it != contours->end(); it++){
     for(vector<Point>::const_iterator i = (*it).begin(); i != (*it).end(); i++){
       Point p = *i;
@@ -622,13 +646,17 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
   }
 
   explode();
+  calculateFinalMap();
 
-  for(int i = 0; i< WIN_SIZE; i++){
-    for(int j = 0; j<WIN_SIZE; j++){
-      cout << explosionMap[i][j] << " ";
-    }
-    cout << endl;
-  }
+  // Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8UC3);
+  // for(int i = 0; i< WIN_SIZE; i++){
+  //   for(int j = 0; j< WIN_SIZE; j++){
+  //     float c = (finalHeightMap[i][j] > 0.0f) ? 255.0f/explosionMap[i][j] : 0.0f;
+  //     hmapRep.at<Vec3b>(Point(i,j)) = Vec3b(0,c,0);
+  //   }
+  // }
+  // imwrite("explosionmap.png", hmapRep);
+
 
   height_map_end=clock();
 }
