@@ -197,10 +197,10 @@ void drawMap(void)
     for(int j=1; j<WIN_SIZE; j++) {
       
       glColor3f(0.0f,(1.0f/finalHeightMap[i][j]),0.0f);          
-      glVertex3f( i / 2.0f, j/2.0f,finalHeightMap[i][j] * 5.0f);
-      glVertex3f( i / 2.0f, (j+1)/2.0f,finalHeightMap[i][j+1] * 5.0f);
-      glVertex3f( i+1 / 2.0f, (j+1)/2.0f,finalHeightMap[i+1][j+1] * 5.0f);
-      glVertex3f( i+1 / 2.0f, j/2.0f,finalHeightMap[i+1][j] * 5.0f);
+      glVertex3f( float(i), float(j),finalHeightMap[i][j]*5.0f);
+      glVertex3f( float(i), (j+1.0f),finalHeightMap[i][j+1]*5.0f);
+      glVertex3f( i+1.0f, (j+1.0f),finalHeightMap[i+1][j+1]*5.0f);
+      glVertex3f( i+1.0f, float(j),finalHeightMap[i+1][j]*5.0f);
     }
       glEnd();
   }
@@ -448,12 +448,15 @@ void setFoundNeighbours(int i, int j, int height, int width, int level){
   assess(B,level,indexI,indexJ);
 }
 
-void explode(){
+
+void explode(vector<int>* array){
+  array->at(0) = 0;
   int currLevel = 1;
-  Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8U);
+  //Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8U);
   int iteration = 1;
   while(!allFound()){
 
+    //Copies foundMap to tempFound
     for(int i = 0; i<WIN_SIZE; i++){
       for(int j = 0; j<WIN_SIZE; j++){
 	tempFoundMap[i][j] = foundMap[i][j] & true;
@@ -470,24 +473,26 @@ void explode(){
       }
     }
 
+    //copies tempFoundMap to foundMap
     for(int i = 0; i<WIN_SIZE; i++){
       for(int j = 0; j<WIN_SIZE; j++){
 	foundMap[i][j] = tempFoundMap[i][j];
       }
     }
 
-    for(int i = 0; i< WIN_SIZE; i++){
-      for(int j = 0; j< WIN_SIZE; j++){
-	if(tempFoundMap[i][j])
-	  hmapRep.at<uchar>(Point(i,j)) = 255;
-      }
-    }
-
-    cout << "size: "<< bitMap->size()<<endl;
-    imwrite("tempMap/tempMapL"+to_string(currLevel)+"I"+to_string(iteration)+".png", hmapRep);
+    //Visual debugging tool
+    // for(int i = 0; i< WIN_SIZE; i++){
+    //   for(int j = 0; j< WIN_SIZE; j++){
+    // 	if(tempFoundMap[i][j])
+    // 	  hmapRep.at<uchar>(Point(i,j)) = 255;
+    //   }
+    // }
+    //cout << "size: "<< bitMap->size()<<endl;
+    //imwrite("tempMap/tempMapL"+to_string(currLevel)+"I"+to_string(iteration)+".png", hmapRep);
 
     iteration++;
     if(foundLevel(currLevel)){
+      array->at(currLevel) = iteration;
       currLevel++;
       iteration = 1;
     }
@@ -495,12 +500,18 @@ void explode(){
   }
 }
 
-void calculateFinalMap(){
+void calculateFinalMap(vector<int>* array){
   for(int i = 0; i < WIN_SIZE; i++){
     for(int j = 0; j < WIN_SIZE; j++){
       int base = hmap[i][j];
-      if(base > 0 && explosionMap[i][j] > 0){
-	float height = (float)base + ( 1.0f / (float)explosionMap[i][j] );
+      float height;
+      if(base > 0){
+	if(explosionMap[i][j] == 0){
+	  height = (float)base + 1.0f;
+	} else {
+	  height = (float)base + (1.0f  - ((float)explosionMap[i][j] / array->at(base)) );
+	  cout << "count was:" << array->at(base) << "height is:" << height << endl;
+	}
 	finalHeightMap[i][j] = height;
       } else {
 	finalHeightMap[i][j] = base;
@@ -519,6 +530,7 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
 
   //List of rows that contain wrong heights
   vector<int>* iList = new vector<int>();
+
 
   int baseLevel;
   int topLevel;
@@ -645,18 +657,29 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
     }				
   }
 
-  explode();
-  calculateFinalMap();
+  vector<int> distances(hierarchy->getSize());
+  explode(&distances);
+  calculateFinalMap(&distances);
+
+  Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8UC3);
+  for(int i = 0; i< WIN_SIZE; i++){
+    for(int j = 0; j< WIN_SIZE; j++){
+      float percent = (distances.at(hmap[i][j]) > 0) ? (float)explosionMap[i][j]/distances.at(hmap[i][j]) : 0.0f;
+      float c = 255.0f * (1.0f - percent);
+      hmapRep.at<Vec3b>(Point(i,j)) = Vec3b(0,c,0);
+    }
+  }
+  imwrite("explosionmap.png", hmapRep);
 
   // Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8UC3);
   // for(int i = 0; i< WIN_SIZE; i++){
   //   for(int j = 0; j< WIN_SIZE; j++){
-  //     float c = (finalHeightMap[i][j] > 0.0f) ? 255.0f/explosionMap[i][j] : 0.0f;
-  //     hmapRep.at<Vec3b>(Point(i,j)) = Vec3b(0,c,0);
+  //     float h = finalHeightMap[i][j];
+  //     hmapRep.at<Vec3b>(Point(i,j)) = Vec3b(0,h,0);
   //   }
   // }
-  // imwrite("explosionmap.png", hmapRep);
-
+  // imwrite("finalmap.png", hmapRep);
+  // cout << "done" << endl;
 
   height_map_end=clock();
 }
