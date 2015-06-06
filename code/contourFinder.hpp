@@ -168,6 +168,7 @@ void approxContours(vector<vector<Point> >* contours, vector<vector<Point> >* ne
   }
 }
 
+
 void naiveDoubleRemoval(vector<vector<Point> >* contours, Tree* htree){
   int originalSize = htree->getSize();
   for(int i = 0; i< contours->size(); i++){

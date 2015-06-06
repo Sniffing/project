@@ -197,10 +197,10 @@ void drawMap(void)
     for(int j=1; j<WIN_SIZE; j++) {
       
       glColor3f(0.0f,(1.0f/finalHeightMap[i][j]),0.0f);          
-      glVertex3f( float(i), float(j),finalHeightMap[i][j]*5.0f);
-      glVertex3f( float(i), (j+1.0f),finalHeightMap[i][j+1]*5.0f);
-      glVertex3f( i+1.0f, (j+1.0f),finalHeightMap[i+1][j+1]*5.0f);
-      glVertex3f( i+1.0f, float(j),finalHeightMap[i+1][j]*5.0f);
+      glVertex3f( float(i), float(j),finalHeightMap[i][j]*30.0f);
+      glVertex3f( float(i), (j+1.0f),finalHeightMap[i][j+1]*30.0f);
+      glVertex3f( i+1.0f, (j+1.0f),finalHeightMap[i+1][j+1]*30.0f);
+      glVertex3f( i+1.0f, float(j),finalHeightMap[i+1][j]*30.0f);
     }
       glEnd();
   }
@@ -228,44 +228,6 @@ void reshape(int x, int y)
   win_height = y;
 }
 
-
-float findDistanceToNearestChild(vector<TreeNode*>* children,vector<vector<Point> >*contours, Point p){
-  float distance = numeric_limits<float>::max();
-  for(auto it = children->begin(); it!= children->end(); it++){
-    float thisDistance = pointPolygonTest(contours->at((*it)->getID()),p,true);
-    distance = min(distance, thisDistance);
-  }
-  return distance;
-}
-
-//Pass Base height, Upper height, list of contours, containing contour, point
-float assignHeight(int baseLevel, int topLevel, vector<vector<Point> >*contours, TreeNode* contourNode, Point p){
-  if(baseLevel <= 0) {
-    //If outside, don't give it anything
-    return -1;
-  } else {
-    float distanceToContainer = fabs(pointPolygonTest(contours->at(contourNode->getID()),p,true));   
-    float distanceToNext;
-      
-    if(contourNode->getChildren()->empty()){
-      distanceToNext = 0.5f;
-    } else {
-      distanceToNext = fabs(findDistanceToNearestChild(contourNode->getChildren(),contours,p));
-    }      
-    
-    //counters distances of 0, i.e. on the contour
-    if(distanceToNext < 0.001f || distanceToContainer < 0.001f){
-      return (float)topLevel;
-    } else {
-      cout << "dist to next is " << distanceToNext;
-      cout << " dist to container is " << distanceToContainer;
-      cout << " fraction is " << distanceToNext / (distanceToNext + distanceToContainer) << endl;
-      float height = (float)baseLevel + (distanceToNext / (distanceToNext + distanceToContainer));
-      return height;
-    }
-
-  }
-}
 
 //Uses a mode filter approach, where there are obvious defects with the 
 //height calcualtion caused by tangental contour boundaries, this will remove
@@ -463,7 +425,6 @@ void explode(vector<int>* array){
       }
     }
 
-
     for(int i = 0; i < WIN_SIZE; i++){
       for(int j = 0; j < WIN_SIZE; j++){
 	if((hmap[i][j] == currLevel) && foundMap[i][j]){
@@ -489,18 +450,24 @@ void explode(vector<int>* array){
     // }
     //cout << "size: "<< bitMap->size()<<endl;
     //imwrite("tempMap/tempMapL"+to_string(currLevel)+"I"+to_string(iteration)+".png", hmapRep);
-
+    
+    
+        
     iteration++;
     if(foundLevel(currLevel)){
+      cout << "one" << endl;
       array->at(currLevel) = iteration;
+      cout << "two" <<endl;
       currLevel++;
       iteration = 1;
     }
     
+    cout << "<Exploding> size: " << bitMap->size() << endl;
   }
 }
 
 void calculateFinalMap(vector<int>* array){
+  cout << "calculating map..." << endl;
   for(int i = 0; i < WIN_SIZE; i++){
     for(int j = 0; j < WIN_SIZE; j++){
       int base = hmap[i][j];
@@ -509,8 +476,7 @@ void calculateFinalMap(vector<int>* array){
 	if(explosionMap[i][j] == 0){
 	  height = (float)base + 1.0f;
 	} else {
-	  height = (float)base + (1.0f  - ((float)explosionMap[i][j] / array->at(base)) );
-	  cout << "count was:" << array->at(base) << "height is:" << height << endl;
+	  height = (float)base + (1.0f  - ((float)explosionMap[i][j] / (array->at(base)-1.0f)) );
 	}
 	finalHeightMap[i][j] = height;
       } else {
@@ -518,8 +484,6 @@ void calculateFinalMap(vector<int>* array){
       }
     }
   }
-
-
 }
 
 void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int height, int width) {
@@ -635,9 +599,10 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
     }
   }
 
-  //cout << "here" << endl;
-  //correctTangents(iList,height, width,hierarchy->getSize());
+
+  cout << "base levels found" << endl;
   GaussianBlurHmap(iList,height, width,hierarchy->getSize());
+  cout << "blur done" << endl;
 
   // Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8UC3);
   // for(int i = 0; i< WIN_SIZE; i++){
@@ -657,9 +622,12 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
     }				
   }
 
-  vector<int> distances(hierarchy->getSize());
+  vector<int> distances(hierarchy->getSize()+1);
+  
   explode(&distances);
+  cout << "explosion done" << endl;
   calculateFinalMap(&distances);
+  cout <<"final map done" << endl;
 
   Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8UC3);
   for(int i = 0; i< WIN_SIZE; i++){
@@ -724,7 +692,8 @@ void createLandscape(){
     naiveContourJoin(&contours, joinedContours, h_tree);
     //joinedContours = nubContours(joinedContours); 
     //approxContours(joinedContours, approximatedContours);
-    //naiveDoubleRemoval(joinedContours, h_tree);
+    // naiveDoubleRemoval(joinedContours, h_tree);
+    
     cout << h_tree->getSize() << " contours found" << endl;
     //printContourAreas(joinedContours);
 
@@ -754,7 +723,7 @@ int main(int argc, char** argv){
 				     Size( 5, 5 ),
 				     Point( ceil(5.0f/2.0), ceil(5.0f/2.0) ) );
   readCameraParameters(argv[1]);
-  BASEFRAME = imread("testpics/perfectsimple.png",CV_LOAD_IMAGE_GRAYSCALE);
+  BASEFRAME = imread("testpics/thicklines.jpg",CV_LOAD_IMAGE_GRAYSCALE);
  
   int check = 0;
   while(!cam.isOpened()){

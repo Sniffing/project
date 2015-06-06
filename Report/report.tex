@@ -905,7 +905,29 @@ and draws containing contours just one or two millimetres apart all the
 way until they fill the paper, which i a rather uninteresting landscape map
 anyway!
 
+\subsubsection{Restrictions}
+\begin{itemize}
+    \item The ARuco marker is visible in the Camera
+    \item The pen colour must be noticeable on the paper colour
+    \item The user must have a fixed camera
+    \item The angle of the camera to the lanscape map can't be too small
+   	\item User must calibrate their camera themselves          
+\end{itemize}
 
+In the ideal form of this project, there would be absolutely no
+restrictions on the user as this means that creativity is constrained
+to within the realms where these restrictions hold. However, as 
+aformentioned, in this project having absolutely no restrictions became
+infeasible. The subject of markerless AR is being researched now curreny 
+methods are rather cumbersome due to the real time requirement of AR. As
+a result, the user must have a marker on the surface they are drawing their
+landscape map. In addition, if it is hard for humans to see the contour
+lines, it is even harder for computers. As a result, the pen colour must
+be of and adequately different shade to that of the surface it is drawn onto.
+The user must also be able to calibrate their camera and make sure it
+is fixed in the scene such that it can see the landscpae map and not at
+too heavy of an angle otherwise the picture becomes way to difficult to 
+recover.
 
 
 
@@ -1385,30 +1407,6 @@ the user can view.
 
 
 
-
-\subsubsection{Restrictions}
-\begin{itemize}
-    \item The ARuco marker is visible in the Camera
-    \item The pen colour must be noticeable on the paper colour
-    \item The user must have a fixed camera
-    \item The angle of the camera to the lanscape map can't be too small
-   	\item User must calibrate their camera themselves          
-\end{itemize}
-
-In the ideal form of this project, there would be absolutely no
-restrictions on the user as this means that creativity is constrained
-to within the realms where these restrictions hold. However, as 
-aformentioned, in this project having absolutely no restrictions became
-infeasible. The subject of markerless AR is being researched now curreny 
-methods are rather cumbersome due to the real time requirement of AR. As
-a result, the user must have a marker on the surface they are drawing their
-landscape map. In addition, if it is hard for humans to see the contour
-lines, it is even harder for computers. As a result, the pen colour must
-be of and adequately different shade to that of the surface it is drawn onto.
-The user must also be able to calibrate their camera and make sure it
-is fixed in the scene such that it can see the landscpae map and not at
-too heavy of an angle otherwise the picture becomes way to difficult to 
-recover.
 
 \subsection{Setting up the Camera and Environment}
 To begin reading data from a video feed and manipulating it, there 
@@ -1938,32 +1936,81 @@ pseudocode in Algorithm \ref{algo:assignHeights}.
 \label{algo:assignHeights}
 \end{algorithm}
 
-However this alrgorithm depends on the function \texttt{getContainingContour}
+However this algorithm depends on the function \texttt{getContainingContour}
 which, though provided in OpenCV as \texttt{pointPolygonTest}, using
 the function does not provide results as expected. The \texttt{findContours}
 function, mentioned in \ref{hierarchytree} returns a contour list as
-well as a hierarchy. Even though the hierarhcy can be established, sometimes
+well as a hierarchy. Even though the hierarchy can be established, sometimes
 \texttt{pointPolygonTest} doesn't recognise the contours as fully closed and
-so will not return as expected. As a result, I offer an alternative 
-algorithm, seen in Algorithm \ref{algo:assignHeights2}
+so will not return as expected.\\
+\\
+Another pitfall is depending on the \texttt{getDistanceFromContour} function.
+OpenCV also provides this functionality through \texttt{pointPolygonTest},
+yet the specified behaviour in the OpenCV documentation is that it 
+"\textit{estimates the signed distance from the point to the nearest 
+contour edge}". What this means is that if I were to use this function
+to give me the height from one contour to another it would be inaccurate.
+This is best illustrated in Figure \ref{fig:polygonTest}. 
 
-.......................DO BELOW
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.6]{pics/polygontest.jpg}
+	\caption{Why not to use \texttt{pointPolygonTest}}
+	\label{fig:polygonTest}
+\end{figure}
+
+In Figure \ref{fig:polygonTest}, there are two points contained within
+the larger contour. To try and assign it a height, we need to know the heights
+of the the contour it is contained in and the next highest contour. 
+The points marked with a cross on each contour and connected to the
+two considered points with a solid line represent the closest
+point on the contour to them. If I were to take a proportion of total
+distance to interpolate heights, as outlined in Algorithm 
+\ref{algo:assignHeights}, the two points will be roughly assigned the 
+same height due to the proportion of distances being the same. This is
+not what is desired as the green point is clearly close to the next contour 
+and should be higher. It would be more ideal to measure the closest distance
+to the next contour and then follow that line to the containing contour, as
+I have shown in the dotted line versions on the same figure. However,
+OpenCV offers no easy way to do this and calculating it would be tedious,
+making extra calls to \texttt{pointPolygonTest} for each pixel in the 
+image, thus order $O(n^2)$. Of course, this is reasonable until there
+are more child contours within the containnig contours as we'll have to
+compute the shortest distances between them all and then work out the 
+dotted line component.\\
+\\
+As a result, I offer an alternative algorithm, seen in 
+Algorithm \ref{algo:assignHeights2}. The algorithm involves holding 3
+matrices of equal size to the image. 
+
 \begin{algorithm}
 \DontPrintSemicolon
+$baseLevelMap$ stores the level of the contour the pixel is within\\
+$foundMap$ is a bitMap indicating which pixels are considered "found" by the
+			algorithm\\
+$explosionMap$ is a map of pixel distances to the next, closest, contour\\
+contourList is a vector of vectors of points, each describing a contour\\
 \Begin{
-\For{$h\in imageHeight$}{
-	\For{$w \in imageWidth$}{
-	p $\longleftarrow pixel(h,w)$\;
-	c1 $\longleftarrow getContainingContour(p)$\;
-	c2 $\longleftarrow getClosestContour(p,c1)$\;
-	
-	baseHeight $\longleftarrow getLevel(c1)$\;
-	d2parent $\longleftarrow getDistanceFromContour(p,c1)$\;
-	d2next $\longleftarrow getDistanceFromContour(p,c2)$\;
-	extraHeight $\longleftarrow d2parent/(d2parent+d2next)$\;
-	HeightMap[h][w] $\longleftarrow$ baseHeight + extraHeight\; 	
+	Initialise $foundMap$ to all be $false$\;
+	Initialise $explosionMap$ to all be $0$\;
+	\For{contour $in$ contourList}{
+		\For{point $in$ contour}{
+			$foundMap($point$) \longleftarrow true$\;
+		}
 	}
-}
+	
+	$currentHeightLevel \longleftarrow 0$\;
+	\While{$foundMap$ has false entries}{
+		\For{Each found point $\&\&$  
+			$baseLevelMap($point$) = currentHeighLevel$}{
+			set all neighbours of point to $true$ in $foundMap$\;
+			increment $explosionMap($point$)$\;	
+		}
+		\If{all points that are $currentHeighLevel$ in $baseLevelMap$
+			are true in $foundMap$}{
+			increment $currentHeightLevel$\;			
+		}
+	}	
 }
 \caption{Corrected height assignment into the heightmap.}
 \label{algo:assignHeights2}
@@ -2597,10 +2644,12 @@ level based on that is an extension I'd like to see completed. The
 writing utensil type then removes itself as a restriction on the user.
 
 \newpage
-\section{~DO~ User Guide}
+\section{User Guide}
 \label{chapter:userguide}
+\newpage
 \subsection{~DO~ Obtaining the Code}
 \label{guide:obtainingcode}
+
 
 \subsection{Generating your ArUco marker}
 This section explains how to get an ArUco marker which will be used 
@@ -2687,9 +2736,9 @@ use a new camera at any point, you must go through this calibration
 step once more to obtain the distortion values for the new piece of
 hardware.
 
-\subsection{~DO~ Using the program}
+\subsection{Using the program}
 
-\subsubsection{Calling the program}
+\subsubsection*{Calling the program}
 After making the project, all you need to do is run the program. This
 is made simple for you, once again, through a bash script called
 "generate\_landscapes.sh". Simply type out the following into
@@ -2699,10 +2748,37 @@ your terminal and the program will begin running.
 	bash generate_landscapes.sh
 \end{verbatim}
 
-\subsubsection{Restrictions and rules}
+\subsubsection*{Restrictions and rules}
+For the program to perform as you should expect it, there are some 
+restrictions on what you can and cannot do with this release version.
+
+\underline{Environment}\\
+\begin{itemize}
+	\item Begin your creation in an area with consistent lighting conditions
+	\item Make sure you calibrate your camera!
+	\item Make sure your landscape map \textit{and} ArUco marker are both
+			visible by the camera.
+	\item Make sure you firmly fix your camera and avoid wobbling!
+	\item Don't angle the camera too close to parallel to the surface
+			your landscape map is on.
+\end{itemize}
+
+\underline{Landscape Map}\\
+\begin{itemize}
+	\item Try to stick to just drawing contours, nothing too complex else
+			it confuses the program.
+	\item Try to draw closed contours (no gaps!)
+	\item Don't overlap contours or draw them too close to one another
+	\item Don't nest too many contours or the program slows a lot!
+	\item Draw your landscape at a reasonable size so it can be
+			recognised by the camera!
+	\item Use a thick pen for better results
+	\item Use a pen colour that is of a differeny shade to the surface
+			you are drawing on.
+\end{itemize}
 
 
-\subsubsection{Finishing up}
+\subsubsection*{Finishing up}
 Taking into consideration the restrictions and rules outlined by the
 section above, you are ready to start drawing your landscape map.
 Preferably use a thick marker pen or a black biro and draw your

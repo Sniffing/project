@@ -34,21 +34,21 @@
 \BOOKMARK [1][-]{section.4}{Implementation}{}% 34
 \BOOKMARK [2][-]{subsection.4.1}{Assumptions and Restrictions of the User}{section.4}% 35
 \BOOKMARK [3][-]{subsubsection.4.1.1}{Assumptions}{subsection.4.1}% 36
-\BOOKMARK [2][-]{subsection.4.2}{Computer Vision and Image Processing \205 MOVE}{section.4}% 37
-\BOOKMARK [3][-]{subsubsection.4.2.1}{Canny Edge Detector}{subsection.4.2}% 38
-\BOOKMARK [3][-]{subsubsection.4.2.2}{Open and Closed contours}{subsection.4.2}% 39
-\BOOKMARK [3][-]{subsubsection.4.2.3}{Mathematical Morphology}{subsection.4.2}% 40
-\BOOKMARK [3][-]{subsubsection.4.2.4}{Erosion}{subsection.4.2}% 41
-\BOOKMARK [3][-]{subsubsection.4.2.5}{Dilation}{subsection.4.2}% 42
-\BOOKMARK [3][-]{subsubsection.4.2.6}{Morphological Closing}{subsection.4.2}% 43
-\BOOKMARK [3][-]{subsubsection.4.2.7}{Image Differencing}{subsection.4.2}% 44
-\BOOKMARK [3][-]{subsubsection.4.2.8}{Simple Intensity Differencing}{subsection.4.2}% 45
-\BOOKMARK [3][-]{subsubsection.4.2.9}{Image Ratioing}{subsection.4.2}% 46
-\BOOKMARK [3][-]{subsubsection.4.2.10}{Camera distortion}{subsection.4.2}% 47
-\BOOKMARK [2][-]{subsection.4.3}{Computer Graphics \205 MOVE}{section.4}% 48
-\BOOKMARK [3][-]{subsubsection.4.3.1}{ DO }{subsection.4.3}% 49
-\BOOKMARK [3][-]{subsubsection.4.3.2}{ DO }{subsection.4.3}% 50
-\BOOKMARK [3][-]{subsubsection.4.3.3}{Restrictions}{subsection.4.3}% 51
+\BOOKMARK [3][-]{subsubsection.4.1.2}{Restrictions}{subsection.4.1}% 37
+\BOOKMARK [2][-]{subsection.4.2}{Computer Vision and Image Processing \205 MOVE}{section.4}% 38
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Canny Edge Detector}{subsection.4.2}% 39
+\BOOKMARK [3][-]{subsubsection.4.2.2}{Open and Closed contours}{subsection.4.2}% 40
+\BOOKMARK [3][-]{subsubsection.4.2.3}{Mathematical Morphology}{subsection.4.2}% 41
+\BOOKMARK [3][-]{subsubsection.4.2.4}{Erosion}{subsection.4.2}% 42
+\BOOKMARK [3][-]{subsubsection.4.2.5}{Dilation}{subsection.4.2}% 43
+\BOOKMARK [3][-]{subsubsection.4.2.6}{Morphological Closing}{subsection.4.2}% 44
+\BOOKMARK [3][-]{subsubsection.4.2.7}{Image Differencing}{subsection.4.2}% 45
+\BOOKMARK [3][-]{subsubsection.4.2.8}{Simple Intensity Differencing}{subsection.4.2}% 46
+\BOOKMARK [3][-]{subsubsection.4.2.9}{Image Ratioing}{subsection.4.2}% 47
+\BOOKMARK [3][-]{subsubsection.4.2.10}{Camera distortion}{subsection.4.2}% 48
+\BOOKMARK [2][-]{subsection.4.3}{Computer Graphics \205 MOVE}{section.4}% 49
+\BOOKMARK [3][-]{subsubsection.4.3.1}{ DO }{subsection.4.3}% 50
+\BOOKMARK [3][-]{subsubsection.4.3.2}{ DO }{subsection.4.3}% 51
 \BOOKMARK [2][-]{subsection.4.4}{Setting up the Camera and Environment}{section.4}% 52
 \BOOKMARK [3][-]{subsubsection.4.4.1}{Camera Calibration and Setup}{subsection.4.4}% 53
 \BOOKMARK [3][-]{subsubsection.4.4.2}{Choosing C++}{subsection.4.4}% 54
@@ -93,11 +93,8 @@
 \BOOKMARK [3][-]{subsubsection.6.3.1}{Contour joining, closing and detection}{subsection.6.3}% 93
 \BOOKMARK [3][-]{subsubsection.6.3.2}{ DO \040Thresholding}{subsection.6.3}% 94
 \BOOKMARK [3][-]{subsubsection.6.3.3}{Stabilisation of background}{subsection.6.3}% 95
-\BOOKMARK [1][-]{section.7}{ DO \040User Guide}{}% 96
+\BOOKMARK [1][-]{section.7}{User Guide}{}% 96
 \BOOKMARK [2][-]{subsection.7.1}{ DO \040Obtaining the Code}{section.7}% 97
 \BOOKMARK [2][-]{subsection.7.2}{Generating your ArUco marker}{section.7}% 98
 \BOOKMARK [2][-]{subsection.7.3}{Calibrating your camera}{section.7}% 99
-\BOOKMARK [2][-]{subsection.7.4}{ DO \040Using the program}{section.7}% 100
-\BOOKMARK [3][-]{subsubsection.7.4.1}{Calling the program}{subsection.7.4}% 101
-\BOOKMARK [3][-]{subsubsection.7.4.2}{Restrictions and rules}{subsection.7.4}% 102
-\BOOKMARK [3][-]{subsubsection.7.4.3}{Finishing up}{subsection.7.4}% 103
+\BOOKMARK [2][-]{subsection.7.4}{Using the program}{section.7}% 100
