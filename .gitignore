@@ -1,8 +1,8 @@
 #*
 *#
-*.jpg
 *.o
 *~
+*/Interrim/*
 OpenCV
 *.aux
 *.log
