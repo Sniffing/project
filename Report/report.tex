@@ -324,9 +324,109 @@ landscape in real time to provide an interactive augmented environment! Sarah
 Reed from the University of California lead the authoring of the persentation
 about this piece of tehnology\cite{Reed14}.
 
-\subsection{~DO~ How Augmented Reality works}
-\subsubsection{~DO~ Markerless AR}
-\subsubsection{~DO~ AR with Fiducial Markers}
+\subsection{How Augmented Reality works}
+Within this project, I will be focusing on augmenting the environment around
+the user. 
+In order to augment the environment around a user, there needs to be some
+way of recognising where and what to augment within the scene. The most
+obvious way of doing this is to use some sort of marker within the scene
+which acts as an anchor. From the anchor, you can know where to place objects
+within the scene to augment it. \\
+\\
+Tracking markers is probably the easiet 
+way of calculating 
+where to place objects in a scene, other than preprocess the area, identify
+relative world coordinates of real items and have your camera in a fixed
+position. \\
+\\
+A marker can be anything, it could be an object, some words, a symbol, a
+known pattern etc. In Augmented Reality you can have implicit and explicit 
+markers within the scene. 
+
+\subsubsection{AR with Fiducial Markers}
+\begin{center}
+	Fiducial Marker: An object placed into view of a camera, resulting in
+	the marker appearing on the captured image to be used for tracking
+	or measurement.
+\end{center}
+
+Some basic augmented reality application will use a fiducial marker in
+the scene to which they will track and align all of their 3D object 
+generation to. It is quite common to see a marker, such as the one shown in 
+Figure \ref{fiducial}, being placed within the scene. Figure
+\ref{fiducialexample} shows how a typical Augmented Reality application,
+which uses fiducial markers, would work. The fiducial marker is detected
+and the 3D object is drawn on top of it.\\
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.8]{pics/fiducial.png}
+	\caption{Fiducial Marker}
+	\label{fiducial}
+\end{figure}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.9]{pics/fiducialexample.jpg}
+	\caption{Typical AR application with fiducial markers}
+	\label{fiducialexample}
+\end{figure}
+
+For applications like this to work, markers, usually perfect squares are
+created. This is so that the program detecting the markers knows the 
+measurements of the sides of the marker. The measurements are understood by
+the program, from there the corner points of the marker are detected in 
+the image. The realitive length of the sides are worked out and
+compared to the known truth, from here, tilt of the marker, along with
+distance and rotation can be determined. These allow the 3D image to be 
+rendered with corresponding properties, as well as allowing rotation, tilt,
+translation etc. of the 3D image when the marker is moved within 
+the video feed.
+
+\subsubsection{Markerless AR}
+Obviously, always having a marker in the scene is not always desirable.
+In my own opinion, having a marker in the scene makes the whole
+experience less interesting. The reason for this being is that there is
+a clear separation between what is real and what isn't. Of course, there
+are many situations where this does not matter, but if you could really
+remove the marker, the scene becomes one step towards being mistaken
+for a true reality.\\
+\\
+Markerless Augmented Reality is seeing a lot of research nowadays, if not
+for the same reasons I just mentioned, it may also may not be easy or
+even feasible to place a marker in the scene. To combat this, we must
+look to other things to help us anchor our scene and graphics. This is done
+through \textit{implicit markers}, things in the scene that arent markers
+but will remain more or less constant as it is viewed in the scene.
+Take for example beauty company, Sephora's, augmented reality mirror.
+This application just takes a video feed of someone's face and will allow
+them to augment different kinds of make up! Obviously this wouldn't be
+a hit with their patrons if they had to slap some fiducial markers on their 
+face. First, it will obscure part of the face, which is the main thing
+the user will be looking at, and it would also make the user feel a bit 
+silly. \\
+\\
+As aformenetioned, markers can be anything, inculding implicit markers,
+preferably ones that are easily identified. For Sephora, these implict
+markers will likel be the eyes, the mouth, possible ears and jaw line.
+The reason for this is that the eyes and mouth are the main areas to
+apply makeup, in addition, ears and jaw stand out and the rough positions
+of all other facial structures can be determined from them! It is quite
+easy to begin identifying eyes and mthe mouth due to their shape, 
+e.g. eyes will be circular, lips oval in shape. In addition, there will
+be a large change in colour between skin and eye white and then eye white
+and iris colour. As a result, when the program identifies such a point, it
+is likely an eye and can be used as an anchoring point for Augmented Reality!\\
+\\
+However, using implicit markers leaves more room for possible error and
+misdetection which will lead to the application not working some of the
+time. In the retail industry, this can cause loses in sales and revenue 
+and can mean a lot to a company and their image. As a result, there
+have been many investigations into making markerless Augmented Reality
+better and better, this starts at the root, which is the Computer
+Vision aspect of AR. This is basically being able to segment and break
+down the image into different objects and parts, then identifying which
+parts are the ones important to track.
 
 \subsection{Construction of AR scenes.}
 Augmented Reality has two main parts to it; Computer Vision and Computer Graphics.
@@ -1532,14 +1632,37 @@ of online documentation and guidelines. There are also numerous samples
 that come along with the library that helped me get to grips with using it 
 for my project. The version used throughout was opencv 2.4.11.
 
-\subsubsection{~DO~ OpenGL}
+\subsubsection{OpenGL}
 OpenGL, "Open Graphics Library" was introduced when I was born, in 1992 and
 developed by Silicon Graphics and is supported by NVIDIA. 
 It is the most widely adopted Computer Graphics Library. Akin to OpenCV, it
 has a massive community and a lot of online help, along with a Wiki page to
-support users. OpenGL interacts with GPUs to create computer graphics 
-
-...............MORE(Sort out opengl version)
+support users. OpenGL interacts with the GPU to create computer graphics.\\
+\\
+When developing this project, I was using OpenGL Version 4.4, the most
+recent version at the time of writin is version 4.5. However, I saw
+no extra benefit in upgrading my version as it didn't offer anything
+particularly useful to me. I simply needed the basic constructs
+to generate a terrain and possibly map a texture over it.\\
+\\
+Some versions of OpenGL are limted based on what hardware (graphics card)
+you have on your machine. I was using my personal laptop for the 
+duration of this project which had an Integrated Intel Graphics card, along
+with an NVIDIA GeForce 820M dedicated Graphics card which performs the 3D
+rendering.\\
+\\
+Some of the code I wrote during this project is deprecated since the newer
+versions. These started happening around OpenGL version 3.0, I did keep the
+code as generous as possible to the lower OpenGL versions, just in case,
+so that people who wish to pull my project's code and use it do not
+have to worry about their hardware requirements. For example, 
+\texttt{glVertex()} and \texttt{glColor()} are two function calls I make in my
+code but are now deprecated. It may be useful in the future to start moving
+my code towards the replacement functions but that was one more worry
+to include within this project which didn't really add much to the 
+end goal. Since I have had exprience with the functions before with a lower
+version of OpenGL, that also made me favour sticking to the old function 
+calls for the purpose of this project.
 
 \subsubsection{ArUco}
 ArUco is a C++ Augmented Reality library that offers wrappers and methods
@@ -1891,8 +2014,11 @@ we can move onto the generation of the Augmented Reality scene that is
 overlayed onto the camera feed so that the user is able to view the
 landscape that they have drawn. From here, we have entered the Computer
 Graphics portion of this Augmented Reality program pipeline.
-\subsubsection{~DO~ View Point alignment}
 
+\subsubsection{~DO~ View Point alignment}
+Thanks to the ArUco library, there was little need to deal with the
+complications of aligning camera coordinates, rendering coordinates
+and real-world coordinates together. From the camera instrinsics
 
 \subsubsection{~DO~ From Hierarchy Tree to Height Map}
 Taking the resulting hierarchy from the Computer Vision stage of this
@@ -2016,12 +2142,44 @@ contourList is a vector of vectors of points, each describing a contour\\
 \label{algo:assignHeights2}
 \end{algorithm}
 
-\subsubsection{~DO~ Landscape Generation}
-Generating the landscape is pretty simple. After having create the height map
-in the previous step, all that remains is a simple 1-to-1 map of each
+\subsubsection{Landscape Generation}
+Generating the landscape was not much of a problem after this stage. By
+creating the \texttt{baseLevelMap}I can assign a height to all the pixels
+already. However, doing so would make the terrain appear very step-like
+rather than smooth. In an attempt to correct this, I create the 
+\texttt{explosionMap} which gives a distance in pixels that a pixel 
+is from the nearest contour pixel. From here, a simple proportion 
+calculation can be used to work out the heights of each pixel. For 
+example, if a pixel has an \texttt{explosionMap} value fo 30, it is 30 
+pixels away from the next contour up. If the highest value in that
+level is 36, then the height of the pixel is
+$30 \div 36 + baseLevel$. I do this for all pixels in the 2D array
+and store the heights.\\
+\\  
+All that remains past these steps is a simple 1-to-1 map of each
 entry in the 2D array to a pixel point on the screen. I made use of
 the openGL primitive, Quads, to generate the landscape. The code snippet
-below shows how I take use the height map to assign ..............MORE
+below in Figure \ref{quadcode} shows how I take use the height map 
+to assign heights to each vertex of the quad, equivalent to the 
+heights in the final 2D array.
+
+\begin{figure}
+\begin{lstlisting}
+for(int i=0; i<WIN_SIZE; i++) {
+  glBegin(GL_QUADS);        
+  for(int j=0; j<WIN_SIZE; j++) {
+    glColor3f(0.0f,(1.0f/finalHeightMap[i][j]),0.0f);          
+    glVertex3f( float(i), float(j),finalHeightMap[i][j]);
+    glVertex3f( float(i), (j+1.0f),finalHeightMap[i][j+1]);
+    glVertex3f( i+1.0f, (j+1.0f),finalHeightMap[i+1][j+1]);
+    glVertex3f( i+1.0f, float(j),finalHeightMap[i+1][j]);
+  }
+  glEnd();
+} 
+\end{lstlisting}
+\caption{Assigning heights to Quad corners}
+\label{quadcode}
+\end{figure}
 
 
 \subsection{Detecting change in the scene}
@@ -2649,7 +2807,32 @@ writing utensil type then removes itself as a restriction on the user.
 \newpage
 \subsection{~DO~ Obtaining the Code}
 \label{guide:obtainingcode}
-
+The source code for this project can be obtained on my GitHub page, linked 
+below. Note that this distribution does not come with the libraries
+OpenGL, OpenCV or ArUco. You will need to download these yourself or make 
+sure that they are already on your machine.\\
+\\
+You will need an OpenCV version of at least 2.1, the latest versions can
+be downloaded at http://opencv.org/downloads.html. \\
+\\
+The version of OpenGL that you can get will depend on your graphics card.
+Make sure you update to the newest drivers, you will also need GLEW and GLUT.
+\\
+The ArUco library can be obtained through http://www.uco.es/investiga/grupos/ava/node/26.
+It is worth noting that changes may happen to the library which changes the
+API and the function calls. In the even of this and the issue is not resolved,
+please leave a message on the GitHub page for an update.\\
+\\
+Once you have these libraries in place, you can pull from my GitHub 
+repository. From here you need to run the following commands from the
+command line:
+\begin{verbatim}
+	mkdir Build
+	cd Build
+	cmake ..
+	make
+\end{verbatim}
+This should have compiled the project read to be used.
 
 \subsection{Generating your ArUco marker}
 This section explains how to get an ArUco marker which will be used 

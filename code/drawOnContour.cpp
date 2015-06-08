@@ -192,10 +192,9 @@ void drawMap(void)
   //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
   
   
-  for(int i=1; i<WIN_SIZE; i++) {
-    glBegin(GL_QUADS);        // Draw The Cube Using quads
-    for(int j=1; j<WIN_SIZE; j++) {
-      
+  for(int i=0; i<WIN_SIZE; i++) {
+    glBegin(GL_QUADS);        
+    for(int j=0; j<WIN_SIZE; j++) {
       glColor3f(0.0f,(1.0f/finalHeightMap[i][j]),0.0f);          
       glVertex3f( float(i), float(j),finalHeightMap[i][j]*30.0f);
       glVertex3f( float(i), (j+1.0f),finalHeightMap[i][j+1]*30.0f);
