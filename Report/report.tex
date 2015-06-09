@@ -39,6 +39,46 @@
 
 \newpage
 \section*{~DO~ Abstract}
+Motivation:
+Augmented Reality is a field within Computer Science garnering much 
+interest, especially in the Game and Entertainment industry. However, 
+it also has many other practical uses. This project explores 
+creative/artistic Augmented Reality, aiming to provide an 
+environment for users to play within, without need to touch the computer.
+
+Problem Statement:
+It is a common theme amongst Augmented Reality applications to use 
+fiducial markers onto which to overlay 3D objects, or data, in 
+order to augment reality. What this means is a restriction in 
+what and where a user can create their own Augmented Reality scenes. 
+This limits the creativity of those who wish to get into using 
+Augmented Reality, not only that, it also puts a limit onto 
+who can use these technologies. For example, those able to use a 
+computer, print a fiducial marker as well as use software to assign
+meaning to that marker. This more or less rules out children getting 
+involved with these applications. Another limiting factor in some 
+Augmented Reality applications is the constant need for users to tell 
+the computer when to reconstruct the 3D scene, as the result of some 
+change or new markers being placed within. This project explores how 
+to remove this extra step.
+
+Approach:
+Using various Computer Vision techniques and a range of custom 
+algorithms, this project utilises popular 3rd party libraries
+in order to try and solve the problems outlined above. In this 
+report I explain the approaches I take to try solve some of 
+the problems that arose during the course of this project, 
+discussing what worked, what ultimately did not work out and 
+the things that could use improvements. There were several points 
+in the project where an empirical approach had to be used which 
+can be improved on int he future.
+
+Results:
+The outcome of this project was
+
+Conclusions:
+
+
 \newpage
 \section*{Acknowledgements}
 Through the course of this project I have received help and advice, as
@@ -67,55 +107,57 @@ to thank them for their contributions, in no particular order:
 \tableofcontents
 \newpage
 
-\section{~DO~ Introduction}
-\begin{center}
-Creativity involves breaking out of established patterns in
-		order to look at things in a different way. \textit{Edward de Bono.}
+\section{Introduction}
+\begin{quote}
 I think it's fair to say that personal computers have become
 		the most empowering tool we've ever created. They're tools of
 		communication, tools of creativity, and they can be shaped by
-		their user. \textit{Bill Gates.}		
-\end{center}
+		their user. \textit{- Bill Gates.}		
+\end{quote}
 
 Augmented Reality(AR) has come into the limelight once
 again with the recent release of the Google Glass. AR has 
-been around for a while now, most of the time being
-thought of the future of technology but with applications ending up with 
-limited use, less than satisfying performance and being gimmicky, it has been
-hanging around in the background for a while.
+been around for a long time now, frequently being
+thought of as the \textit{future of technology} but with AR applications 
+ending up with limited use, less than satisfying performance and some rather
+gimmicky, it has been hanging around in the background for a while.
 \\ \\
-AR in a nutshell is reality, augmented! A view of the real world is presented
-to the user but it has been enriched in some sort of way. If you are unaware
+AR, in a nutshell, is reality, augmented! A view of the real world is presented
+to the user but it has been enriched in some way. If you are unaware
 of what looking through a Google Glass is like, one pretty well known example 
 is the film Terminator. When seeing from Terminator's viewpoint, we are 
 presented with a red screen, this is what a normal person would see but in red.
-However, on the screen, it has a crosshair, which lock onto a person, their
-statistics in the right hand corner, when it's your target, the words flash
-in view. This is what augmented reality is.
-\\ \\
+However, on the screen, it has a crosshair, which locks onto a person; in 
+addition, information on that person is displayedin the right hand corner.
+When the person is an identified target, the words "TARGET" in front of 
+Terminator's eyes. This is what augmented reality is.\\
+\\
 Of course, we're not all cyborg assassins, hence why things like the Google 
 Glass have been created. Our eyes already give us a lot of information about 
 the world, but having even more information presented to us than what we
-naturally have is Augmented Reality. Already, anyone with a semi-decent mobile
-phone can play around and take benefits from Augmented Reality, it does not take
-large amounts of processing power to produce an AR image. The key is that AR is
-real time, our view gets updated as we see it. 
-\\ \\
-Augmented Reality is not just limited to some head mounted device. In addition
-to our phones, we can use tablets or just plain computers in which to play
+naturally have is Augmented Reality. Anyone with a decent smart
+phone can play around and take benefits from Augmented Reality, 
+with a camera and a processor, even hand held devices can create
+appealing AR scenes. One of the key attributed of AR is that it
+is interactive in real time, our enhanced view gets updated as there are
+changes in the real world. \\ 
+\\
+In addition to head mounted displays, and also our smart phones,
+we can use tablets or just plain computers with which to play
 with AR. All we need is a camera which can capture the world and then allow 
-us to view it either with additional information or even diminished information!
-One use case is in the British Maritime museum, where visitors can aim cameras
-at special AR exhibits and have the item explained to them visually. The range 
-applications of AR are overwhelming, imagine a Dinosaur coming to life in a
+us to view it either with additional information (or even diminished 
+information). One use case is in the British Maritime museum, where 
+visitors can aim cameras at special AR exhibits and have the item 
+explained to them visually. The range applications of AR are overwhelming,
+imagine a Dinosaur coming to life in a
 History museum and you can see it navigating the halls. Imagine having an
 AR mirror that superimposes clothes onto your body that fit, without having
 to go and search and try on the clothes themselves. Imagine being on a 
 construction project and you are able to view the outcome on your tablet, even
 if the old structure has not been cleared away for the new project to begin!
 Augmented Reality can do all of that already and the scope of new
-applications is, no pun intended, as far as the eye can see!    
-\\ \\
+applications is, no pun intended, as far as the eye can see!\\ 
+\\
 As previously stated, AR has many applications in terms of games and 
 entertainment. These come in all different styles, from simple use of a camera,
 to using fixed feature points as markers, or using patterns as feature points
@@ -124,17 +166,22 @@ are either very simple or immutable. They are something that the computer
 can directly identify which is obviously good for performance reasons. However,
 what about the ability to create your own feature points on the fly? If we
 able to immediately draw feature points and by extraction of these points, 
-augment reality based off of these points, it would greatly improve the 
+augment reality based off of them, it would greatly improve the 
 experience of Augmented Reality, removing the need to create the marker 
 on a computer and just, for example, grabbing a piece of paper, drawing it
-yourself and have it work straight away! I shall refer to this as a feature
-drawing throughout the rest of the report. 
+yourself and have it work straight away!
 
-\subsection{~DO~ Motivation}
+\subsection{Motivation}
+\begin{quote}
+Creativity involves breaking out of established patterns in
+		order to look at things in a different way. \textit{- Edward de Bono.}
+\end{quote}
+
 Augmented Reality may also be used for more commercial and other practical uses. 
 When people think of AR, it usually defaults to thinking about games and 
-indeed there is a lot of future in that industry with AR, there are also
-Educational uses, Project and Landscape Planning, Commerce and Animation, 
+indeed there is a lot of future in that industry with AR. However,
+there are also Educational uses, Project and Landscape Planning, 
+Commerce and Animation, 
 the list goes on. The beauty of Augmented Reality is that it removes
 the constrains of the world and allows you to bring anything into your
 current location through the computer. Anything can be created, from 
@@ -148,7 +195,7 @@ of the applications of Augmented Reality involve placing an object over
 a fiducial marker in the scene. The motivation for this project is to 
 move away from having to use a handful of fiducial markers and allow
 creation to occur how it used to be done before we had computers. 
-Through drawing.\\
+Through drawing!\\
 \\
 Allowing users to draw a scene which is later brought to life right 
 in front of them offers a multitude of different applications. It can
@@ -159,7 +206,7 @@ seem available to the general public. In addition, those that are usually
 require the user to photograph their picture before it is brought to life.
 This obviously places a limit on the creative power of individuals as
 it constrains them to certain rules and requires a lot of user interaction
-to produce the deisred effect. \\
+to produce the desired effect. \\
 \\
 The motivation for this project is exactly this; allowing users to 
 express their creative side and bring it to life with minimal interaction.
@@ -839,9 +886,9 @@ requirement for special equipment.
 \section{Hardware Investigation}
 \subsection{Microsoft Kinect V2}
 \subsubsection{Background \& History}
-The Microsoft Kinect(V1) was original released as an extra piece of hardware
-for Microsoft's Xbox360 in 2010. The Kinect for windows (V2) was released
-in 2012 and offered a range of improved statistics from its ancestor,
+The Microsoft Kinect(V1) was originally released as an extra piece of hardware
+for Microsoft's Xbox360 in 2010. The Kinect for Windows (V2) was released
+in 2012 and offered a range of improved functionality from its ancestor, the
 V1. Since its introduction into the market, the Kinect has received a lot of
 attention from developers and there have been many applications for it put
 forward. Many large companies have caught onto its capabilities and work 
@@ -859,13 +906,13 @@ Augmented Reality, Entertainment and Games, Retail, Education and much more.\\
 "Evaluation of the Spatial Resolution Accuracy of the Face 
 tracking system for Kinect For Windows V1 and V2" \cite{AmonFuhrmann14}
 explores in more detail the increase in performance and capability
-of the V2 and shows that is beats V1 in every aspect. 
-\\ \\
+of the V2 and shows that it beats V1 in every aspect. 
+
 \subsubsection{How it works} 
 The V2 allows us to take infrared images along with 1080p colour images. It 
 also has depth sensors to produce depth images. Inside the V2 are 3 infrared
 emitters along with a colour camera, an infrared camera and some microphones.
-These internal components can be seen in figure \ref{kinectinternal}. The
+These internal components can be seen in Figure \ref{kinectinternal}. The
 microphones are along the bottom.
 \begin{center}
 	\begin{figure}[H]
@@ -882,16 +929,17 @@ V1 uses structured light while the V2 utilises Time-Of-Flight. Time-of-Flight
 involves emitting many short bursts of infrared light (strobing it) and then
 collecting it back through its camera. 
 The technique involves splitting a pixel in half and collecting infrared light
-on the pixel. However, they are on at different times, while one half is on, 
-the other is off and depending on the ratio of how much light is collected 
-by each half (ratio since it accounts for light absorption by objects in the scene),
+on the pixel. However, each half is switche on at different times, 
+while one half is on, the other is off and depending on the ratio of
+how much light is collected by each half (ratio since it accounts 
+for light absorption by objects in the scene),
 the relative depth of objects can be inferred. \\
 \\
 The V2 also accounts for over exposure and saturation of pixels. This scenario
 occurs when there are alternative sources of infrared light, i.e. in an outdoor
 environment! The V2 can reset pixel values in the middle of an exposure, also
 explained in Daniel Lau's blog mentioned above. This then
-allows it to be used outside where the V1 wouldn't account for this and cause
+allows it to be used outside whereas the V1 wouldn't account for this and cause
 all kinds of strange behaviour; this of course means that the scope for using
 the V2 and its applications is significantly larger than it ancestor.
 \\ \\
@@ -901,13 +949,13 @@ you can see an example of the depth sensing capability of V2. On the right,
 circled in blue, is myself. I sat around 40cm away from the camera. As I highlight 
 in the limitations section below, this is reported as the minimum distance 
 performance can be guaranteed by the V2. My friend, Juto Yu, is circled in 
-yellow, he say slightly outside the view of the camera, giving me a rough 
+yellow, he stays slightly outside the view of the camera, giving me a rough 
 indication on how wide the capture region is. The green circled object is a 
 pillar in the central library of Imperial College, it is definitely more than 
 3m away from the V2 which is reported as the range before objects become 
-"too far". Whether it being detected is because the device can actually 
-handle larger caption depths or due to the pillar being white and thus 
-more reflective will need to be further looked in to.
+"too far". Whether its detection is because the device can actually 
+handle larger capure depths or due to the pillar being white and thus 
+more reflective will need to be further looked into.
 \begin{center}
 	\begin{figure}[H]
 		\begin{center}
@@ -2505,28 +2553,31 @@ trying out this program.
 
 \subsection{~DO~ Overall Evaluation}
 
-\section{Extensions}
+\section{FINAL CHECK - Extensions}
 \label{chapter:extensions}
 Having implemented an environment for dynamic creative Augmented Reality,
 content, there are many obvious improvements that can be made to transform 
-this project into a much larger and better application. \\
+this project into a much better application. \\
 \\
 The original idea for this project was the concept of having an environment
 for individuals to create their own 3D, responsive landscapes that can react
 to changes in the real world scene and reflect them within the AR scene. Indeed
 this has been done to a certain extent, changes in the landscape drawing cause
 the AR scene to change as a result, without need for user interaction with the
-program. Currently this only works with contour to landscape conversion. This
-will be of little use to individuals who wish to create something more than just
-land. In this section shall highlight some of the more immediate extensions
-and then go on to explore other extensions which have been lingering in the 
-background of my vision for what this project could have become.
+program.\\
+\\
+Currently this only works with contour to landscape conversion. This
+will be of little use to individuals who wish to create something more 
+than just land. In this section shall highlight some of the more 
+immediate extensions and then go on to explore other extensions 
+which have crossed my mind when I was envisioning what 
+this project could have become.
 
 \subsection{Immediate Extensions}
 There are numerous extensions that can be added to this project due to the 
 vast amounts of things that could be brought to life by Augmented Reality.
-These are the extensions I would have implemented had I more time to commit
-to this project.
+This section outlines some extensions I would have implemented had I
+more time to commit to this project.
 
 \subsubsection{Coloured Contours}
 Currently the program works by taking frames from the camera and then   
@@ -2537,27 +2588,49 @@ if three sets of contours drawn in different colours were presented to
 the program, they would all behave the same way and create a terrain
 with a green shade. If we were to introduce new colours, we could also
 introduce new terrain! For example, brown tinted colours could represent
-rock or mountainous landscape; green can be used to represent something like
-everything within is a cluster of trees i.e. a forest! Blue can signify
+rock or mountainous landscape; green can be used to represent that the 
+enclosed area is like a cluster of trees i.e. a forest! Blue can signify
 the enclosed area is a lake or a body of water. The things different
 colours can represent are endless and will add an extra amount of creativity
 (and enjoyment) to the application! One use for this is creating a 
-landscape for a battlefield or any other kind of more detailed environments.
-These in turn can be used to protoype landscapes for games!\\
+landscape for a battlefield, along with other kinds of more 
+detailed environments. These in turn can be used to protoype 
+landscapes for games and movies!\\
 \\
-To implement this wouldn't require much extension to the program. Just a simple
-reading of the contour points' RGB values and from there making a distance 
+Implementing this wouldn't require too much experimentation and
+additional research. An initial solution would be a
+reading of the contour points' RGB values from teh original colour image
+and from there making a distance 
 measure which will allow classification of the considered pixels to the 
 closest colour. From there, generation of the 3D scene will be a switch case 
-between different terrains base on the result of the classification.
+between different terrains based on the result of the colour classification.
 
-\subsubsection{~DO~ Removal of the Calibration Marker Points}
-Currently, with the fiducial marker in place to aide with camera
+\subsubsection{Removal of the Calibration Marker Points}
+Currently, with the fiducial marker in place to aid with camera
 calibration, it means there is always an additional piece of data on the 
 landscape map. Naturally, the when contour detection is done on the
 landscape map, the fiducial marker is also picked up. This means that the 
-marker will create undesired contours in the 3D scene. 
-...................DO IF CANNOT REMOVE
+marker will create undesired contours in the 3D scene which will in turn
+cause the scene to render with a square shaped mountain in the corner of
+the picture.\\
+\\
+Although this is not necessarily detrimental to the application as a whole,
+it does mean that users have to put up with always having an extra 
+piece of land in their drawings. Removing this slight inconvenience would
+be best as then the user will only view what they have purposely placed
+within the scene.\\
+\\
+An idea to remove this unwanted contour is to identify the corner points
+of the marker, which are easily obtained from use of the ArUco library. 
+With information these markers, it allows me to create an area which the
+generated landscape should definitely have a height of 0. However, this
+solution enforces the fact that the user should not be drawing their 
+contours around the marker. A solution to this, then, would be to apply
+another sort of blurring function that will take the heights of the pixels
+surrounding the marker and use those as an indication as to what the
+average heights of the pixels contained in the marker should be. If the user
+doesn't decide to draw a contour through the marker, I believe this solution
+will fix the problem though I was not able to implement it in code.
 
 \subsubsection{Other implicit markers}
 A marker is something on the paper or creative environment that will be 
@@ -2565,10 +2638,12 @@ detected and understood by the program. Right now, the only markers we have
 at the user's disposal are contour lines which are converted into land with
 different elevation levels, and the fiducial marker used for helping
 with camera pose and scene orientation. While it is very easy to add 
-special computer generated markers ......................MORE...................
- 				
- 		it removes from the creative experience of the application
-as there is less interaction with pen and paper. \\
+ore fiducial markers into the scene, for example, printing a range of 
+small fiducial markers the user can just place onto the landscape map, 				
+it removes from the creative experience of the application
+as there is less interaction with pen and paper. What i'm proposing in
+this extension is basically having a way to recognise implicit markers
+from a store of shapes.\\
 \\
 To have other markers which represent other objects would greatly enhance the
 creative power of the user. Some examples of these are converting crosses ("X")
@@ -2583,42 +2658,72 @@ over the image as some kind of mask for convolution. A difference measure is run
 across the two images (taking into account rotation and affine transformation).
 If this is smaller than a threshold then it can be said within some statiscal
 region, that the detected area was intended to be that marker. From there placing
-the object over the mid point (with regard to surface normal) will suffice.
+the object over the mid point (with regard to surface normal) will suffice. 
+The drawn marker can also be fitted to a box or an ellipse so that the
+scale of the produced object rendered is also to the scale of how 
+large the marker is drawn.
 
 \subsubsection{Photorealistic lighting environment}
 Augmented Reality comes under the fields of Computer Graphics and Computer
-Vision, and as a result it means that for it to be good, it has to look good.
+Vision, and as a result it means that for it to be considered good, 
+it has to look good. Right now, my application generates a very basic 
+landscape and this is not good enough to be used in any commercial piece
+of software.\\
+\\
 The potential user of this program can range from professional land/environment
 planner all the way to a 3 year old child with a bunch of pens at their 
-disposal. If it does not appealing, it will not appeal to the professional
-and the sustained interest of the 3 year old cannot be guaranteed by 
-sub-standard graphics. A very easy way to quickly improve a scene and make it
-realistic, as Augmented Reality should be, is to add illumination equivalent 
-to the local scene. \\
+disposal. If it does not look appealing, it will not appeal to 
+professionals and the sustained interest of the 3 year old cannot be 
+guaranteed by sub-standard graphics. A very easy way to quickly improve 
+a scene and make it realistic, as Augmented Reality should be, is to add 
+illumination equivalent to the local lighting view by the camera. \\
 \\
 Implementing this also shouldn't require too much extra logic and is something
 I wanted to be able to add into the project; unfortunately I had not
-enough time due to unexpected road blocks within other areas of the project.
+enough time due to unexpected road blocks within other areas of implementation.
 By using a light probe placed within view of the camera, global illumination
 can be achieved without much intereference to the scene. A single frame can be
 enough to get the lighting for the environment. In addition, this can change 
-with time as the environment can be update every so often wither by frame count
-or program run time, where another frame will be taken and the environment 
-recalculated in the background. As a result, when lighting conditions change
-over time, it will cause no problem to the user and require no extra interaction.\\
+with time as the environment can be updated every so often whether by frame count
+or program run time, where another frame will be taken as a base frame 
+and the environment  recalculated in the background. As a result, when 
+lighting conditions change over time, it will cause no problem to the user 
+and require no extra interaction.\\
 \\
 Another point to think about is shadowing and self occlusion which should 
 cause shadows to form upon the landscape creataed by other parts of the landscape
 itself. This would be included once the global illumination has been captured.
 
+\subsubsection{Texture Mapping}
+Texture mapping is the process of applying an image over a surface. This is
+a very easy and quick way to make the 3D scene rendered a lot more realistic.
+By having a bitmap picture, like the one in Figure \ref{bitmap}, I can
+map the picture over the landscape giving it a more real-life environment
+look. In addition, I could use differeny bitmaps and map to specific
+areas of the scene, e.g. mapping rocky textures to areas of higher heights
+in the image. In addition to the photorealistic extension, this will
+make the scene look a lot better than it currently does now, as just a block
+of changing colour shades.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.7]{pics/texture.jpg}
+	\caption{Texture bitmap}
+	\label{bitmap}
+\end{figure}
+
+Implementing this extension takes little time, it's just a few extra lines
+of code and I have already began implementing this feature in the code base.
+
 \subsection{Future Extensions}
 I shall now highlight some of the other ideas I had while going into this 
-project although some were a bit too broad and not realted enough to the main
-goals and contributions of this project. These extensions are more of what
-can be done to grow this project into a fully functions piece of software that
-could potnetially be used commercially, or indeed lay groundwork for future
-work in Augmented Reality. There are also ideas here that could be implemented
-when the technology for its realisation becomes available.
+project. Some were a bit too broad and not related enough to the main
+goals and final contributions of this project. These extensions are more of what
+can be done to grow this project into a fully functioning piece of 
+software that could potnetially be used commercially, or indeed lay 
+groundwork for future Augmented Reality applications. There are also ideas 
+here that could be implemented when the technology for its realisation 
+becomes available.
 
 \subsubsection{The Leap Motion}
 Before coming into this project I had a great interest and desire to work with
@@ -2627,47 +2732,50 @@ head pieces and Augmented Reality. While investigating these, I ran into the
 Leap Motion, an infrared hand tracker which allows you to use your hands as
 an input device. I really loved the idea of using your own hands to interact
 with things in a generated environment as opposed to touchless control of a device.
-However, the leap motion still has a number of bugs and is not as seamless and 
+However, the leap motion still has a number of bugs making it not as 
+seamless at  
 hand tracking as one would like it to be. It is still one of the better and 
 cheaper hand tracking devices out there, with advances in its development I think
-it could prove very useful to users of the AR program created from this project.\\
+it could prove very useful and fun to users of the AR program 
+created from this project.\\
 \\
 The basic idea for integrating this piece of hardware into the project is to,
-after creating the scene, the user is also able to \textit{manipulate} the
-scene they had just created! This adds another dimension onto the creative
+after creating the scene, allow the user to \textit{manipulate} the
+scene they just created! This adds another dimension onto the creative
 ability of the the application and really promotes the basic idea I have when
 conducting this project. Using your hands to create things! \\
 \\
 On top of this basic idea, there were a variety of potential pieces of 
-functionality that could be implemented with this new medium of interaction, some
-of which I shall list:
+functionality that could be implemented with this new medium of 
+interaction, some of which I shall list here:
 
 \begin{enumerate}
 	\item \textit{Allow the user to scale the environment using their hands.} \\
 		  By registering a pinch action, if the user pinches edges of the
 		  generated scene, or by pinching the highest point and pulling 
 		  outward/upward, the user can scale the generated scene to their 
-		  desired size! Will require alignment of Leap Motion hand point 
+		  desired size! This will require alignment of Leap Motion hand point 
 		  coordinate space to the 3D scene coordinate space to work.
 	\item \textit{Adding content by drag and drop.}\\
 		  This functionality is inspired by games much like \textit{The Sims}.
 		  The user can choose to either add in content through the computer and
 		  literally drop it into the scene by moving their hands around. This
-		  could possibly be achieves by pinch and release as aforementioned. 
-		  If the extension of adding in animals/people or other moving object
+		  could possibly be achieved by pinch and release method as aforementioned. 
+		  If the extension of adding in animals/people or other moving objects
 		  that traverse the scene were to implemented, the user could also
 		  pick these up and move them around the scene at will. This will 
-		  introduce more of a game aspect into the project and will definitely
-		  appeal to the younger set of users while adding functionality for
+		  promote more of a game aspect into the project and will definitely
+		  appeal to the younger set of users, while adding functionality for
 		  those who could be using this for professional work.
 	\item \textit{Introduce "God Mode"}\\
 		  Again inspired by some games and similar to the above point. Allow
 		  the user to view hands in the scene, as if you were playing the
 		  role of God. This is purely to enchance the program as more of a game
 		  instead of a creative environment. God mode would allow the user to
-		  make various changes to the environment, for example spreading the hand
+		  make various changes to the environment, for example, spreading the hand
 		  could represent rainfall on the area below the convex hull of the hand
-		  points! Another idea is if the user start  pressing on the landscape, the
+		  points, just like it is in the Augmented Sandbox application.
+		  Another idea is if the user start  pressing on the landscape, the
 		  landscape itself can change, e.g. decreasing in height, cause cracks in
 		  the scene etc. This is one of the more ambitious extensions.
 \end{enumerate}
@@ -2675,7 +2783,7 @@ of which I shall list:
 \subsubsection{No Calibration Marker}
 The bigger dream for this project was to enable users to be creative 
 wherever they go with their computer or laptop. The idea was to have a
-program that imposes as low an amount of restrictions on the user as 
+program that imposes as little restrictions on the user as 
 possible. One of the main restrictions is the calibration marker. In its
 current state, for the user to begin their creative landscape maps, they
 have to be in possession of paper marked with an ARuco marker. In addition,
@@ -2684,19 +2792,28 @@ this marker has to be of a specified value and size. \\
 In order to further improve the application, it would be great to remove 
 the need for a calibration marker. This means that the user does not even 
 have to carry around paper, they can grab any scrap piece that they find 
-around should an idea spring to mind. There have been a few papers and
-investigations in Augmented Reality without fiducial markers. Ferrari
+around should an awesome landscape idea spring to mind. There are already
+several papers and ongoing
+investigations in markerless Augmented Reality. Ferrari
 gives a good introduction into some methods for a real time AR
-system without explicit markers in the paper "Markerless Augmented 
-Reality with a Real-time Affine Region Tracker" \cite{Ferrari}. In here, they
-rightly state that most AR researchers \textit{often
-have to take refuge to putting ‘markers’ or ‘landmarks’ into the scene} 
+system without explicit markers in the paper \textit{"Markerless Augmented 
+Reality with a Real-time Affine Region Tracker"} \cite{Ferrari}. 
+The paper states, quite rightly, that most AR researchers
+
+\begin{quote}
+	...often have to take refuge to putting ‘markers’ or 
+	‘landmarks’ into the scene...
+\end{quote}
+ 
 due to the real time requirements of AR, as is no different in this project.
-There are also many applications that already work without the need for these markers,
+There are also many applications that already work without these markers,
 though many use some form of implicit marker rather than an explicit one.
-An example of this is the Augmented Reality dressing, where a user 
+An example of this is the Augmented Reality dressing room, where a user 
 stands in front of the camera, implicit markers like hands, head, shoulders
-etc. are used to gain an understanding of the scene in front of the camera.\\
+etc. are used to gain an understanding of the scene in front of the camera.
+The application then overlays an image of a chosen garment onto the user
+with this understnading of the scene. In addition, the user can use
+their hands to gesture when to switch to the next item of clothing.\\
 \\
 In order for this to work for my project however, there is need to
 somehow convert a part of the users' landscape map into a base for 
@@ -2714,20 +2831,20 @@ had to be solved. Truthfully, some of these problems could have been entire
 projects themselves and have been studied a lot in their field of literature.
 Since there is not enough time to explore each of these problems in 
 depth, some simple approaches have been taken to reach a suitable solution
-that will fulfil the needs of this project. The main areas which I think would
+that fulfilled the needs of this project. The main areas which I think would
 benefit from more extensive testing are highlighted in this section.
 
 \subsubsection{Contour joining, closing and detection}
 Contour closing is a pretty large topic in the field of Computer Vision as 
 it is the basis for segmentation. As a result, it plays \texttt{the} main role
-in many applications of computer vision. As a result of this there are 
+in many applications of Computer Vision. There are 
 already numerous papers out there which look into achieving accurate segmentation.
 Some of these require human input, such as creating atlases in medical imaging.
 Machine learning methods can also require some forms of human input, mainly in 
 reinforcement learning where the program may segment an image by finding contours 
-and then the user correct the segmentation, causing updates to the program's
+and then have the user correct the segmentation, causing updates to the program's
 segmentation algorithm. Over time, this would hopefully improve the performance
-of the program when identifying contours in roughly similar images. \\
+of the program when identifying contours in similar images. \\
 \\
 In this project, contour closing has been dealt with through 
 a naive approach. Firstly, morphological closing helps connect 
@@ -2735,8 +2852,8 @@ very close contours, however, there were still contours that were
 very close that weren't caught by this transform. The next approach 
 was to join contours that have start and end points which
 neighboured the start/end point of another contour. This was pretty much
-the extent of closing contours in this project. As I mentioned early on
-in this project, accurate contour closing could itself be a whole
+the extent of closing contours in this project. As I mentioned early on, 
+accurate contour closing could itself be a whole
 research topic due to its importance. It can also be intertwined with 
 machine learning to yield better results. However, when joining contours,
 it is important to realise that the time to do this matters immensely in 
@@ -2748,15 +2865,15 @@ behaves when detecting contours after using the Canny detection algorithm,
 has imposed limits on the types of drawing utensils the user has to use to
 obtain good performance from the program. It would be much
 better to allow the user to use any thickness of utensil and still 
-accurately detect and close contours.\\
+accurately detect and close contours in their landscape maps.\\
 \\
 One test I would have liked to immediately implement is instead of using
 the Canny detector, just go straight to the thresholding stage to produce
 and image of potential contours. This itself would require a lot of
-threshod testing to make sure it behaves optimally. However, it could be
-possible that this method is faster than using Canny. However,
-there would need to be extensive tesing into thresholding to make sure that
+threshold testing to make sure it behaves optimally, making sure that
 it performs well on the average case as well as some of the edge cases.
+However, it could be possible that this method is faster than using Canny
+and so is well worth the time to investigate into. 
 
 \subsubsection{~DO~ Thresholding}
 Computer Vision is heavily dependent on aesthetics. A successful Computer
@@ -2777,66 +2894,85 @@ contour detection,
 
 \subsubsection{Stabilisation of background}
 To determine if there was any change in the landscape map, I implemented an
-algorithm (Algorithm \ref{algo:stabilisation} which takes a base frame 
+algorithm (Algorithm \ref{algo:stabilisation}) which takes a base frame 
 and the current frame and calculates a change measure. The base 
 frame was considered the "Background" and any change was the
 "Foreground". If the change measure surpassed an empirically determined 
 threshold, the scene was deemed to have changed.\\
 \\
 Since the threshold was empirically determined, given more time I would
-have put more extensive tesing into finding out the optimal value for 
+have put more extensive testing into finding out the optimal value for 
 this threshold. The threshold should also be adaptive, depending on what
 utensil the user is wielding. For example, a thin leaded pencil, or one where
 it is of colour harder to distinguish from the colour of the creative 
-surface will produce a small change image. On the other hand, a 
-much thicker, black permanent marker will produce a larger change image and
+surface, will produce a small difference image. On the other hand, a 
+much thicker, black permanent marker will produce a larger difference image and
 thus need a higher threshold to properly capture an adequate amount of 
 change.\\
 \\
 The threshold for this project was determined on changes to a landscape
 map brought on by a user using a standard black biro pen. So while it
-may work to a certain accuracy with that and indeed some things thicker,
-for other drawing utensils, it may not perform well, if at all. Thus,
+may work to a certain accuracy with that and indeed some thicker 
+drawing utensils, it may not perform well, if at all for others. Thus,
 allowing the user to choose their utensil and adapt the thresholding 
-level based on that is an extension I'd like to see completed. The
+level based on the choice is an extension I'd like to see completed. The
 writing utensil type then removes itself as a restriction on the user.
 
 \newpage
-\section{User Guide}
+\section{FINAL CHECK (NEEDS MORE PICS) - User Guide}
 \label{chapter:userguide}
 \newpage
-\subsection{~DO~ Obtaining the Code}
+\subsection{Obtaining the Code}
 \label{guide:obtainingcode}
 The source code for this project can be obtained on my GitHub page, linked 
-below. Note that this distribution does not come with the libraries
+below:
+
+\begin{center}
+http://github.com/Sniffing/ARLandscapes
+\end{center}
+
+Note that this initial distribution does not come with the libraries
 OpenGL, OpenCV or ArUco. You will need to download these yourself or make 
 sure that they are already on your machine.\\
 \\
 You will need an OpenCV version of at least 2.1, the latest versions can
-be downloaded at http://opencv.org/downloads.html. \\
-\\
+be downloaded at:
+	\begin{center}
+		http://opencv.org/downloads.html.
+	\end{center} 
 The version of OpenGL that you can get will depend on your graphics card.
-Make sure you update to the newest drivers, you will also need GLEW and GLUT.
+Make sure you update to the newest drivers, you will also need GLEW and GLUT
+which you should download and install yourself.\\
 \\
-The ArUco library can be obtained through http://www.uco.es/investiga/grupos/ava/node/26.
+The ArUco library can be obtained through:
+	\begin{center}
+		http://www.uco.es/investiga/grupos/ava/node/26	
+	\end{center}
 It is worth noting that changes may happen to the library which changes the
-API and the function calls. In the even of this and the issue is not resolved,
+API and the function calls. These changes are out of my control though
+in the event of this, I will respond to the change as soon as 
+possible by updating the code base. If the issue is not resolved,
 please leave a message on the GitHub page for an update.\\
 \\
-Once you have these libraries in place, you can pull from my GitHub 
+Once you have these libraries installed, pull from my GitHub 
 repository. From here you need to run the following commands from the
 command line:
+
 \begin{verbatim}
 	mkdir Build
 	cd Build
 	cmake ..
 	make
 \end{verbatim}
-This should have compiled the project read to be used.
 
+After successfully running these commands, the program is ready to be used.
+Move onto the next steps to start playing around with the landscape maker.
+
+\newpage
 \subsection{Generating your ArUco marker}
-This section explains how to get an ArUco marker which will be used 
-by the program to orientate the scene. 
+This section explains how to obtain an ArUco marker. The marker is 
+a necessary part of the surface onto which you will be drawing your 
+landscape map. 
 
 \subsubsection*{Producing your marker}
 The first step is to head over to the website:
@@ -2847,7 +2983,8 @@ http://terpconnect.umd.edu/~jwelsh12/enes100/markergen.html
 
 You will be presented with three entry boxes, shown below in
 Figure \ref{guide:markergeneration}. The Marker ID must be an integer
-and can be any number you want it to be. 
+and can be any number you want it to be, the ID has no purpose in
+the current application but may be used in the future. 
 
 \begin{figure}[!h]
 	\centering
@@ -2857,24 +2994,27 @@ and can be any number you want it to be.
 \end{figure}
 
 Follow the rest of the instructions on the webpage and print the marker.
-You can alternatively save the image and attach it to the corner of a
-blank document and print these out. \textit{Remember the size of the marker
-you have printed!}
+You can alternatively save the marker image and place it in the corner of a
+blank document and print these out.
+\begin{center}
+	\textit{Important: Remember the size of the marker you have printed!}
+\end{center}
 
 \subsubsection*{Placing the marker}
 With the marker printed out, you can attach this to the surface of 
 whatever it is you are going to draw your landscape map on. Pay
 attention not to damage the marker, obscure it with stains etc. It
 is best to place the marker at a point not too far away from your
-drawing but also at a point that doesn't prevent you from drawing.
+drawing but also at a position that doesn't prevent you from drawing.
 It is best not to place the marker in the middle of a contour,
-place it separate to the parent contour you draw as the behaviour
-otherwise is undefined!\\
+place it separate to the parent contour you draw for the best
+results. The behaviour ,otherwise, is undefined!\\
 \\
 Alternatively, if you have printed off the marker on the corner of 
 a blank document, you have nothing further else to do before moving onto 
-the next step in the next section.
+the next section.
 
+\newpage
 \subsection{Calibrating your camera}
 With the code you obtained in Section \ref{guide:obtainingcode}, you
 will realise it came with a file called "calibration". Navigate your way 
@@ -2882,33 +3022,32 @@ into this file.
 
 \subsubsection*{The Checkerboard}
 The first step is to print off the checkerboard which is used for 
-calibration. The checkerboard should be print out in full  on an
+calibration. The checkerboard should be printed in full  on an
 A4 piece of paper. Supplied to you is the A4 checkerboard pdf,
 "checkerboard.pdf" as well as the original checkerboard image,
 "checkerboard.png".\\
 \\
-Having print this out, you now need to stick the board, face up, to 
+Having print this out, you now need to attach it, face up, to 
 a sturdy piece of material, such as cardboard, so the checkboard
 does not bend easily. When this is done, you may move onto the 
 actual calibration.
 
 \subsubsection*{Running the Calibration}
-There is a shell script in the "calibration" file. Simply run
+There is a shell script in the "calibration" file. Simply run:
 
 \begin{verbatim}
 	bash calibrate_camera.sh
 \end{verbatim}
 
-
 to start the camera calibration. You will be presented with a 
 window which shows what your current camera sees. Place your 
 mounted checkerboard in full view of your camera. Move the 
-checkerboard about, moving it closer, further away, across such
+checkerboard about, moving it closer, further away, across the lens such
 that it still remains in view of the camera. Try to rotate
 the checkboard about all three axes to achieve a better calibration.
 The program will take 10 pictures to determine distortion in your 
 camera and will tell you when calibration has finished. 
-Press the "ESC" key when this is done to close the calibration program.
+Press the "ESC" key when this is done to close the calibration window.
 
 \subsubsection*{Using the Camera Parameters}
 Upon successfully calibrating with 10 captured images from the 
@@ -2919,11 +3058,14 @@ use a new camera at any point, you must go through this calibration
 step once more to obtain the distortion values for the new piece of
 hardware.
 
+\newpage
 \subsection{Using the program}
+With camera calibration finished, this section will guide you through how
+to use the program.
 
 \subsubsection*{Calling the program}
 After making the project, all you need to do is run the program. This
-is made simple for you, once again, through a bash script called
+is made simple for you, once again through a bash script, called
 "generate\_landscapes.sh". Simply type out the following into
 your terminal and the program will begin running.
 
@@ -2960,14 +3102,13 @@ restrictions on what you can and cannot do with this release version.
 			you are drawing on.
 \end{itemize}
 
-
 \subsubsection*{Finishing up}
 Taking into consideration the restrictions and rules outlined by the
 section above, you are ready to start drawing your landscape map.
-Preferably use a thick marker pen or a black biro and draw your
-contours as smooth as possible. Experiment and see what works and what
-doesn't. To provide feedback, please leave a comment on the project
-Github!
+Experiment and see what works and what doesn't. 
+To provide feedback, please leave a comment on the project Github,
+any suggestions to the program will be thoroughly considered and may
+end up in the next release!
 
 \newpage
 

@@ -150,22 +150,24 @@ void approxContours(vector<vector<Point> >* contours, vector<vector<Point> >* ne
 }
 
 void naiveDoubleRemoval(vector<vector<Point> >* contours, Tree* htree){
-  int originalSize = htree->getSize();
-  for(int i = 0; i< contours->size(); i++){
-    vector<Point> contour = contours->at(i);
-    TreeNode* contourNode = htree->getNodeWithID(i);
-    if (contourNode->getNumChildren() == 1){
+  int count = 0;
+  int size;
+  for(vector<vector<Point> >::const_iterator it = contours->begin();
+      it != contours->end(); it++){
+    size = htree->getSize();
+    TreeNode* contourNode = htree->getNodeWithID(count);
+    if(contourNode->getNumChildren() == 1){
+      //likely to be outer edge of a contour, lets remove inner.
+      vector<Point> childContour = *(it++);
+      count++;
       TreeNode* childNode = contourNode->getChild(0);
-      int contourNum = childNode->getID();
-      vector<Point> childContour = contours->at(contourNum);
-      //if(adjacent(childContour.at(1), contour.at(1),7)) {
-	contourNode->removeChild(0);
-	contourNode->addChildren(childNode->getChildren());
-	contours->erase(contours->begin()+contourNum);
-	htree->removeNode(contourNum);
-	//}
-	
+      vector<TreeNode*>* childChildren = childNode->getChildren();
+      
+      contourNode->removeChild(0);
+      contourNode->addChildren(childChildren);
+      htree->removeNode(childNode->getID());
+      htree->correctIndices(size);
     }
-    htree->correctIndices(originalSize);
+    count++;
   }
 }

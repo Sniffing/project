@@ -130,7 +130,14 @@ void TreeNode::setPrev(TreeNode* node){
 }
 
 void TreeNode::addChildren(vector<TreeNode*>* childrenList){
+  for(vector<TreeNode*>::const_iterator it = childrenList->begin(); 
+      it != childrenList->end(); it++){
+    TreeNode* node = *it;
+    node->setParent(this);
+    node->setLevel(this->getLevel() + 1);
+  }
   children->insert(children->end(), childrenList->begin(), childrenList->end());
+  
 }
 
 void TreeNode::setChildren(vector<TreeNode*>* childrenList) {

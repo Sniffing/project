@@ -113,7 +113,7 @@ vector<Point>* naiveContourJoin (vector<vector<Point> >*contourList, vector<vect
 static bool cameraFound(VideoCapture* cam){
   //If web cam is not found, default to whatever 
   if (!cam->isOpened()) { 
-    *cam = VideoCapture(0);
+    *cam = VideoCapture(1);
     if (!cam->isOpened()){
       //No cameras found
       cout << "No Webcams have been located" << endl;
@@ -134,8 +134,8 @@ int main(int argc, char** argv)
   time_t start,end;
   globalFPS = 0;
 
-  VideoCapture cam(1);
-  if(!cameraFound(&cam)) return -1;
+  VideoCapture cam(0);
+  //if(!cameraFound(&cam)) return -1;
 
   int frameCounter = 0;
   int fps;
@@ -148,7 +148,7 @@ int main(int argc, char** argv)
 
   cam >> tempBase;
   gray(&tempBase);
-  
+  cout << "What the fuck" << endl;
     while( cam.isOpened() )    // check if we succeeded
       {
 	if(!cam.read(nextFrame))
@@ -158,8 +158,6 @@ int main(int argc, char** argv)
 	nextFrame = colourFrame;
         gray(&nextFrame);
 
-
-	
 	if(frameCounter == 0) {
 	  time(&start);
 	}

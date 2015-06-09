@@ -1,7 +1,7 @@
-\contentsline {section}{\numberline {1}\nobreakspace {}DO\nobreakspace {} Introduction}{7}{section.1}
-\contentsline {subsection}{\numberline {1.1}\nobreakspace {}DO\nobreakspace {} Motivation}{8}{subsection.1.1}
+\contentsline {section}{\numberline {1}Introduction}{7}{section.1}
+\contentsline {subsection}{\numberline {1.1}Motivation}{8}{subsection.1.1}
 \contentsline {subsection}{\numberline {1.2}Project Goals}{9}{subsection.1.2}
-\contentsline {subsection}{\numberline {1.3}Report Structure}{9}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.3}Report Structure}{10}{subsection.1.3}
 \contentsline {section}{\numberline {2}Background}{11}{section.2}
 \contentsline {subsection}{\numberline {2.1}Augmented Reality}{11}{subsection.2.1}
 \contentsline {subsubsection}{\numberline {2.1.1}Augment the User}{11}{subsubsection.2.1.1}
@@ -80,21 +80,22 @@
 \contentsline {subsubsection}{\numberline {5.3.2}\nobreakspace {}DO\nobreakspace {} Aesthetics}{64}{subsubsection.5.3.2}
 \contentsline {subsection}{\numberline {5.4}\nobreakspace {}DO\nobreakspace {} Results}{64}{subsection.5.4}
 \contentsline {subsection}{\numberline {5.5}\nobreakspace {}DO\nobreakspace {} Overall Evaluation}{64}{subsection.5.5}
-\contentsline {section}{\numberline {6}Extensions}{64}{section.6}
+\contentsline {section}{\numberline {6}FINAL CHECK - Extensions}{64}{section.6}
 \contentsline {subsection}{\numberline {6.1}Immediate Extensions}{64}{subsection.6.1}
 \contentsline {subsubsection}{\numberline {6.1.1}Coloured Contours}{64}{subsubsection.6.1.1}
-\contentsline {subsubsection}{\numberline {6.1.2}\nobreakspace {}DO\nobreakspace {} Removal of the Calibration Marker Points}{65}{subsubsection.6.1.2}
-\contentsline {subsubsection}{\numberline {6.1.3}Other implicit markers}{65}{subsubsection.6.1.3}
+\contentsline {subsubsection}{\numberline {6.1.2}Removal of the Calibration Marker Points}{65}{subsubsection.6.1.2}
+\contentsline {subsubsection}{\numberline {6.1.3}Other implicit markers}{66}{subsubsection.6.1.3}
 \contentsline {subsubsection}{\numberline {6.1.4}Photorealistic lighting environment}{66}{subsubsection.6.1.4}
-\contentsline {subsection}{\numberline {6.2}Future Extensions}{66}{subsection.6.2}
-\contentsline {subsubsection}{\numberline {6.2.1}The Leap Motion}{67}{subsubsection.6.2.1}
-\contentsline {subsubsection}{\numberline {6.2.2}No Calibration Marker}{68}{subsubsection.6.2.2}
-\contentsline {subsection}{\numberline {6.3}Continued testing and experimentation}{69}{subsection.6.3}
-\contentsline {subsubsection}{\numberline {6.3.1}Contour joining, closing and detection}{69}{subsubsection.6.3.1}
-\contentsline {subsubsection}{\numberline {6.3.2}\nobreakspace {}DO\nobreakspace {} Thresholding}{70}{subsubsection.6.3.2}
-\contentsline {subsubsection}{\numberline {6.3.3}Stabilisation of background}{70}{subsubsection.6.3.3}
-\contentsline {section}{\numberline {7}User Guide}{72}{section.7}
-\contentsline {subsection}{\numberline {7.1}\nobreakspace {}DO\nobreakspace {} Obtaining the Code}{73}{subsection.7.1}
-\contentsline {subsection}{\numberline {7.2}Generating your ArUco marker}{73}{subsection.7.2}
-\contentsline {subsection}{\numberline {7.3}Calibrating your camera}{74}{subsection.7.3}
-\contentsline {subsection}{\numberline {7.4}Using the program}{75}{subsection.7.4}
+\contentsline {subsubsection}{\numberline {6.1.5}Texture Mapping}{67}{subsubsection.6.1.5}
+\contentsline {subsection}{\numberline {6.2}Future Extensions}{68}{subsection.6.2}
+\contentsline {subsubsection}{\numberline {6.2.1}The Leap Motion}{68}{subsubsection.6.2.1}
+\contentsline {subsubsection}{\numberline {6.2.2}No Calibration Marker}{69}{subsubsection.6.2.2}
+\contentsline {subsection}{\numberline {6.3}Continued testing and experimentation}{70}{subsection.6.3}
+\contentsline {subsubsection}{\numberline {6.3.1}Contour joining, closing and detection}{70}{subsubsection.6.3.1}
+\contentsline {subsubsection}{\numberline {6.3.2}\nobreakspace {}DO\nobreakspace {} Thresholding}{71}{subsubsection.6.3.2}
+\contentsline {subsubsection}{\numberline {6.3.3}Stabilisation of background}{72}{subsubsection.6.3.3}
+\contentsline {section}{\numberline {7}FINAL CHECK (NEEDS MORE PICS) - User Guide}{73}{section.7}
+\contentsline {subsection}{\numberline {7.1}Obtaining the Code}{74}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Generating your ArUco marker}{75}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}Calibrating your camera}{76}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.4}Using the program}{77}{subsection.7.4}

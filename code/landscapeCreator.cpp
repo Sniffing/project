@@ -34,12 +34,7 @@ bool readArguments ( int argc,char **argv )
 }
 
 
-/************************************
- *
- *
- *
- *
- ************************************/
+/******************************** ************************************/
 
 int main(int argc,char **argv)
 {
@@ -47,7 +42,8 @@ int main(int argc,char **argv)
     {//parse arguments
         if (readArguments (argc,argv)==false) return 0;
         //read from camera
-        if (TheInputVideo=="live") TheVideoCapturer.open(1);
+	//CAMERA INDEX
+        if (TheInputVideo=="live") TheVideoCapturer.open(0);
         else TheVideoCapturer.open(TheInputVideo);
         if (!TheVideoCapturer.isOpened())
         {
@@ -64,12 +60,30 @@ int main(int argc,char **argv)
 	TheGlWindowSize=TheInputImage.size();
 
 	cvtColor(TheInputImage, BASEFRAME,CV_BGR2GRAY);
+	imwrite("contourImages/baseFrame.png",BASEFRAME);
 	POTENTIAL_NEW_BASEFRAME = BASEFRAME;
 	createLandscape();
 	
         //read camera paramters if passed
         TheCameraParams.readFromXMLFile(TheIntrinsicFile);
         TheCameraParams.resize(TheInputImage.size());
+
+	// if(TIME_FLAG){
+
+	//   double maptime = (height_map_end-height_map_start) / (double)(CLOCKS_PER_SEC / 1000);
+	//   double treetime = (tree_end-tree_start)/ (double)(CLOCKS_PER_SEC / 1000);
+	//   double bgtime = (bg_end-bg_start)/ (double)(CLOCKS_PER_SEC / 1000);
+	//   double landscapetime= (drawing_end-drawing_start)/ (double)(CLOCKS_PER_SEC / 1000);
+	//   double pptest =(singlepptest_end-singlepptest_start)/ (double)(CLOCKS_PER_SEC / 1000);
+	//   double containing = (containing_end-containing_start)/(double)(CLOCKS_PER_SEC/1000);
+ 
+	//   printf("map time %2.5f ms" ,maptime); cout << endl;
+	//   printf("tree time %2.5f ms",treetime); cout << endl;
+	//   printf("background time %2.5f ms",bgtime); cout<< endl;
+	//   printf("landscape time: %2.5f ms", landscapetime); cout << endl;
+	//   printf("Polygon test time: %2.5f ms",pptest); cout << endl;
+	//   printf("Contatining test time: %2.5f ms",containing); cout << endl;
+	// }
 
         glutInit(&argc, argv);
         glutInitWindowPosition( 0, 0);
@@ -198,8 +212,8 @@ void vDrawScene()
         glTranslatef(-(TheMarkerSize/2.0f), -(TheMarkerSize/2.0f),0);
 	glPushMatrix();
 	
-	double lol = (TheMarkerSize/WIN_WIDTH);//*(TheGlWindowSize.width);// * scaleMarker);
-	double lol1 = (TheMarkerSize/WIN_HEIGHT);//*(TheGlWindowSize.height);// * scaleMarker);
+	double lol = (TheMarkerSize/WIN_WIDTH) * 5.0f;//*(TheGlWindowSize.width);// * scaleMarker);
+	double lol1 = (TheMarkerSize/WIN_HEIGHT) *5.0f;//*(TheGlWindowSize.height);// * scaleMarker);
 
 	double newx = 0;//(tl.x*scaleMarker);
 	double newy = 0;//(tl.y*scaleMarker);
@@ -207,11 +221,11 @@ void vDrawScene()
         for(int i=0; i<TheGlWindowSize.height; i++) {
             for(int j=0; j<TheGlWindowSize.width; j++) {
                 glBegin(GL_QUADS);        // Draw The Cube Using quads
-                glColor3f(0.0f,1.0f/hmap[i][j],0.0f);    // Color Blue
-                glVertex3f( i*lol1 - newx ,j*lol - newy, hmap[i][j]*scaleMarker);
-                glVertex3f( (i+1)*lol1 - newx,(j)*lol -newy, hmap[i+1][j]*scaleMarker);
-                glVertex3f( (i+1)*lol1 - newx,(j+1)*lol - newy, hmap[i+1][j+1]*scaleMarker);
-                glVertex3f(   i*lol1 - newx, (j+1)*lol - newy, hmap[i][j+1]*scaleMarker);
+                glColor3f(0.0f,1.0f/finalHeightMap[i][j],0.0f);    // Color Blue
+                glVertex3f( i*lol1 - newx ,j*lol - newy, finalHeightMap[i][j]*scaleMarker * 15.0f);
+                glVertex3f( (i+1)*lol1 - newx,(j)*lol -newy, finalHeightMap[i+1][j]*scaleMarker * 15.0f);
+                glVertex3f( (i+1)*lol1 - newx,(j+1)*lol - newy, finalHeightMap[i+1][j+1]*scaleMarker * 15.0f);
+                glVertex3f( i*lol1 - newx, (j+1)*lol - newy, finalHeightMap[i][j+1]*scaleMarker * 15.0f);
                 glEnd();
         }
         }
@@ -219,6 +233,11 @@ void vDrawScene()
         glPopMatrix();
     }
 
+    
+    // glRasterPos2i(100, 120);
+    // glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+    // const char* string = "STUFF HAPPENING";
+    // glutBitmapString(GLUT_BITMAP_HELVETICA_18, (const unsigned char) *string);
     glutSwapBuffers();
 
 }
@@ -234,20 +253,22 @@ void vIdle()
 {
     if (TheCaptureFlag) {
         //capture image
-        TheVideoCapturer.grab();
-        TheVideoCapturer.retrieve( TheInputImage);
-        TheUndInputImage.create(TheInputImage.size(),CV_8UC3);
-        //transform color that by default is BGR to RGB because windows systems do not allow reading BGR images with opengl properly
-        cv::cvtColor(TheInputImage,TheInputImage,CV_BGR2RGB);
-        //remove distorion in image
-        cv::undistort(TheInputImage,TheUndInputImage, TheCameraParams.CameraMatrix, TheCameraParams.Distorsion);
+      TheVideoCapturer >> TheInputImage;
+      
+      Mat grayImage = Mat(TheInputImage.size(),DataType<float>::type);
+      //cv::cvtColor(TheInputImage,grayImage,CV_BGR2GRAY);
+      //checkForChange(&grayImage);
 
-	
-
-        //detect markers
-        PPDetector.detect(TheUndInputImage,TheMarkers, TheCameraParams.CameraMatrix,Mat(),TheMarkerSize,false);
-        //resize the image to the size of the GL window
-        cv::resize(TheUndInputImage,TheResizedImage,TheGlWindowSize);
+      TheUndInputImage.create(TheInputImage.size(),CV_8UC3);
+      //transform color that by default is BGR to RGB because windows systems do not allow reading BGR images with opengl properly
+      cv::cvtColor(TheInputImage,TheInputImage,CV_BGR2RGB);
+      //remove distorion in image
+      cv::undistort(TheInputImage,TheUndInputImage, TheCameraParams.CameraMatrix, TheCameraParams.Distorsion);
+      
+       //detect markers
+      PPDetector.detect(TheUndInputImage,TheMarkers, TheCameraParams.CameraMatrix,Mat(),TheMarkerSize,false);
+      //resize the image to the size of the GL window
+      cv::resize(TheUndInputImage,TheResizedImage,TheGlWindowSize);
     }
     glutPostRedisplay();
 }

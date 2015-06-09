@@ -231,7 +231,7 @@ void Marker::draw(Mat &in, Scalar color, int lineWidth ,bool writeId)const
     cv::rectangle( in,(*this)[2]-Point2f(2,2),(*this)[2]+Point2f(2,2),Scalar(255,0,0,255),lineWidth,CV_AA);
     if (writeId) {
         char cad[100];
-        sprintf(cad,"id=%d",id);
+        //sprintf(cad,"id=%d",id);
         //determine the centroid
         Point cent(0,0);
         for (int i=0;i<4;i++)
@@ -295,7 +295,7 @@ void Marker::calculateExtrinsics(float markerSizeMeters,cv::Mat  camMatrix,cv::M
     //rotate the X axis so that Y is perpendicular to the marker plane
    if (setYPerpendicular) rotateXAxis(Rvec);
     ssize=markerSizeMeters; 
-    cout<<(*this)<<endl;
+    //cout<<(*this)<<endl;
     
 }
 

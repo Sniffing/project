@@ -96,11 +96,12 @@ void Tree::printTree(){
     if (!allNodes->at(i)){
       cout << "NULL NODE (joined)." <<endl;
     } else {
-      cout << "Contour: " << to_string(i)  << " at level "<< allNodes->at(i)->getLevel() << " Children: [";
+      cout << "Contour: " << to_string(i)  << " Children: [";
       TreeNode* node = allNodes->at(i);
       vector<TreeNode*>* children = node->getChildren();
       printVector(children);
-      cout << "]" << endl;
+      cout << "]";
+      cout << " My level is: " << node->getLevel() << endl;
     }
   }
 }

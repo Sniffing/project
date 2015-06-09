@@ -1,4 +1,5 @@
 #include "drawOnContour.hpp"
+#define WIN_SIZE 256
 
 VideoCapture cam(1);
 float temp_hmap[WIN_SIZE][WIN_SIZE]; 
