@@ -174,9 +174,11 @@ void checkForChange(Mat* thisFrame){
       //cout << "incrementing" << endl;
       changedFrameCounter++;
       if(changedFrameCounter > STABILISATION_REQUIREMENT) {
-	//cout << "STABILISED" << endl;
+	cout << "Stabilisation and frame change" << endl;
 	changedFrameCounter = 0;
 	potentialChange = false;
+	//potential base frame should stay constant incase next frame
+	//change doesnt see any change on the picture.
 	BASEFRAME = POTENTIAL_NEW_BASEFRAME;
 	createLandscape();
       }
