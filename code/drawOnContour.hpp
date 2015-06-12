@@ -625,7 +625,6 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy) {
   cout << "blur done" << endl;
   
   printHmap();
-
   initBitMap();
 
   for(vector<vector<Point> >::const_iterator it = contours->begin(); it != contours->end(); it++){
