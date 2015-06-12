@@ -68,6 +68,7 @@ int main(int argc,char **argv)
 	cvtColor(BASEFRAME, BASEFRAME,CV_BGR2GRAY);
 	imwrite("contourImages/baseFrame.png",BASEFRAME);
 	POTENTIAL_NEW_BASEFRAME = BASEFRAME;
+
 	createLandscape();
 	
 	// if(TIME_FLAG){
