@@ -55,19 +55,21 @@ int main(int argc,char **argv)
 				     Size( 5, 5 ),
 				     Point( ceil(5.0f/2.0), ceil(5.0f/2.0) ) );
 
-
+	
 	TheVideoCapturer >> TheInputImage;
 	TheGlWindowSize=TheInputImage.size();
 
-	cvtColor(TheInputImage, BASEFRAME,CV_BGR2GRAY);
+	//read camera paramters if passed
+        TheCameraParams.readFromXMLFile(TheIntrinsicFile);
+        TheCameraParams.resize(TheInputImage.size());
+	
+	//undistort(TheInputImage,BASEFRAME, TheCameraParams.CameraMatrix, TheCameraParams.Distorsion);
+	BASEFRAME = TheInputImage;
+	cvtColor(BASEFRAME, BASEFRAME,CV_BGR2GRAY);
 	imwrite("contourImages/baseFrame.png",BASEFRAME);
 	POTENTIAL_NEW_BASEFRAME = BASEFRAME;
 	createLandscape();
 	
-        //read camera paramters if passed
-        TheCameraParams.readFromXMLFile(TheIntrinsicFile);
-        TheCameraParams.resize(TheInputImage.size());
-
 	// if(TIME_FLAG){
 
 	//   double maptime = (height_map_end-height_map_start) / (double)(CLOCKS_PER_SEC / 1000);
@@ -89,7 +91,7 @@ int main(int argc,char **argv)
         glutInitWindowPosition( 0, 0);
         glutInitWindowSize(TheInputImage.size().width,TheInputImage.size().height);
         glutInitDisplayMode( GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE );
-        window = glutCreateWindow( "AruCo" );
+        window = glutCreateWindow( "Landscape" );
         glutDisplayFunc( vDrawScene );
         glutIdleFunc( vIdle );
         glutReshapeFunc( vResize );
@@ -176,7 +178,7 @@ void vDrawScene()
     glLoadIdentity();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0, TheGlWindowSize.width, 0, TheGlWindowSize.height, -1.0, 1.0);
+    glOrtho(0, TheGlWindowSize.width, 0, TheGlWindowSize.height, 0.1, 10.0);
     glViewport(0, 0, TheGlWindowSize.width , TheGlWindowSize.height);
     glDisable(GL_TEXTURE_2D);
     glPixelZoom( 1, -1);
@@ -192,6 +194,9 @@ void vDrawScene()
 
     //now, for each marker,
     double modelview_matrix[16];
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     
     for (unsigned int m=0;m<TheMarkers.size();m++){
         TheMarkers[m].glGetModelViewMatrix(modelview_matrix);
@@ -206,28 +211,30 @@ void vDrawScene()
         cv::Point2f bl = TheMarkers[m][2];
         cv::Point2f br = TheMarkers[m][3];
 
-        glColor3f(1,0.4,0.4);
-	double scaleMarker = TheMarkerSize / cv::norm(tl-tr);
+	float scaleMarker = TheMarkerSize / cv::norm(tl-tr);
+	float verShift = fabs(tr.y-0) * scaleMarker;
+	float horShift = fabs(WIN_HEIGHT - tr.x) * scaleMarker;
+
         //glTranslatef(-(realZeroX+TheMarkerSize/2),-(realZeroY+TheMarkerSize/2),0);
-        glTranslatef(-(TheMarkerSize/2.0f), -(TheMarkerSize/2.0f),0);
+        glTranslatef(-horShift, -verShift,0);
 	glPushMatrix();
 	
-	double lol = (TheMarkerSize/WIN_WIDTH) * 5.0f;//*(TheGlWindowSize.width);// * scaleMarker);
-	double lol1 = (TheMarkerSize/WIN_HEIGHT) *5.0f;//*(TheGlWindowSize.height);// * scaleMarker);
+	double jScale = scaleMarker;//*(TheGlWindowSize.width);// * scaleMarker);
+	double iScale = scaleMarker;//*(TheGlWindowSize.height);// * scaleMarker);
 
-	double newx = 0;//(tl.x*scaleMarker);
-	double newy = 0;//(tl.y*scaleMarker);
+	double newx = 0;//TheMarkerSize;//(tl.x*scaleMarker);
+	double newy = 0;//TheMarkerSize;//(tl.y*scaleMarker);
 
-        for(int i=0; i<TheGlWindowSize.height; i++) {
-            for(int j=0; j<TheGlWindowSize.width; j++) {
+        for(int i=0; i<WIN_HEIGHT; i++) {
+            for(int j=0; j<WIN_WIDTH; j++) {
                 glBegin(GL_QUADS);        // Draw The Cube Using quads
-                glColor3f(0.0f,1.0f/finalHeightMap[i][j],0.0f);    // Color Blue
-                glVertex3f( i*lol1 - newx ,j*lol - newy, finalHeightMap[i][j]*scaleMarker * 15.0f);
-                glVertex3f( (i+1)*lol1 - newx,(j)*lol -newy, finalHeightMap[i+1][j]*scaleMarker * 15.0f);
-                glVertex3f( (i+1)*lol1 - newx,(j+1)*lol - newy, finalHeightMap[i+1][j+1]*scaleMarker * 15.0f);
-                glVertex3f( i*lol1 - newx, (j+1)*lol - newy, finalHeightMap[i][j+1]*scaleMarker * 15.0f);
+                glColor4f(0.0f,1.0f/finalHeightMap[i][j],0.0f,transparencyMap[i][j]);    // Color Blue
+                glVertex3f((WIN_HEIGHT-i)*iScale,(j)*jScale, finalHeightMap[i][j]*scaleMarker);
+                glVertex3f((WIN_HEIGHT-(i+1))*iScale,(j)*jScale, finalHeightMap[i+1][j]*scaleMarker);
+                glVertex3f((WIN_HEIGHT-(i+1))*iScale,(j+1)*jScale, finalHeightMap[i+1][j+1]*scaleMarker);
+                glVertex3f((WIN_HEIGHT-i)*iScale, (j+1)*jScale, finalHeightMap[i][j+1]*scaleMarker);
                 glEnd();
-        }
+	    }
         }
 
         glPopMatrix();
@@ -256,8 +263,8 @@ void vIdle()
       TheVideoCapturer >> TheInputImage;
       
       Mat grayImage = Mat(TheInputImage.size(),DataType<float>::type);
-      //cv::cvtColor(TheInputImage,grayImage,CV_BGR2GRAY);
-      //checkForChange(&grayImage);
+      cv::cvtColor(TheInputImage,grayImage,CV_BGR2GRAY);
+      checkForChange(&grayImage);
 
       TheUndInputImage.create(TheInputImage.size(),CV_8UC3);
       //transform color that by default is BGR to RGB because windows systems do not allow reading BGR images with opengl properly
@@ -267,6 +274,8 @@ void vIdle()
       
        //detect markers
       PPDetector.detect(TheUndInputImage,TheMarkers, TheCameraParams.CameraMatrix,Mat(),TheMarkerSize,false);
+      
+      //imwrite("contourImages/undistort.jpg",TheUndInputImage);
       //resize the image to the size of the GL window
       cv::resize(TheUndInputImage,TheResizedImage,TheGlWindowSize);
     }

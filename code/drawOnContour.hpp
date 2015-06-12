@@ -48,15 +48,17 @@ const int WIN_WIDTH = 480; //Cols = 640
 const int WIN_HEIGHT = 640; //Rows = 480
 
 //holds level the pixels belong to
-int hmap[WIN_HEIGHT][WIN_WIDTH];
+int hmap[WIN_HEIGHT][WIN_WIDTH] = { {0} };
 //holds whether pixel has been explored
 bool foundMap[WIN_HEIGHT][WIN_WIDTH] = { {false} };
 bool tempFoundMap[WIN_HEIGHT][WIN_WIDTH] = { {false} };
 //holds the explosion count
 int explosionMap[WIN_HEIGHT][WIN_WIDTH] = { {0} };
 //the final height map
-float finalHeightMap[WIN_HEIGHT][WIN_WIDTH];
+float finalHeightMap[WIN_HEIGHT][WIN_WIDTH] = { {0} };
+float transparencyMap[WIN_HEIGHT][WIN_WIDTH] = { {0} };
 
+vector<int> distances;
 
 Mat hmapRep(WIN_HEIGHT,WIN_WIDTH,CV_8UC3);
 
@@ -95,6 +97,17 @@ void createLandscape();
 void init(void)
 {
   glClearColor(0,0,0,0);
+}
+
+
+//Resets everything so no lingering values
+void resetMatrices(){
+  int hmap[WIN_HEIGHT][WIN_WIDTH];
+  bool foundMap[WIN_HEIGHT][WIN_WIDTH] = { {false} };
+  bool tempFoundMap[WIN_HEIGHT][WIN_WIDTH] = { {false} };
+  int explosionMap[WIN_HEIGHT][WIN_WIDTH] = { {0} };
+  float finalHeightMap[WIN_HEIGHT][WIN_WIDTH] = { {0} };
+  float transparencyMap[WIN_HEIGHT][WIN_WIDTH] = { {0} };
 }
 
 
@@ -180,6 +193,7 @@ void checkForChange(Mat* thisFrame){
 	//potential base frame should stay constant incase next frame
 	//change doesnt see any change on the picture.
 	BASEFRAME = POTENTIAL_NEW_BASEFRAME;
+	resetMatrices();
 	createLandscape();
       }
     }
@@ -239,51 +253,51 @@ void drawBackground(GLuint temp_texture){
 //Uses a mode filter approach, where there are obvious defects with the 
 //height calcualtion caused by tangental contour boundaries, this will remove
 //most of the noise
-void correctTangents(vector<int>* iList,int height, int width, int highest){
-  vector<int> rows = *iList;
-  int mode;
-  for (int i = 0 ; i < rows.size(); i++){
-    vector<int> heightCount(highest,0);
-    for(int j = 0; j<width; j++){
-      int TL = (int)hmap[max(0,rows[i]-1)][max(0,j-1)];
-      int L = (int)hmap[max(0,rows[i]-1)][j];
-      int BL = (int)hmap[max(0,rows[i]-1)][min(j+1,width-1)];
+// void correctTangents(vector<int>* iList,int height, int width, int highest){
+//   vector<int> rows = *iList;
+//   int mode;
+//   for (int i = 0 ; i < rows.size(); i++){
+//     vector<int> heightCount(highest,0);
+//     for(int j = 0; j<width; j++){
+//       int TL = (int)hmap[max(0,rows[i]-1)][max(0,j-1)];
+//       int L = (int)hmap[max(0,rows[i]-1)][j];
+//       int BL = (int)hmap[max(0,rows[i]-1)][min(j+1,width-1)];
 
-      int NTL = (int)hmap[max(0,rows[i]-2)][max(0,j-1)];
-      int NL = (int)hmap[max(0,rows[i]-2)][j];
-      int NBL = (int)hmap[max(0,rows[i]-2)][min(j+1,width-1)];
+//       int NTL = (int)hmap[max(0,rows[i]-2)][max(0,j-1)];
+//       int NL = (int)hmap[max(0,rows[i]-2)][j];
+//       int NBL = (int)hmap[max(0,rows[i]-2)][min(j+1,width-1)];
 
-      int TR = (int)hmap[min(height-1,rows[i]+1)][max(0,j-1)];
-      int R = (int)hmap[min(height,rows[i]+1)][j];
-      int BR = (int)hmap[min(height-1,rows[i]+1)][min(j+1,width-1)];
+//       int TR = (int)hmap[min(height-1,rows[i]+1)][max(0,j-1)];
+//       int R = (int)hmap[min(height,rows[i]+1)][j];
+//       int BR = (int)hmap[min(height-1,rows[i]+1)][min(j+1,width-1)];
       
-      int NTR = (int)hmap[min(height-1,rows[i]+2)][max(0,j-1)];
-      int NR = (int)hmap[min(height,rows[i]+2)][j];
-      int NBR = (int)hmap[min(height-1,rows[i]+2)][min(j+1,width-1)];
+//       int NTR = (int)hmap[min(height-1,rows[i]+2)][max(0,j-1)];
+//       int NR = (int)hmap[min(height,rows[i]+2)][j];
+//       int NBR = (int)hmap[min(height-1,rows[i]+2)][min(j+1,width-1)];
 
-      heightCount[TL]++; heightCount[L]++; heightCount[BL]++;
-      heightCount[NTL]++; heightCount[NL]++; heightCount[NBL]++;
-      heightCount[TR]++; heightCount[R]++; heightCount[BR]++;
-      heightCount[NTR]++; heightCount[NR]++; heightCount[NBR]++;
+//       heightCount[TL]++; heightCount[L]++; heightCount[BL]++;
+//       heightCount[NTL]++; heightCount[NL]++; heightCount[NBL]++;
+//       heightCount[TR]++; heightCount[R]++; heightCount[BR]++;
+//       heightCount[NTR]++; heightCount[NR]++; heightCount[NBR]++;
 
-      mode = -1;
-      int highestTotal = 0;
-      int runningtotal = 0;
-      for(int k = 0; k< highest; k++){
-      	if (highestTotal < heightCount[k]){
-      	  mode = k; 
-      	  highestTotal = heightCount[k];
-      	  runningtotal += heightCount[k];
-      	}
+//       mode = -1;
+//       int highestTotal = 0;
+//       int runningtotal = 0;
+//       for(int k = 0; k< highest; k++){
+//       	if (highestTotal < heightCount[k]){
+//       	  mode = k; 
+//       	  highestTotal = heightCount[k];
+//       	  runningtotal += heightCount[k];
+//       	}
 	
-      	//only 6 neighbours considered
-      	if(runningtotal == 6)
-      	  break;
-      }
-      hmap[rows[i]][j] = mode;
-    }
-  }
-}
+//       	//only 6 neighbours considered
+//       	if(runningtotal == 6)
+//       	  break;
+//       }
+//       hmap[rows[i]][j] = mode;
+//     }
+//   }
+// }
 
 void GaussianBlurHmap(vector<int>* iList,int height, int width, int highest){
   vector<int> rows = *iList;
@@ -293,7 +307,7 @@ void GaussianBlurHmap(vector<int>* iList,int height, int width, int highest){
   float sON;
   float self;
   
-  int mode;
+  int mode = 0;
   for (int i = 0 ; i < rows.size(); i++){
     vector<int> heightCount(highest,0);
     for(int j = 0; j<width; j++){
@@ -510,8 +524,8 @@ void explode(vector<int>* array){
 
 void calculateFinalMap(vector<int>* array){
   cout << "calculating map..." << endl;
-  for(int i = WIN_WIDTH-1; i >= 0; i--){
-    for(int j = 0; j < WIN_HEIGHT; j++){
+  for(int i = WIN_HEIGHT-1; i >= 0; i--){
+    for(int j = 0; j < WIN_WIDTH; j++){
       int base = hmap[i][j];
       float height;
       if(base > 0){
@@ -521,8 +535,10 @@ void calculateFinalMap(vector<int>* array){
 	  height = (float)base + (1.0f  - ((float)explosionMap[i][j] / (array->at(base)-1.0f)) );
 	}
 	finalHeightMap[i][j] = height;
+	transparencyMap[i][j] = 1;
       } else {
-	finalHeightMap[i][j] = base;
+	finalHeightMap[i][j] = -1;
+	transparencyMap[i][j] = 0;
       }
     }
   }
@@ -665,7 +681,7 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy, int heig
     }				
   }
 
-  vector<int> distances(hierarchy->getSize()+1);
+  distances = vector<int>(hierarchy->getSize()+1);
   
   explode(&distances);
   cout << "explosion done" << endl;
@@ -707,7 +723,7 @@ Mat* draw(vector<vector<Point> >*contours, vector<Vec4i>* hierarchy){
 void createLandscape(){
   //Mat scaledImage(WIN_SIZE,WIN_SIZE, DataType<float>::type);
   //resize(BASEFRAME,scaledImage,scaledImage.size(),0,0,INTER_LINEAR);
-  
+
   //erosion then dilation since we want the darker (pen) regions to close
   erode(BASEFRAME,erodedImage,element);
   dilate(erodedImage,dilatedImage,element);
