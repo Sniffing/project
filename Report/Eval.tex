@@ -97,9 +97,16 @@ the large, curved contour, has its edges coloured green
 and red, whilst both \ref{kernelExample2} and \ref{kernelExample3} correctly
 detect the square to be one contour, coloured in a single colour. Since
 the program should be able to tolerate some small amount of openness of
-contours, the kernel size was determined, empirically, best of size 5.
+contours, the kernel size was determined, empirically, best of size 5.\\
+\\
+Figure \ref{fig:hysteresisDetermining} shows a
+small selection of results I obtained through this kind of testing. After
+seeing that performance was best between an upper threshold of 1700 and 2200,
+along with a lower threshold of 800, I did a smaller scale, binary search
+approach to reach the upper and lower thresholds the program currently uses
+of 2000 and 900 respectively.
 
-\begin{figure}[!h]
+\begin{figure}[H]
 \centering
 	\begin{subfigure}[t]{.25\textwidth}
 		\centering
@@ -174,15 +181,7 @@ contours, the kernel size was determined, empirically, best of size 5.
 	\label{fig:kernelDetermining}
 \end{figure}
 
-
-Figure \ref{fig:hysteresisDetermining} shows a
-small selection of results I obtained through this kind of testing. After
-seeing that performance was best between an upper threshold of 1700 and 2200,
-along with a lower threshold of 800, I did a smaller scale, binary search
-approach to reach the upper and lower thresholds the program currently uses
-of 2000 and 900 respectively
-
-\begin{figure}[!h]
+\begin{figure}[H]
 \centering
 	\begin{subfigure}[t]{.25\textwidth}
 		\centering
@@ -302,7 +301,9 @@ where the contour will "end" as determined by OpenCV rather than at the
 original start point. This causes a massive problem later on where we
 will be unable to tell if contours are actually closed or not and connecting
 nearby contours becomes a problem since they no longer have their
-start and end points nearby each other. After assessing the behaviour of 
+start and end points nearby each other. \\
+\\
+After assessing the behaviour of 
 the program after trying to eliminate duplicate points in conjunction 
 with my \texttt{naivecontourjoin()} algorithm, I found these exact
 problems to occur, making joining contours almost impossible. As it
@@ -312,14 +313,14 @@ at least preserve the original contour end and begin properties. This is
 something that should be considered by others thinking of working with
 OpenCV for contour detection.
 
-\begin{figure}[!h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.8]{pics/backtrack.png}
 	\caption{Contour Backtracking problem}
 	\label{backtrack}
 \end{figure}
 
-\subsubsection{TODO ~ Contour Elimination}
+\subsubsection{Contour Elimination}
 For the landscape seen in Figure \ref{eliminationInput}, the results of
 runnig \texttt{findContours()} can be seen in 
 Figure \ref{fig:contourElimination}. In Figure \ref{eliminationInput}, we
@@ -333,7 +334,7 @@ reduces the total count to 13 so my approach above does work quite well, but
 there are still anomalies that will take more than just proximity checking
 to join together. 
 
-\begin{figure}[!h]
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{0.45\textwidth}
 		\centering
@@ -368,7 +369,7 @@ Figure \ref{construction11}. There is not much gained from keeping the smaller
 contours. In addition, Figure \ref{construction12} also seems negligible, with
 the final construction seemingly done by Figure \ref{construction8}. 
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{0.32\textwidth}
 	\centering
@@ -452,10 +453,11 @@ the final construction seemingly done by Figure \ref{construction8}.
 	\label{construction}
 \end{figure}
 
-............FINISH, SAY WHAT HAPPENS ON REMOVAL.
-However, when by running several tests, on the sizes of contours discovered 
-along with their sizes, it became apparent that all of the contours should be
-kept. It was very possible that some of the smaller contours drawn by users 
+However, after removing the smaller contours, the generated areas experienced
+noise, where some would not even close properly any more as the small
+contours which were removed happened to cover the gap in another nearby 
+contour. This makes the hierarchy and height assignment go completely
+wrong. It was also very possible that some of the smaller contours drawn by users 
 would be even smaller than some of the contours detected by the algorithm. 
 In this case setting a constant threshold for contour removal would not work
 in the general case. By deciding to keep these contours, it also presented
@@ -466,14 +468,52 @@ intentionally draws one massive contour and several considerably smaller
 contours. The other option is to sort contour sizes and consider contours,
 for example, were not needed if the sum of a subset of these contours, starting
 from the largest, made up 90\% of the total contour size sum. This neglects 
-contour hierarchy information, however, which is important to preserve, so
-making a good algorithm for contour removal would require a lot more time
+contour hierarchy information, however, which is important to preserve.
+Making a good algorithm for contour removal would require a lot more time
 and investigation.\\
 \\
-
-
-
-...............FINISH, DO DOUBLE CONTOUR REMOVAL
+In addition to removing smaller and useless contours, there is also need
+to remove larger ones too. Due to the way in which edge detectors work,
+the majority of drawn contours will produce 2 contours to be found by
+OpenCV. The thickness of the contour has a large impact on this effect,
+however, a thin pen may only generate 1 contour when the Sobel detector 
+kernel size is larger than the width of the contour.\\
+\\
+The problem caused by the double detection of contours affects height
+assignment. When contours are double detected, the inner edge will always be
+a child of the outer edge. This means the program will assign it
+a height above its outer edge when in reality, they should be the same height.
+Since the distance between them is relatively small than from one contour
+to another separate contour, the gradient change of pixels in between 
+the outer and inner edge is very steep. This becomes obvious in the output
+where landscapes seem very blocky at points on a contour.\\
+\\
+I tried two different approaches to remove an edge of these doubly 
+detected contours. One approach involved looking at the hierarchy 
+of the scene, looking for contours with just one child and deciding to
+merge remove that contour and rearrange it's children. The idea
+behind this was to keep the outer contour and remove the inner one. 
+The second approach involved looking at proximity of contour start points
+and if they are within a certain pixel neighbourhood, to compare their areas.
+The logic behiind this being that the in a doubly detected contour, they
+will have the same shape and an area that is quite close to one another. \\
+\\
+However, both solutions were affected by the fact that this double detection
+is not a definite property of the Canny Edge detector in OpenCV. Especially
+with thinner contours, if one edge is detected, then the first solution
+ended up removing some edges completely. In the second case, if the 
+contours were thin but detected, and the user draws a similar child contour,
+the child contour would be removed when it shouldn't have been.\\
+\\
+Weighing up the pros and cons of the effects of these solutions, I 
+decided that it was not in our best interest to remove these doubly 
+detected contours with these algorithms. When a user creates something,
+it is much better to add extra things into their creation, rather than
+take away from it. In this case, the addition is not much of a problem,
+just the final render looks a bit less visually appealing. As for when 
+using the algorithms, the final render has the possibility of being
+wrong by removing contours that shouldn't be. In the end, preserving
+information worked out better for the overall performance of the application.
 
 \subsubsection{Determining Thresholds}
 Throughout this project, there were numerous thresholds that I had to 
@@ -603,7 +643,7 @@ could have been improved, the main areas I used thresholding are listed below.\\
 				conclusions could be drawn.
 				
 				
-\subsubsection{~TODO~ Height Map Creation}
+\subsubsection{Height Map Creation}
 Where most of the problems came up were upon height map creation. 
 Creating the height map was the simplest way to 
 describe the vertex heights when creating the 3D scene. The algorithm to
@@ -660,19 +700,19 @@ than satisfactory and sometimes very large ellipses were fitted. In this case,
 the corresponding bounding rectangles overlapped a lot in terms of area, making
 containing contour assignment even more difficult. This approach was scrapped.\\
 \\
-The second approach was yo use the function \texttt{approxPolyDP()} which 
+The second approach was to use the function \texttt{approxPolyDP()} which 
 would fit a curve to a set of points and specify whether the area should be
 closed. Fitting contours to found contour points seems very redundant but if
 it would close the contours, it would be a satisfactory method. Implementing
 this solution did close the contours but in a way that was incorrect. 
 Due to the fact that I joined contours together without any restructure
 of internal points, the order of points was preserved. Since it is the case
-that \texttt{approcPolyDP()} takes into account the order of points passed
-to it, the following result was obtained ...
-
-..........APPrOXIMATE CONTOURS FROM POINTs
-
-
+that \texttt{approxPolyDP()} takes into account the order of points passed
+to it, the resulting contours had various artifacts in the form of straight
+lines being added to the contour. This misrepresented the scene and was not
+worth the effort of correcting to try utilised this method and was
+quickly abandoned.\\
+\\
 Due to the time constraints on the project, I had decided to leave this issue
 behind me and approach it in my own way. At the time I evaluated that spending
 more time to investigate the problem and maybe or maybe not find a solution
@@ -720,11 +760,11 @@ are more discretised as "distance in pixels" is a whole number. However,
 I was very skeptical of its accuracy after the original issues with
 \texttt{pointPolygonTest()} so went onto implement my solution which does produce
 the correct answer. In addition, there were various issues with the function
-that I have highlighted in \ref{chapter:implementation}. 
-However, after implenting my algorithm and testing its run time,
+that I have highlighted in \ref{chapter:implementation}. \\
+\\
+After implenting my algorithm and testing its run time,
 the computation does take a while and it is
 to my regret I did not have the time to go back and try this method and
 compare run times between the two algorithms.
-
 
 \end{document}

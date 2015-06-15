@@ -10,6 +10,7 @@
 #include <aruco/cameraparameters.h>
 #include <aruco/cvdrawingutils.h>
 #include <stack>
+#include <omp.h>
 
 #include <fstream>
 #include <sstream>
@@ -19,6 +20,7 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #endif
+
 
 
 #define MAX_COLOUR_VAL 255
@@ -34,6 +36,7 @@ using namespace aruco;
 
 Size TheGlWindowSize;
 
+bool MULTITHREAD = true;
 int upperthresh = 2000;
 int lowerthresh = 900;
 int NEIGHBOURHOOD = 5;
@@ -410,90 +413,124 @@ void setFoundNeighbours(int i, int j, int height, int width, int level){
 }
 
 
-void explode(vector<int>* array){
+void explode(vector<int>* array, bool multithread){
   array->at(0) = 0;
 
-  int currLevel = 1;
+  int currLevel = 0;
   int startSize = bitMap->size();
   int lastSize = bitMap->size();
-  int noChange = 0;
-  //Mat hmapRep = Mat(WIN_SIZE,WIN_SIZE,CV_8U);
+  
   int iteration = 1;
+  int noChange = 0;
 
-  while(!allFound()){
-
-    //Copies foundMap to tempFound
-    for(int i = 0; i<WIN_HEIGHT; i++){
-      for(int j = 0; j<WIN_WIDTH; j++){
-	tempFoundMap[i][j] = foundMap[i][j] & true;
-      }
-    }
-
-    for(int i = 0; i < WIN_HEIGHT; i++){
-      for(int j = 0; j < WIN_WIDTH; j++){
-	if((hmap[i][j] == currLevel) && foundMap[i][j]){
-	  setFoundNeighbours(i,j, WIN_HEIGHT, WIN_WIDTH,currLevel);
-	  explosionMap[i][j] += 1;
+  if (!multithread){
+    while(!allFound()){
+      //Copies foundMap to tempFound
+      for(int i = 0; i<WIN_HEIGHT; i++){
+	for(int j = 0; j<WIN_WIDTH; j++){
+	  tempFoundMap[i][j] = foundMap[i][j] & true;
 	}
       }
-    }
 
-    //copies tempFoundMap to foundMap
-    for(int i = 0; i<WIN_HEIGHT; i++){
-      for(int j = 0; j<WIN_WIDTH; j++){
-	foundMap[i][j] = tempFoundMap[i][j];
+      for(int i = 0; i < WIN_HEIGHT; i++){
+	for(int j = 0; j < WIN_WIDTH; j++){
+	  if((hmap[i][j] == currLevel) && foundMap[i][j]){
+	    setFoundNeighbours(i,j, WIN_HEIGHT, WIN_WIDTH,currLevel);
+	    explosionMap[i][j] += 1;
+	  }
+	}
       }
-    }
 
-    //Visual debugging tool
-    // for(int i = 0; i< WIN_SIZE; i++){
-    //   for(int j = 0; j< WIN_SIZE; j++){
-    // 	if(tempFoundMap[i][j])
-    // 	  hmapRep.at<uchar>(Point(i,j)) = 255;
-    //   }
-    // }
-    //cout << "size: "<< bitMap->size()<<endl;
-    //imwrite("tempMap/tempMapL"+to_string(currLevel)+"I"+to_string(iteration)+".png", hmapRep);
-    
-    if(bitMap->size() == lastSize)
-      noChange++;
-    else{
-      lastSize = bitMap->size();
-      noChange = 0;
-    }
-        
-    iteration++;
-    if(foundLevel(currLevel) && currLevel < array->size()){
-      array->at(currLevel) = iteration;
-      currLevel++;
-      iteration = 1;
-    }
-    
+      //copies tempFoundMap to foundMap
+      for(int i = 0; i<WIN_HEIGHT; i++){
+	for(int j = 0; j<WIN_WIDTH; j++){
+	  foundMap[i][j] = tempFoundMap[i][j];
+	}
+      }
 
-    //Tries to stop the program halting by returning message
-    cout << "noChange: " << noChange <<", threshold: " << STOP_THRESHOLD<< endl;
-    if(noChange > STOP_THRESHOLD){
-      if(currLevel > array->size()-1){
- 	// If we reached the end and we identified more than H_T of pixel heights
-	cout << "could not fully render heights, some inconsistencies" << endl;
-	rerender = true;
-	break;
-      } else if((float(startSize) - bitMap->size() / float(startSize)) > HALT_THRESHOLD){
-	// If not the end, move on to next level 
-	currLevel++;
+      if(bitMap->size() == lastSize)
+	noChange++;
+      else{
+	lastSize = bitMap->size();
 	noChange = 0;
-	iteration = 1;
-      } else {
-	//Could not calculate enough of the pixel heights to render
-	cout << "Could not accurately detect contours, please draw more clearly" << endl;
       }
-    }
+        
+      iteration++;
+      if(foundLevel(currLevel) && currLevel < array->size()){
+	array->at(currLevel) = iteration;
+	currLevel++;
+	iteration = 1;
+      }
+    
 
-    cout << "<Exploding> size: " << bitMap->size() << endl;
+      //Tries to stop the program halting by returning message
+      //cout << "noChange: " << noChange <<", threshold: " << STOP_THRESHOLD<< endl;
+      if(noChange > STOP_THRESHOLD){
+	if(currLevel > array->size()-1){
+	  // If we reached the end and we identified more than H_T of pixel heights
+	  cout << "could not fully render heights, some inconsistencies" << endl;
+	  rerender = true;
+	  break;
+	} else if((float(startSize) - bitMap->size() / float(startSize)) > HALT_THRESHOLD){
+	  // If not the end, move on to next level 
+	  currLevel++;
+	  noChange = 0;
+	  iteration = 1;
+	} else {
+	  //Could not calculate enough of the pixel heights to render
+	  cout << "Could not accurately detect contours, please draw more clearly" << endl;
+	}
+      }
+    
+      //cout << "<Exploding> size: " << bitMap->size() << endl; 
+    } 
+  } else {
+    bool tempFoundMapMulti[WIN_HEIGHT][WIN_WIDTH] = { {false} };
+    //#pragma omp parallel private(iteration, tempFoundMapMulti, noChange, lastSize) num_threads(8)
+    {
+#pragma omp parallel for private (iteration,tempFoundMapMulti,noChange,lastSize) num_threads(8)
+      for (int level = 0; level < array->size(); level++){
+	while(!foundLevel(level) && noChange > STOP_THRESHOLD){
+	  //Copies foundMap to tempFound
+	  for(int i = 0; i<WIN_HEIGHT; i++){
+	    for(int j = 0; j<WIN_WIDTH; j++){
+	      tempFoundMapMulti[i][j] = foundMap[i][j] & true;
+	    }
+	  }
+    
+	  for(int i = 0; i < WIN_HEIGHT; i++){
+	    for(int j = 0; j < WIN_WIDTH; j++){
+	      if((hmap[i][j] == level) && foundMap[i][j]){
+		setFoundNeighbours(i,j, WIN_HEIGHT, WIN_WIDTH,level);
+		explosionMap[i][j] += 1;
+	      }
+	    }
+	  }
+
+	  //copies tempFoundMap to foundMap
+	  for(int i = 0; i<WIN_HEIGHT; i++){
+	    for(int j = 0; j<WIN_WIDTH; j++){
+	      foundMap[i][j] = tempFoundMapMulti[i][j];
+	    }
+	  }
+      
+	  if(bitMap->size() == lastSize)
+	    noChange++;
+	  else{
+	    lastSize = bitMap->size();
+	    noChange = 0;
+	  }
+
+	}
+	array->at(level) = iteration;
+	iteration = 1;
+      }
+    }  
   }
 }
 
 void calculateFinalMap(vector<int>* array){
+#pragma omp parallel for num_threads(8)
   for(int i = WIN_HEIGHT-1; i >= 0; i--){
     for(int j = 0; j < WIN_WIDTH; j++){
       int base = hmap[i][j];
@@ -503,7 +540,7 @@ void calculateFinalMap(vector<int>* array){
 	  height = (float)base;
 	} else {
 	  float extra = (array->at(base) != 0) ? ((float)explosionMap[i][j] / (array->at(base))) : 0.0f;
-	  height = (float)base + extra;
+	  height = (float)base + pow(extra,2);
 	}
 	finalHeightMap[i][j] = height;
 	transparencyMap[i][j] = 1;
@@ -642,7 +679,7 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy) {
   rerender = false;
   
   explosion_map_start = clock();
-  explode(&distances);
+  explode(&distances,MULTITHREAD);
   explosion_map_end = clock();
   cout << "explosion done" << endl;
 

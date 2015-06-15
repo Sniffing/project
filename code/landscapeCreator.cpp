@@ -43,7 +43,7 @@ int main(int argc,char **argv)
         if (readArguments (argc,argv)==false) return 0;
         //read from camera
 	//CAMERA INDEX
-        if (TheInputVideo=="live") TheVideoCapturer.open(1);
+        if (TheInputVideo=="live") TheVideoCapturer.open(0);
         else TheVideoCapturer.open(TheInputVideo);
         if (!TheVideoCapturer.isOpened())
         {

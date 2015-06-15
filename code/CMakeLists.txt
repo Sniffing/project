@@ -9,7 +9,7 @@ find_package(aruco REQUIRED )
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
 
-add_definitions("-std=c++11 -ggdb")
+add_definitions("-std=c++11 -ggdb -fopenmp")
 include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
 target_link_libraries(landscapeCreator  ${aruco_LIBS})
 target_link_libraries(landscapeCreator ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})

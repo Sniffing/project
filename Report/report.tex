@@ -1024,7 +1024,32 @@ steep. If you compare this to somewhere such as near Ballinvally, the contours
 are much further apart, indicating a flatter, less steeply increasing/decreasing 
 slope. 
 
-\subsection{~DO~ Computer Graphics and Rendering Scenes}
+\subsection{~DO~ Computer Graphics and Rendering AR Scenes}
+Computer Graphics is also a very large field in Computer Science. It is
+concerned with producing pictures or video with which objects in the
+medium have been created by the computer. With relation to Augmented
+Reality scenes, graphics is concerned with generating the frame of
+a 3D model. Onto this, there may or may not be textures, colours and
+illumination applied. The main problem comes with aligning the object
+with the scene in real life. This is because each of the components
+of Augmented Reality is rendered in its own coordinate space.\\
+\\
+When working with an Augmented Reality application, the following
+coordinate spaces have to be aligned:
+\begin{itemize}
+	\item Real World coordinates
+	\item Camera Coordinates
+	\item Model Coordinates
+\end{itemize}
+
+In addition, there also has to be a specification of what the 
+user should be able to see, which is described through a 
+\textit{Projection Matrix}.
+
+\subsubsection{Real World Coordinates}
+Real world coordinates are where objects are situated in the real world.
+There is some defined origin and objects have
+
 
 \subsection{FINAL CHECK - Existing Augmented Reality Projects}
 Within this section, I outline a couple of existing Augmented Reality 
@@ -2992,8 +3017,29 @@ User Landscape 		& Landscape Map 			& Generated 	& Run time(s) & Contours found 
 5. Student (Other)
 	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/5.png}\end{center} 
 							& \begin{center}\end{center} & \\
+\hline
 6. Student (Computing)
 	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/6.png}\end{center} 
+							& \begin{center}\end{center} & \\
+\hline
+7. Student (Computing)
+	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/7.png}\end{center} 
+							& \begin{center}\end{center} & \\
+\hline
+8. Student (Computing)
+	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/8.png}\end{center} 
+							& \begin{center}\end{center} & \\
+\hline
+9. Student (Computing)
+	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/9.png}\end{center} 
+							& \begin{center}\end{center} & \\
+\hline
+10. Student (Computing)
+	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/10.png}\end{center} 
+							& \begin{center}\end{center} & \\
+\hline
+11. Student (Computing)
+	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/11.png}\end{center} 
 							& \begin{center}\end{center} & \\
 \hline
 \caption{A table arranging  images}
@@ -3043,33 +3089,798 @@ less variables, I will test the following:
 	\item Time to respond to an entirely new landscape map
 \end{itemize}
 
-\subsubsection{~DO~ Aesthetics}
+\subsubsection{Aesthetics}
 \begin{center}
 	Aesthetics: A set of principles associated with the appreciation of beauty
 	of an object, particularly in art. 
 \end{center}
 
-Talking about aesthetics, I am looking at the solution to the problem and
-the final outcome, judging them purely on how it looks. Since beauty is 
+As this is a project which has a visual output, it is worthwhile to
+judge the solution on how it looks/performs. Since beauty is 
 sometimes said to be in the eye of the beholder, I have also accumulated
-responses from other people (those who have no prior judgement or association
-with myself, the project or the field in particular).\\
+responses from other people (those who have no prior bias or association
+to myself, the project or the Computer Science in particular).\\
 \\
 In this section, I will assess the following: How the generated landscape
 looks, how did the result stack up against how the user envisioned their
 landscape map and how nice the idea and set up of the project was.\\
 \\
 \underline{The Generated Landscape Aesthetics}\\
-\underline{Comparing aesthetics of vision to reality}\\
-\underline{Aesthetics of the environment to use the program}\\
-
-\subsection{~DO~ Results}
-
-\subsection{~DO~ Overall Program Evaluation}
+The generated landscapes seen from the user testing section above show
+the extent of the aesthetics achieved in this project. Quite simply,
+the generated graphics are not particularly pleasing. They describe the
+scene and generally take the shape of what the user has drawn. The
+colours of the contour areas accurately describe the height difference
+in the image. However, the actual landscapes are still rather blocky. This is
+a result of not being able to succesfully solve the double contour problem
+of OpenCV detecting 2 contours for every 1 contour drawn. It is 
+also partly attributed to the fact my solution to the problem uses
+a discrete method to interpolate heights. Though I tried to correct this by
+reducing the effect of discrete steps, it still is not enough to consider
+the landscapes to be aesthetically pleasing. \\
+\\
+The landscapes could have been made a lot more appealing had I the time
+to implement texture mapping or devised another way to assign heights.
+Adding local illumination and surface normal points to the OpenGL Quads
+I produced would also have given a better effect visually. These will
+be outlined in the Extensions of this report in Section \ref{chapter:extensions}.\\
+\\
+\underline{Comparing Aesthetics of Idea to Reality}\\
+The successful part of the aesthetics of this project is thaton successful
+render, the created scene reflects the landscape map well, in terms of 
+height, it matches up to what the user was thinking. However, the quality 
+of the landscapes created compared to the vision each user had ended
+up being lackluster as a general point of feedback. The reason for this
+is that nowadays, with the amount of realism in Computer Graphics,
+particularly games and entertainment, people have a base level of
+realism they feel should be a given. As a result, the expectations
+of the landscapes the users had in their mind whilst drawing the 
+landscape map are expected to be of much higher quality. Given more time
+with this project, such expectations may be able to be met. \\
+\\
+Although the quality of the landscapes wasn't the main
+aim of this project, it is a worthwhile point to make about Augmented
+Reality applications as a whole and definitely a point worth
+evaluating and looking into for the future. If Augmented
+Reality applications are to be used commercially, be
+interesting and captivate users, they have to meet certain realism 
+benchmarks that people implicitly create from exposure to 
+Computer Graphics in their everyday life.
 
 \subsection{Process Evaluation}
+In this section I take time to evaluate my implementation process, aside
+from the results gathered from the final product.
+
+\subsubsection{OpenCV}
+Using third party libraries is always a gamble, their performance is not
+always guaranteed. Even for a library so well supported as OpenCV, there 
+were times where the library did not behave as expected. This can be 
+attributed to some of the algorithms used in the functions provided. 
+Whether there exists a more suitable and better performing algorithm is
+unlikely and hard to determine.\\
+\\
+Having justified my use of the OpenCV library, playing around with a 
+few functions and digging through the documentation to see what was
+on offer for me, I think it was the best option to use. 
+However, I did not conduct a thorough enough investigation into specific
+functions and their behaviour. This would have merited a lot more time in 
+the beginning of the project, it would not have changed my mind to  use
+the library but would have prepared me against some of the problems that 
+arose throughout the project. The Computer Vision aspect is the most
+important part in my project, it is the first step and an inaccurate
+representation of the drawn scene will cause the rest of the 
+implementation and the result to be inaccurate and essentially useless. As
+a result, OpenCV played a huge part in this project. 
+In this section, I outline some of the
+problems that came with using OpenCV, a brief explanation of my solution
+(of which more can be read about in Section \ref{lol}), and evaluation of
+the solution. 
+
+\subsubsection{Contour Detection}
+The first major step in this project is contour detection. This was achieved
+using the Canny Detector from OpenCV, thresholding empirically. Having
+researched edge detectors avaiilable to me before hand, I was aware of those
+available and I could manipulate the output in various ways by
+changing the paramters passedto the function. I did experiment with different
+sizes of Sobel kernel, which were 3x3, 5x5 and 7x7. In addition, I also
+tested various upper and lower thresholds which are used for hysteresis. The
+results were accumulated as pictures and I stored the output for visual
+comparison. After this process was done I made my choice of threshold values
+and kernel size based on which pictures seemed to capture the contours
+in each contour the best. \\
+\\
+Figure \ref{fig:kernelDetermining} shows the way I determined the best kernel
+size. I simultaneously raised the Upper and lower thresholds alongside the 
+kernel size so that I could visually compare them later on. I did this
+across different pictures as well, with different styles of contours drawn,
+thick, thin, open etc. The Sobel operator has a smoothing effect when
+used and so its size will affect contour detection quality.
+From this I found that the best kernel size to use was
+a 5x5 kernel. The best picture to illustrate this is \ref{kernelExample1} 
+and \ref{kernelExample2}, Looking at the smaller, circular contour in
+\ref{kernelExample1}, it is coloured red, with its inner contour
+blue and then the inner contour's inner area coloured red. This highlights
+3 distinct contours identified. In \ref{kernelExample2} the same contour
+now only has two colours, the outer most being blue with the inner, inner
+area being red. This is because the inner contour has been joined with the
+outer contour as the kernel size was too large and determined the two
+contours to be connected! In the other case, in \ref{kernelExample3}, the
+same contour did not have its inner, inner area coloured, this  because the
+kernel size was too small and did not join the contour completely. In 
+addition, the simple square in \ref{kernelExample3}, just to the top right of
+the large, curved contour, has its edges coloured green
+and red, whilst both \ref{kernelExample2} and \ref{kernelExample3} correctly
+detect the square to be one contour, coloured in a single colour. Since
+the program should be able to tolerate some small amount of openness of
+contours, the kernel size was determined, empirically, best of size 5.\\
+\\
+Figure \ref{fig:hysteresisDetermining} shows a
+small selection of results I obtained through this kind of testing. After
+seeing that performance was best between an upper threshold of 1700 and 2200,
+along with a lower threshold of 800, I did a smaller scale, binary search
+approach to reach the upper and lower thresholds the program currently uses
+of 2000 and 900 respectively.
+
+\begin{figure}[H]
+\centering
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]
+		{pics/shitlinesThreshTest/Upper1700lower1000kernel3.png}
+		\caption{U:1700, L:1000, K:3x3}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]
+		{pics/shitlinesThreshTest/Upper1700lower1000kernel5.png}
+		\caption{U:1700, L:1000, K:5x5}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]
+		{pics/shitlinesThreshTest/Upper1700lower1000kernel7.png}
+		\caption{U:1700, L:1000, K:7x7}	
+	\end{subfigure}
 
 
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]
+		{pics/shitlinesThreshTest/Upper2200lower800kernel3.png}
+		\caption{U:2200, L:800, K:3x3}
+		\label{kernelExample3}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]
+		{pics/shitlinesThreshTest/Upper2200lower800kernel5.png}
+		\caption{U:2200, L:800, K:5x5}
+		\label{kernelExample1}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]
+		{pics/shitlinesThreshTest/Upper2200lower800kernel7.png}
+		\caption{U:2200, L:800, K:7x7}
+		\label{kernelExample2}
+	\end{subfigure}
+
+
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]
+		{pics/shitlinesThreshTest/Upper2200lower1200kernel3.png}
+		\caption{U:2200, L:1200, K:3x3}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]
+		{pics/shitlinesThreshTest/Upper2200lower1200kernel5.png}
+		\caption{U:2200, L:1200, K:5x5}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]
+		{pics/shitlinesThreshTest/Upper2200lower1200kernel7.png}
+		\caption{U:2200, L:1200, K:7x7}
+	\end{subfigure}
+	
+	\caption{Example of determining Kernel size \\
+		(U = UpperThreshold, L = LowerThreshold, K = KernelSize)}
+	\label{fig:kernelDetermining}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/normalThreshTest/Upper1700lower800kernel5.png}
+		\caption{U:1700, L:800}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/normalThreshTest/Upper1700lower1200kernel5.png}
+		\caption{U:1700, L:1200}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/normalThreshTest/Upper1700lower1400kernel5.png}
+		\caption{U:1700, L:1400}	
+	\end{subfigure}
+
+
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/normalThreshTest/Upper2200lower800kernel5.png}
+		\caption{U:2200, L:800}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/normalThreshTest/Upper2200lower1400kernel5.png}
+		\caption{U:2200, L:1400}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/normalThreshTest/Upper2200lower2000kernel5.png}
+		\caption{U:2200, L:2000}
+	\end{subfigure}
+
+	
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/normalThreshTest/Upper2700lower800kernel5.png}
+		\caption{U:2700, L:800}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/normalThreshTest/Upper2700lower1400kernel5.png}
+		\caption{U:2700, L:1400}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}[t]{.25\textwidth}
+		\centering
+		\includegraphics[scale=0.3]{pics/normalThreshTest/Upper2700lower2000kernel5.png}
+		\caption{U:2700, L:2000}
+	\end{subfigure}
+	
+	\caption{Example of determining hysteresis thresholds with kernel size = 5. \\(U = UpperThreshold, L = LowerThreshold}
+	\label{fig:hysteresisDetermining}
+\end{figure}
+
+A regret I have with the way I tackled detecting contours is not fully 
+investigating using pure thresholding to identify contours. Quite naively, 
+after reading
+up the Canny edge detector versus other edge detection algorithms, I tunnel
+visioned on that solution because I thought it was the best of the edge 
+detectors. However, I did not consider the thought of not using
+a edge detecor, just simply using a thresholding algorithm that if pixels 
+vary in intensity from those nearby, mark it as a possible contour. I
+missed the fact that I could purely use thresholding to identify possible
+contours and use the result to form a hierarchy. However, in retrospect,
+whether this approach would have worked better than using the Canny 
+remains to be determined. It may
+have behaved a lot worse, I would also have to spend a lot of time 
+empirically determining the threshold values, especially without the 
+use of hysteresis which is so useful in the Canny Edge Detector. However, if
+the user was limited to using just black pen on a white paper surface,
+detection of contours may have done well in the thresholding case. However,
+with these points in mind, I think it was sufficient to try out the 
+Canny detection method, due to its proven good performance by using
+the double thresholding method with hysteresis. Detecting contours
+without an edge detector could be a worthwhile extension or something that
+future projects should consider in their approaches.
+
+\subsubsection{Contour Joining}
+OpenCV offers a method, \texttt{findContours()} which will return a
+vector of contours (expressed as a vector of constituent points) along with
+a hierarchy describing the relation of these contours. However, detection
+isn't always perfect sometimes a contour, though continuous on paper
+will be identified as several contours. In an attempt to reduce this, I 
+use morphological closing to try connect contours as much as possible.
+This worked to some extent but had to be amplified with another join
+algorithm. The algorithm I implemented was to analyse the beginning and end points
+of each contour, due to the order in which OpenCV discovers, it is sufficient 
+enough to join contours that are subsequent to others in the returned
+vector. If two adjacent contours are within an empirically set pixel
+neighbourhood they will be joined together. \\
+\\
+When using the \texttt{findContours()} if a contour is not closed,
+points, in an effort to close the contour, the library will duplicate 
+points as a way to get from the end of the contour back to the beginning
+point without loss of information. However, sometimes the backtrack does
+deviate from the original beginning-to-end point path and choose a very
+slightly different path on the way back to the beginning point. This causes 
+a variety of complications, if we were to naively remove duplicate points
+within each contour, there may be stray points on the contour that do not
+belong. This is best explained in the example below in Figure \ref{backtrack}.
+The coloured pixels indicate a possible contour. Consider this contour
+starting left and ending right, this is not a closed contour and
+so OpenCV tries to close it. The mauve pixels are pixels that are part
+of the front and back traversal. On the way back the constituent pixels
+deviate slightly due to detection in OpenCV. The black pixels are
+on the path left to right, the pink pixels are those on the path right to left.
+By eliminating duplicates, we will keep the pink pixels. If these are on the
+way back and pixel discovery order is preserved, then the pink pixels are
+where the contour will "end" as determined by OpenCV rather than at the 
+original start point. This causes a massive problem later on where we
+will be unable to tell if contours are actually closed or not and connecting
+nearby contours becomes a problem since they no longer have their
+start and end points nearby each other. \\
+\\
+After assessing the behaviour of 
+the program after trying to eliminate duplicate points in conjunction 
+with my \texttt{naivecontourjoin()} algorithm, I found these exact
+problems to occur, making joining contours almost impossible. As it
+would be better to reduce the amount of contours by joining them, my approach
+to this problem was to simply leave the duplicated points as they would 
+at least preserve the original contour end and begin properties. This is
+something that should be considered by others thinking of working with
+OpenCV for contour detection.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.8]{pics/backtrack.png}
+	\caption{Contour Backtracking problem}
+	\label{backtrack}
+\end{figure}
+
+\subsubsection{Contour Elimination}
+For the landscape seen in Figure \ref{eliminationInput}, the results of
+runnig \texttt{findContours()} can be seen in 
+Figure \ref{fig:contourElimination}. In Figure \ref{eliminationInput}, we
+clearly see that there are only 3 contours, OpenCV finds 21 contours. These
+can be attributed to the fact that contours are counted twice (once entering
+the contour, once leaving the contour) in addition to the ArUco marker being
+treated as a contour. In addition, there are other contours found that are
+a lot more subtle, some of these are joined with the \texttt{naivecontourjoin()}
+algorithm as explained in the last section. Joining the contours
+reduces the total count to 13 so my approach above does work quite well, but
+there are still anomalies that will take more than just proximity checking
+to join together. 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.45\textwidth}
+		\centering
+		\includegraphics[scale=1.4]{pics/elimination.jpg}
+		\caption{Landscape Map}
+		\label{eliminationInput}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.45\textwidth}
+		\centering
+		\includegraphics[scale=0.8]{pics/eliminationResults.png}
+		\caption{Contours Found}
+		\label{eliminationResults}
+	\end{subfigure}
+	\caption{Results of \texttt{findContours()}}
+	\label{elimination}
+\end{figure}
+
+There were other algorithms implemented within this project to try to reduce the
+contour count. This is because having a smaller contour tree will speed
+up the overall computation in the program. The first of which was to try and
+eliminate contours of negligible size. Looking at Figure \ref{eliminationResults},
+we ca see cotour 9,10 and 11 have considerably less contours than the
+other ones found, having under 60 points each. The original intuition is that
+these can be thrown away with minimal impact on the understanding of the
+landscape map. This is further backed up by the fact that they add
+minimal extra value to the reconstruction of the landscape map in contour form,
+which is seen in Figure \ref{construction}.\\
+\\
+As can be seen from Figure\ref{construction9}, Figure \ref{construction10} and
+Figure \ref{construction11}. There is not much gained from keeping the smaller
+contours. In addition, Figure \ref{construction12} also seems negligible, with
+the final construction seemingly done by Figure \ref{construction8}. 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval1.png}
+		\caption{1}
+		\label{construction1}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval2.png}
+		\caption{1,2}
+		\label{construction2}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval3.png}
+		\caption{1,2,3}
+		\label{construction3}
+	\end{subfigure}
+	
+	
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval4.png}
+		\caption{1,2,3,4}
+		\label{construction4}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval5.png}
+		\caption{1 to 5}
+		\label{construction5}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval6.png}
+		\caption{1 to 6}
+		\label{construction6}
+	\end{subfigure}
+
+	
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval7.png}
+		\caption{1 to 7}
+		\label{construction7}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval8.png}
+		\caption{1 to 8}
+		\label{construction8}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval9.png}
+		\caption{1 to 9}
+		\label{construction9}
+	\end{subfigure}
+
+	
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval10.png}
+		\caption{1 to 10}
+		\label{construction10}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval11.png}
+		\caption{1 to 11}
+		\label{construction11}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\textwidth}
+	\centering
+		\includegraphics[scale=0.28]{pics/elimination/joinedAfterRemoval12.png}
+		\caption{1 to 12}
+		\label{construction12}
+	\end{subfigure}
+	\caption{Found Contours}
+	\label{construction}
+\end{figure}
+
+However, after removing the smaller contours, the generated areas experienced
+noise, where some would not even close properly any more as the small
+contours which were removed happened to cover the gap in another nearby 
+contour. This makes the hierarchy and height assignment go completely
+wrong. It was also very possible that some of the smaller contours drawn by users 
+would be even smaller than some of the contours detected by the algorithm. 
+In this case setting a constant threshold for contour removal would not work
+in the general case. By deciding to keep these contours, it also presented
+other problems later on in the project. It may have been a better idea
+delve down this path and have a dynamic assignment of a threshold based on
+the average or lowest contour sizes. Using an average may not work if the user
+intentionally draws one massive contour and several considerably smaller 
+contours. The other option is to sort contour sizes and consider contours,
+for example, were not needed if the sum of a subset of these contours, starting
+from the largest, made up 90\% of the total contour size sum. This neglects 
+contour hierarchy information, however, which is important to preserve.
+Making a good algorithm for contour removal would require a lot more time
+and investigation.\\
+\\
+In addition to removing smaller and useless contours, there is also need
+to remove larger ones too. Due to the way in which edge detectors work,
+the majority of drawn contours will produce 2 contours to be found by
+OpenCV. The thickness of the contour has a large impact on this effect,
+however, a thin pen may only generate 1 contour when the Sobel detector 
+kernel size is larger than the width of the contour.\\
+\\
+The problem caused by the double detection of contours affects height
+assignment. When contours are double detected, the inner edge will always be
+a child of the outer edge. This means the program will assign it
+a height above its outer edge when in reality, they should be the same height.
+Since the distance between them is relatively small than from one contour
+to another separate contour, the gradient change of pixels in between 
+the outer and inner edge is very steep. This becomes obvious in the output
+where landscapes seem very blocky at points on a contour.\\
+\\
+I tried two different approaches to remove an edge of these doubly 
+detected contours. One approach involved looking at the hierarchy 
+of the scene, looking for contours with just one child and deciding to
+merge remove that contour and rearrange it's children. The idea
+behind this was to keep the outer contour and remove the inner one. 
+The second approach involved looking at proximity of contour start points
+and if they are within a certain pixel neighbourhood, to compare their areas.
+The logic behiind this being that the in a doubly detected contour, they
+will have the same shape and an area that is quite close to one another. \\
+\\
+However, both solutions were affected by the fact that this double detection
+is not a definite property of the Canny Edge detector in OpenCV. Especially
+with thinner contours, if one edge is detected, then the first solution
+ended up removing some edges completely. In the second case, if the 
+contours were thin but detected, and the user draws a similar child contour,
+the child contour would be removed when it shouldn't have been.\\
+\\
+Weighing up the pros and cons of the effects of these solutions, I 
+decided that it was not in our best interest to remove these doubly 
+detected contours with these algorithms. When a user creates something,
+it is much better to add extra things into their creation, rather than
+take away from it. In this case, the addition is not much of a problem,
+just the final render looks a bit less visually appealing. As for when 
+using the algorithms, the final render has the possibility of being
+wrong by removing contours that shouldn't be. In the end, preserving
+information worked out better for the overall performance of the application.
+
+\subsubsection{Determining Thresholds}
+Throughout this project, there were numerous thresholds that I had to 
+determine and set due to the importance of them in Computer Vision. 
+As can be seen from the sections above, there was some degree of 
+threshold testing that went into the decisions with threshold numbers.
+The majority of the final constants were determined through observation
+of test outputs. However, there are some ways in which the thresholding
+could have been improved, the main areas I used thresholding are listed below.\\
+
+\underline{\textbf{Canny Hysteresis Thresholds}}\\
+\textbf{Test for determination:} Observation and binary search\\
+\textbf{Problems:}\\ Limited to the set of landscape maps
+				that the test was conducted on. In total
+				there were 5 different maps tested drawn by 3 
+				people, this was done without the ArUco marker
+				present.\\
+\textbf{Corrections/Alternatives:}\\
+		Although the method has some solidity in its
+		numbers, to make the thresholds even better, it
+		would've been better if more landscape maps could
+		have been tested, all including the ArUco marker. In
+		addition, acquiring landscape maps from other user
+		groups and having them drawn in different kinds of
+		pen, over different coloured surfaces. Having 
+		young children or industry specialists
+		would be better as a wider range of drawings can be 
+		analysed, possibly a better set of thresholds found. \\
+\\
+\underline{\textbf{Change detection Threshold}}\\
+\textbf{Test for determination:} Trial and inspection\\
+\textbf{Problems:}\\ I only went through this change detection with
+				a black biro pen. As a result, the threshold I obtained
+				from this was geared towards a thin pen. A 
+				simple line drawn in marker pen, which is considerably thicker
+				than biro, may cause enough change to prompt a rerender of
+				the scene. Fitting the threshold for a thin pen means that
+				to be counted as enough change, there has to be $X$ amount
+				of pixels that have changed. Even a contour with large
+				area will cause little change due to the amount of pixels
+				the width of the biro pen will produce. The same amount
+				can be attained by a smudge to a very thick marker pen which,
+				to a human, is not enough to say there is a change in the
+				scene.\\
+\textbf{Corrections/Alternatives:}\\ A much better approach to this method
+				would be to test for different utensils and attain a
+				threshold in between. The better thing to do would be
+				to have an adaptive thresholding depending on the environment,
+				such as lighting, or drawing utensil chosen by the user.
+				I go into more detail in the Section \ref{chapter:extensions}
+				because this is a very important threshold for the project,
+				especially if it a project of its kind is to be used 
+				commercially. However, in retrospect, due to the fact the
+				user will have to move their arm within the scene to draw
+				any change onto the paper, this method will always work
+				so long as the threshold is relatively low. Moving a whole
+				arm into the scene will cause a large change in the 
+				captured frames and so since this is a necessity (at the
+				moment!) for change in the landscape map to happen, the
+				level of precision for the change threshold, so long as
+				it is lower than the amount of change an arm introduces,
+				is sufficient. This may change in the future though, so
+				is a point I thought I should mention in this evaluation. \\
+\\
+\underline{\textbf{Stabilisation}}\\
+\textbf{Test for determination:} Counting Frames and in-situ observation\\
+\textbf{Problems:}\\ There are two problems here, 
+			one is that only a small set of people
+			were tested and these from a certain age group.
+			For example, a child might leave their arm in the picture a bit
+			longer than most adults. In this scenario, it may be sufficient
+			enough that the child is resting their arm in the scene for the
+			prgoram to identify it as a stabilisation. This will cause 
+			a rendering of something we do not want and is wasted computation.
+			However, as soon as the child removes their arm and stabilisation
+			met, there will be an accurate rendering. Thus, using this method
+			the algorithm will always \textit{eventually} work. However,
+			the amount of wasted computation may be an issue that can
+			be avoided. The second problem is that the algorithm goes off
+			a frame count basis. Since I only tested on two camera, it is
+			unclear whether a bad camera with a bad framerate will cause
+			a long wait between real world stabilisation and rerendering or
+			a good camera with a fast framerate will wait too little time 
+			after and consider a brief stall a stabilisationg due to the
+			amount of frames it manages to capture.\\
+\textbf{Corrections/Alternatives:}\\ The best way to solve these problems
+			is to firstly, gather data on more users to determine their
+			habits to set a time for stabilisation. To solve the second
+			problem, testing on a few different cameras of different
+			quality and adapting the algorithm to include
+			an FPS measure to then use to set an
+			adaptive threshold for stabilisation. This way, stabilisation
+			be can proven more reliable on any hardware used. However,
+			at this moment, since the algorithm eventually works and the
+			two cameras I tested with were a standard laptop webcam and a
+			mid/high end webcam, the frame count threshold shouldn't cause
+			much issue with other hardware. This remains to be tested, however.\\
+\\
+\underline{\textbf{Explosion halting}}\\
+\textbf{Test for determination:} Arbitrary assignment\\
+\textbf{Problems:}\\ Explosion halting plays the important role 
+				of describing when the program should render
+				the landscape and when it should abandon it. This
+				was arbitrarily set to 95\% of all points on the
+				landscape being able to be assigned a height. However,
+				whether this gives a good performance is completely
+				random. For example, it may even have
+				been sufficient to render with just 80\% of pixels
+				being officially assigned a height. This means that
+				a lot of the scenarios which the program currently 
+				throws away may actually \textit{look} visually ok.
+				This means, inherently, that the lower we can tolerate,
+				the more resistant the program is to oddly detected 
+				contour shapes. \\
+\textbf{Corrections/Alternatives:}\\ A more controlled way to go about 
+				setting this threshold should have been undergoing
+				a lot of user testing at various levels of height 
+				assignment success. My approach was simply to get a very
+				accurate representation of heights so I set the threshold
+				to a point of near perfect assignment. An alernative to
+				this method is to allow a lower assignment but then
+				convolve the result with some sort of neighbourhood 
+				donation function which would assign estimates of the correct
+				height to the pixels which weren't able to be reached
+				through explosion. However, the speed of these methods
+				would have to be measured against one another before any
+				conclusions could be drawn.
+				
+				
+\subsubsection{Height Map Creation}
+Where most of the problems came up were upon height map creation. 
+Creating the height map was the simplest way to 
+describe the vertex heights when creating the 3D scene. The algorithm to
+solve this problem involved being able to know where each pixel was in 
+relation to the contours drawn by the user. The easiest way to do this is
+find the contour that the pixel is within and assign the pixel a base
+height equal to the level that the contour it is contained in is within
+the hierarchy tree. Successfully able to create the tree and 
+associate heights with contours, the problem to be solved was
+identifying the contour any given pixel was within.\\
+\\
+After delving into the OpenCV documentation, I found a function
+\texttt{pointPolygonTest} which would allow me to determine if a given
+point was contained within a provided vector or points. 
+I spent a long time calling this function 
+but at a point realised that it does not working as expected.
+When contours are detected, by \texttt{findContours()}, a hierarchy
+is able to be returned, telling me how my contours were related in terms
+of parents and containment. However, when using \texttt{pointPolygonTest()},
+points that were obviously within a contour were not being identified
+as being so. \\
+\\
+Looking into the problem, it seems that the errors begin higher up in the 
+chain. OpenCV sometimes cannot tell whether a contour is closed, given a
+set of the contour points. However, quite strangely, it is able to provide
+a hierarchy of the points. Sometimes even when a contour is reported
+as having children within the hierarchy, when a point is selected from within
+that contour, calling \texttt{pointPolygonTest()} is not able to identify
+the parent contour. This could be due to the way that the contours are
+represented, as I stated before, they often backtrack and this backtracking
+might cause an internal area which effecively lies on the contour line. Thus,
+only points on the line will count as within a contour. The other theory
+I had was on the behaviour of \texttt{pointPolygonTest()} which I found
+online \footnote{http://code.opencv.org/issues/3648}, 
+the ordering of the points within the supplied contours matters. After joining
+contours together, this ordering is destroyed, not only that, but it also
+ties into the backtracking issue. That even if I supplied one contour, the
+fitted contour would be some sort of line, rather than a full ellipse
+shape if it was identified as one contour (and closed) by OpenCV. The result
+of this being that unless there is considerable manipulation of the contours
+detected by OpenCV such that point order is preserved upon joining contours,
+then supplying any contour that is not one originally found by OpenCV will
+cause undefined behaviour for the \texttt{pointPolygonTest()} function.\\
+\\
+I tried two different approaches to try and solve the point containment issue,
+these were both shape fitting algorithms offered by OpenCV. I first used
+\texttt{fitEllipse()} to try and fit the minimum area, rotated ellipse to
+the contours and would correct the errors post processing. However, after
+implementing this method, although it was possible to tell which points belong
+to which fitted rotated ellipse, the ellipse is stored as a minimum 
+\textit{rectangle}, causing points that were not within the fitted contours
+area to count as within that contour. In addition, ellipse fitting was less
+than satisfactory and sometimes very large ellipses were fitted. In this case,
+the corresponding bounding rectangles overlapped a lot in terms of area, making
+containing contour assignment even more difficult. This approach was scrapped.\\
+\\
+The second approach was to use the function \texttt{approxPolyDP()} which 
+would fit a curve to a set of points and specify whether the area should be
+closed. Fitting contours to found contour points seems very redundant but if
+it would close the contours, it would be a satisfactory method. Implementing
+this solution did close the contours but in a way that was incorrect. 
+Due to the fact that I joined contours together without any restructure
+of internal points, the order of points was preserved. Since it is the case
+that \texttt{approxPolyDP()} takes into account the order of points passed
+to it, the resulting contours had various artifacts in the form of straight
+lines being added to the contour. This misrepresented the scene and was not
+worth the effort of correcting to try utilised this method and was
+quickly abandoned.\\
+\\
+Due to the time constraints on the project, I had decided to leave this issue
+behind me and approach it in my own way. At the time I evaluated that spending
+more time to investigate the problem and maybe or maybe not find a solution
+that could even require changing more logic around my contour joining was
+not the best choice I could have made. I stand by the decision, though if
+I had more time, investigating down this route is definitely something I should
+have done. There were a number of different methods I tried before
+settling.\\
+\\
+The approach I took was to perform a linear traversal through
+the image with known contour pixels. Based on whether I encountered a 
+contour pixel on traversal, I could tell which contour I was in, very simply
+from the property that all contours should be closed. Take any strip 
+of pixels (as they are the smallest unit of display), I maintain a stack which
+tells me which contour I am currently within. I pop from the stack when I
+meet the contour once again. This accurately tells me the contour level I am
+within without needing $n^2$ calls to the \texttt{pointPolygonTest()} function
+which does not give me my required answer almost all the time.\\
+\\
+Further delving into this algorithm, another problem occurred where
+if our strip of pixels is on a tangent to the contour edge, the stack method
+does not work. This causes inconsistencies in the height assignment. Luckily,
+this happens only after we encounter the first tangent point. To correct this,
+the strip is noted down in a list, after traversal, a blurring kernel is
+convolved with these lists to correctly identify which contour each point
+in the image was situated within.\\
+\\
+The next problem in this string of issues was to interpolate the heights
+each pixel should have. The heights should get closer toward the next 
+contour level height as that contour is approached. Again, 
+\texttt{pointPolygonTest()} offers this functionality but it does not work
+accurately, nor does it always return correct answers due to its defined
+behaviour. To solve this I approached the problem with a breadth first 
+search algorithm called "explosion"
+that converges to the correct answer, however, the algorithm
+requires several passes over the entire image, especially if the 
+contours have a large area. The 
+current run time of the algorithm is heavily dependent on the area
+of the contours that the user draws. A larger area will incur a larger
+run time for this algorithm which is not ideal. 
+An alternative to this method was
+to use euclidean distance transforms, offered also by OpenCV. The breadth
+first search algorithm works on a very similar basis except distances
+are more discretised as "distance in pixels" is a whole number. However,
+I was very skeptical of its accuracy after the original issues with
+\texttt{pointPolygonTest()} so went onto implement my solution which does produce
+the correct answer. In addition, there were various issues with the function
+that I have highlighted in \ref{chapter:implementation}. \\
+\\
+After implenting my algorithm and testing its run time,
+the computation does take a while and it is
+to my regret I did not have the time to go back and try this method and
+compare run times between the two algorithms.
 
 \section{FINAL CHECK - Extensions}
 \label{chapter:extensions}
@@ -3560,7 +4371,7 @@ Figure \ref{guide:markergeneration}. The Marker ID must be an integer
 and can be any number you want it to be, the ID has no purpose in
 the current application but may be used in the future. 
 
-\begin{figure}[!h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.8]{userguide/markersite.png}
 	\caption{Generating the ArUco marker}
