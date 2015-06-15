@@ -5,12 +5,15 @@ using namespace cv;
 
 class Tree {
 public:
+  Tree();
   Tree(vector<Vec4i>*);
   TreeNode* getRoot();
+  void makeAndInsertNode(TreeNode*);
   void makeAndInsertNode(int,Vec4i*,unordered_map<int,TreeNode*>*,vector<Vec4i>*);
   void printTree();
   void joinNodes(int first, int second);
   void correctIndices(int);
+  void checkNexts();
   int getSize(); // Num of contours
   TreeNode* getNodeWithID(int id);
   void removeNode(int i);
@@ -21,6 +24,31 @@ private:
 
 void Tree::removeNode(int i){
   TreeNode* node = allNodes->at(i);
+  unordered_map<int,TreeNode*>::iterator it = allNodes->begin();
+
+  TreeNode* prev = node->getPrev();
+  TreeNode* next = node->getNext();
+  TreeNode* parent = node->getParent();
+  vector<TreeNode*>* children = node->getChildren();
+
+
+  if(prev)
+    prev->setNext(next);
+  if(next)
+    next->setPrev(prev);
+  
+  if(parent){
+    for(int i=0; i<parent->getNumChildren(); i++){
+      cout << "some logic shit" << endl;
+      if(node->getID() == parent->getChild(i)->getID()){
+	parent->removeChild(i);
+      }
+    }
+    parent->addChildren(children);
+  }
+  cout << "trying to advance" << endl;
+  advance(it,i);
+  allNodes->erase(it);
   int totalNodes = allNodes->size();
 }
 
@@ -64,14 +92,26 @@ void Tree::correctIndices(int originalSize){
 	if(allNodes->count(i)){
 	  TreeNode* item = allNodes->at(i);
 	  item->setID(currentIndex);
-	  item->setLevel(currentIndex);
-	  allNodes->emplace(currentIndex, item);
+	  int level = (item->getParent()) ? item->getParent()->getLevel() + 1 : 0;
+	  item->setLevel(level);
+ 	  allNodes->emplace(currentIndex, item);
 	  allNodes->erase(i);
 	  break;
 	}
       }
     }
     currentIndex++;
+  }
+}
+
+//There is an scenario where the last contour will have a next value
+//that is of a contour that no longer exists. This will hackily fix it
+void Tree::checkNexts(){
+  for(int i=0; i<allNodes->size(); i++){
+    TreeNode* curr = allNodes->at(i);
+    if(curr->getNext() && (curr->getNext()->getID() > allNodes->size()-1)){
+      curr->setNext(NULL);
+    }
   }
 }
 
@@ -101,13 +141,19 @@ void Tree::printTree(){
       vector<TreeNode*>* children = node->getChildren();
       printVector(children);
       cout << "]";
-      cout << " My level is: " << node->getLevel() << endl;
+      cout << " Level: " << node->getLevel();
+      int n = (node->getNext()) ? node->getNext()->getID() : -1;
+      cout << " Next is " << n << endl;
     }
   }
 }
 
 int Tree::getSize(){
   return allNodes->size();
+}
+
+Tree::Tree(){
+  allNodes = new unordered_map<int,TreeNode*>();
 }
 
 Tree::Tree(vector<Vec4i>* hierarchy){
@@ -155,6 +201,12 @@ TreeNode* Tree::getRoot(){
 
 void Tree::makeAndInsertNode(int id, Vec4i* data, unordered_map<int,TreeNode*>* allNodes, vector<Vec4i>* hierarchy){
   TreeNode* node = new TreeNode(*data,allNodes,hierarchy,id);
+  insertNode(id,node);
+}
+
+//Used when adding a node from another tree, will clear most data
+void Tree::makeAndInsertNode(TreeNode* node){
+  int id = allNodes->size();
   insertNode(id,node);
 }
 

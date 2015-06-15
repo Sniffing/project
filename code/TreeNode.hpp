@@ -83,7 +83,9 @@ void TreeNode::print(){
 }
 
 void TreeNode::removeChild(int i){
-  children->erase(children->begin() + i);
+  vector<TreeNode*>::iterator it= children->begin();
+  advance(it,i);
+  children->erase(it);
 }
 
 TreeNode::TreeNode(Vec4i data, unordered_map<int,TreeNode*>* allNodes,

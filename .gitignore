@@ -9,3 +9,4 @@ OpenCV
 *.pdf
 *.gz
 openvrml-0.16.3-bin-macosx
+code/contourImages/*

@@ -1,12 +1,11 @@
 #include "Tree.hpp"
+#define CONTOUR_SIZE_THRESHOLD 85
 
 using namespace std;
 using namespace cv;
 
 
 ////////////////////////////////////////////////////////////////////////////
-
-
 
 Tree* createHierarchyTree(vector<Vec4i>* hierarchy){
   Tree* hierarchyTree = new Tree(hierarchy);
@@ -56,7 +55,6 @@ vector<vector<Point> >* nubContours(vector<vector<Point> >*contours){
 
 static bool adjacent(Point a, Point b, int neighbourhood)
 {
-
   if(a.x == (b.x + neighbourhood) || a.x == (b.x-neighbourhood) || a.x == b.x) {
     return (a.y == b.y || a.y == (b.y+neighbourhood) || a.y == (b.y-neighbourhood));
   } else {
@@ -64,8 +62,7 @@ static bool adjacent(Point a, Point b, int neighbourhood)
   }
 }
 
-
-//HOLY SHIT IT WORKS
+//Based on start and end points, if contours are close together, will join them
 void naiveContourJoin (vector<vector<Point> >*contourList, vector<vector<Point> >* joinedList, Tree* htree){
 
   Point currFront, currBack, nextFront, nextBack;
@@ -138,7 +135,6 @@ void naiveDoubleRemovalFromArea(vector<vector<Point> >* contours, Tree *htree, i
   }
   htree->correctIndices(original);
   contours = newContours;
-  cout << "contours has size " << contours->size()<<endl;
 }
 
 
@@ -149,24 +145,70 @@ void approxContours(vector<vector<Point> >* contours, vector<vector<Point> >* ne
   }
 }
 
+void naiveDoubleRemovalTree(TreeNode* root, vector<vector<Point> >* contours, Tree* htree,
+			    vector<vector<Point> >* newContours, Tree* newTree) {
+  if(root->getNumChildren() == 1){
+    TreeNode* child = root->getChild(0);
+    root->setChildren(child->getChildren());
+    root->setID(newContours->size());
+    
+    newTree->makeAndInsertNode(root);
+    newContours->push_back(contours->at(root->getID()));
+  } else {
+    root->setID(newContours->size());
+    newTree->makeAndInsertNode(root);
+    newContours->push_back(contours->at(root->getID()));
+  }
+  
+  
+  for(int i = 0; i< root->getNumChildren(); i++){
+    TreeNode* child = root->getChild(i);
+    child->setParent(root);
+    child->setLevel(root->getLevel() + 1);
+    naiveDoubleRemovalTree(root->getChild(i), contours, htree, newContours, newTree);
+  }
+
+}
+
 void naiveDoubleRemoval(vector<vector<Point> >* contours, Tree* htree){
+  Tree* nubTree = new Tree();
+  int size = htree->getSize();
+  TreeNode* currNode = htree->getRoot();
+  vector<TreeNode*>* childList = currNode->getChildren();
+  vector<vector<Point> >* newContours = new vector<vector<Point> >();
+  Tree* newTree = new Tree();
+
+  while(currNode) {
+    if(currNode->getNumChildren() != 0){
+      currNode->setID(newContours->size());
+      currNode->setLevel(0);
+      naiveDoubleRemovalTree(currNode, contours, htree, newContours, newTree);
+    } else {
+      currNode->setID(newContours->size());
+      currNode->setLevel(0);
+    }
+
+    
+    if(currNode->getNext()){
+      currNode = currNode->getNext();
+    } else {
+      currNode = NULL;
+    }
+  }
+
+  newTree->checkNexts();
+  *contours = *newContours;
+  *htree = *newTree;
+}
+
+void removeUseless(vector<vector<Point> >* contours, Tree* htree){
   int count = 0;
-  int size;
-  for(vector<vector<Point> >::const_iterator it = contours->begin();
-      it != contours->end(); it++){
-    size = htree->getSize();
-    TreeNode* contourNode = htree->getNodeWithID(count);
-    if(contourNode->getNumChildren() == 1){
-      //likely to be outer edge of a contour, lets remove inner.
-      vector<Point> childContour = *(it++);
-      count++;
-      TreeNode* childNode = contourNode->getChild(0);
-      vector<TreeNode*>* childChildren = childNode->getChildren();
-      
-      contourNode->removeChild(0);
-      contourNode->addChildren(childChildren);
-      htree->removeNode(childNode->getID());
-      htree->correctIndices(size);
+  for(vector<vector<Point> >::iterator it = contours->begin(); it != contours->end(); it++){
+    vector<Point> contour = contours->at(count);
+    cout << contour.size() << endl;
+    if(contour.size() < CONTOUR_SIZE_THRESHOLD){
+      htree->removeNode(count);
+      contours->erase(it);
     }
     count++;
   }

@@ -25,7 +25,6 @@
 #define CHANGE_THRESHOLD 100
 #define NEW_BASE_THRESHOLD 200
 #define STABILISATION_REQUIREMENT 30
-#define MARKER_MOVEMENT_LIMIT 2
 
 #define TIME_FLAG false
 
@@ -39,16 +38,26 @@ int upperthresh = 2000;
 int lowerthresh = 900;
 int NEIGHBOURHOOD = 5;
 
+
+//If 95% was removed, then just render
+float HALT_THRESHOLD = 0.95;
+
+//If three iterations with no change, better move on
+int STOP_THRESHOLD = 3;
+
+
 vector<vector<Point> > contours;
 vector<Vec4i> hierarchy;
 Tree* h_tree;
 
+//If could not render the scene correctly, will try again
+bool rerender = false;
 
 const int WIN_WIDTH = 480; //Cols = 640
 const int WIN_HEIGHT = 640; //Rows = 480
 
 //holds level the pixels belong to
-int hmap[WIN_HEIGHT][WIN_WIDTH] = { {0} };
+int hmap[WIN_HEIGHT][WIN_WIDTH] = { {-1} };
 //holds whether pixel has been explored
 bool foundMap[WIN_HEIGHT][WIN_WIDTH] = { {false} };
 bool tempFoundMap[WIN_HEIGHT][WIN_WIDTH] = { {false} };
@@ -82,10 +91,11 @@ Mat element;
 
 clock_t height_map_start, height_map_end;
 clock_t tree_start, tree_end;
-clock_t bg_start,bg_end;
-clock_t drawing_start, drawing_end;
+clock_t explosion_map_start, explosion_map_end;
+clock_t final_map_start, final_map_end;
+clock_t render_start, render_end;
 clock_t singlepptest_start, singlepptest_end;
-clock_t containing_start,containing_end;
+clock_t blur_start, blur_end;
 
 int globalFPS;
 CameraParameters camParams;
@@ -93,6 +103,7 @@ CameraParameters camParams;
 //////////////////////////////////////////////////////////
 void drawBackground(GLuint temp_texture);
 void createLandscape();
+void printContourSizes(vector<vector<Point> >* contours);
 
 void init(void)
 {
@@ -122,14 +133,14 @@ void assignCorners(){
 }
 
 
-bool enoughChange(double nTLx,double nTLy,double nTRx, double nTRy,
-		  double nBLx,double nBLy,double nBRx, double nBRy) {
-  double totalDiff = abs(nTLx-TLx) + abs(nTLy-TLy) +
-                     abs(nTRx-TRx) + abs(nTRy-TRy) + 
-                     abs(nBLx-BLx) + abs(nBLy-BLy) +
-                     abs(nBRx-BRx) + abs(nBRy-BRy);
-  return(totalDiff > MARKER_MOVEMENT_LIMIT*8);
-}
+// bool enoughChange(double nTLx,double nTLy,double nTRx, double nTRy,
+// 		  double nBLx,double nBLy,double nBRx, double nBRy) {
+//   double totalDiff = abs(nTLx-TLx) + abs(nTLy-TLy) +
+//                      abs(nTRx-TRx) + abs(nTRy-TRy) + 
+//                      abs(nBLx-BLx) + abs(nBLy-BLy) +
+//                      abs(nBRx-BRx) + abs(nBRy-BRy);
+//   return(totalDiff > MARKER_MOVEMENT_LIMIT*8);
+// }
 
 void printExplosionMap(){
   Mat hmapRep = Mat(WIN_HEIGHT,WIN_WIDTH,CV_8UC3);
@@ -159,7 +170,7 @@ void printHmap(){
   for(int i = 0; i< WIN_HEIGHT; i++){
     for(int j = 0; j< WIN_WIDTH; j++){
       int c = (hmap[i][j] > 0)?(int)255/hmap[i][j]:0;
-      hmapRep.at<Vec3b>(Point(i,j)) = Vec3b(255,c,255);
+      hmapRep.at<Vec3b>(Point(j,i)) = Vec3b(0,c,0);
     }
   }
   imwrite("contourImages/hmap.png", hmapRep);
@@ -205,7 +216,7 @@ void checkForChange(Mat* thisFrame){
 	potentialChange = false;
 	//potential base frame should stay constant incase next frame
 	//change doesnt see any change on the picture.
-	imwrite("contourImages/potential.png",POTENTIAL_NEW_BASEFRAME);
+	//imwrite("contourImages/potential.png",POTENTIAL_NEW_BASEFRAME);
 	BASEFRAME = POTENTIAL_NEW_BASEFRAME;
 	resetMatrices();
 	createLandscape();
@@ -402,12 +413,6 @@ void setFoundNeighbours(int i, int j, int height, int width, int level){
 void explode(vector<int>* array){
   array->at(0) = 0;
 
-  //If 95% was removed, then just render
-  float  HALT_THRESHOLD = 0.95;
-
-  //If three iterations with no change, better move on
-  int STOP_THRESHOLD = 3;
-
   int currLevel = 1;
   int startSize = bitMap->size();
   int lastSize = bitMap->size();
@@ -471,6 +476,7 @@ void explode(vector<int>* array){
       if(currLevel > array->size()-1){
  	// If we reached the end and we identified more than H_T of pixel heights
 	cout << "could not fully render heights, some inconsistencies" << endl;
+	rerender = true;
 	break;
       } else if((float(startSize) - bitMap->size() / float(startSize)) > HALT_THRESHOLD){
 	// If not the end, move on to next level 
@@ -488,16 +494,15 @@ void explode(vector<int>* array){
 }
 
 void calculateFinalMap(vector<int>* array){
-  cout << "calculating map..." << endl;
   for(int i = WIN_HEIGHT-1; i >= 0; i--){
     for(int j = 0; j < WIN_WIDTH; j++){
       int base = hmap[i][j];
       float height;
       if(base > 0){
 	if(explosionMap[i][j] == 0){
-	  height = (float)base + 1.0f;
+	  height = (float)base;
 	} else {
-	  height = (float)base + (1.0f  - ((float)explosionMap[i][j] / (array->at(base)-1.0f)) );
+	  height = (float)base + (- ((float)explosionMap[i][j] / (array->at(base)-1.0f)) );
 	}
 	finalHeightMap[i][j] = height;
 	transparencyMap[i][j] = 1;
@@ -535,25 +540,20 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy) {
     root = hierarchy->getRoot();
     baseLevel = 0;
     topLevel = 1;
-
     nodeStack = new stack<TreeNode*>();
 
     for(j = 0; j < WIN_WIDTH; j++){
       Point p = Point(i,j);
-
-      if(i == 10 && j == 20) { singlepptest_start=clock();containing_start=clock();}
-      if(i == 10 && j == 20) { containing_end=clock(); }
    
       //Find if we are on a pixel which is part of a contour
       //If the point is on the contou we are currently within, we've reached the boundary
       bool isEmpty = nodeStack->empty();
-
       //Stack not empty and we're on a contour
+      singlepptest_start=clock();
       if (!isEmpty && pointPolygonTest(contours->at(nodeStack->top()->getID()),p,false) == 0){
+	singlepptest_end=clock();
 	contourNode = nodeStack->top();
-	
 	nodeStack->pop();
-    
 	contourEndFound = true;	
       } else {
 	//If stack is empty then must get the base nodes to check
@@ -609,8 +609,6 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy) {
       }
       contourStartFound = false;
       contourEndFound = false;
-      
-      if(i == 10 && j == 20) { singlepptest_end=clock(); }
     }
     //At the end of the row, if we haven't popped everything, we met a tangent along the way
     //must go back and correct the pixels
@@ -619,14 +617,18 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy) {
     }
   }
 
+  height_map_end=clock();
 
-  cout << "base levels found" << endl;
+  blur_start = clock();
   GaussianBlurHmap(iList,hierarchy->getSize());
+  blur_end = clock();
   cout << "blur done" << endl;
   
   printHmap();
+
   initBitMap();
 
+  //Find all contour line points
   for(vector<vector<Point> >::const_iterator it = contours->begin(); it != contours->end(); it++){
     for(vector<Point>::const_iterator i = (*it).begin(); i != (*it).end(); i++){
       Point p = *i;
@@ -636,30 +638,42 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy) {
 
   distances = vector<int>(hierarchy->getSize()+1);
   
+  rerender = false;
+  
+  explosion_map_start = clock();
   explode(&distances);
+  explosion_map_end = clock();
   cout << "explosion done" << endl;
-  calculateFinalMap(&distances);
-  cout <<"final map done" << endl;
 
-  printExplosionMap();
-  printFinalMap();
 
-  height_map_end=clock();
+  rerender = false;
+  if(!rerender) {
+    final_map_start = clock();
+    calculateFinalMap(&distances);
+    final_map_end = clock();
+    cout <<"final map done" << endl;
+
+    printExplosionMap();
+    printFinalMap();
+  } else {
+    //createLandscape();
+  }
 }
 
-Mat* draw(vector<vector<Point> >*contours, vector<Vec4i>* hierarchy){
+Mat* draw(vector<vector<Point> >*contours, string prefix){
   Mat* drawing = new Mat();
   *drawing = Mat::zeros( WIN_HEIGHT,WIN_WIDTH, CV_8UC3 );
   for(int i = 0; i< contours->size(); i++){
-    drawContours( *drawing, *contours, i, Scalar(0,255,0),1,CV_AA,*hierarchy, 0,Point(0,0));
+    drawContours( *drawing, *contours, i, Scalar(0,255,0),1,CV_AA,NULL, 0,Point(0,0));
+    imwrite(prefix + to_string(i) + ".png",*drawing);
   }
   return drawing; 
 }
 
 void createLandscape(){
-  //Mat scaledImage(WIN_SIZE,WIN_SIZE, DataType<float>::type);
-  //resize(BASEFRAME,scaledImage,scaledImage.size(),0,0,INTER_LINEAR);
+  render_start = clock();
 
+  //Morphological closing
   //erosion then dilation since we want the darker (pen) regions to close
   erode(POTENTIAL_NEW_BASEFRAME,erodedImage,element);
   dilate(erodedImage,dilatedImage,element);
@@ -674,29 +688,34 @@ void createLandscape(){
     h_tree = createHierarchyTree(&hierarchy);
     time(&tree_end);
 
-    cout << h_tree->getSize() << " original contours" << endl;
-    //contours = *(nubContours(&contours));
-    naiveContourJoin(&contours, joinedContours, h_tree);
-    //joinedContours = nubContours(joinedContours); 
-    //approxContours(joinedContours, approximatedContours);
-    //naiveDoubleRemoval(joinedContours, h_tree);
-    
-    cout << h_tree->getSize() << " contours found" << endl;
-    //printContourAreas(joinedContours);
+    // printContourSizes(&contours);
+    // removeUseless(&contours,h_tree);
+    // printContourSizes(&contours);
+    // h_tree->printTree();
 
-    // for (int i =0; i< h_tree->getSize(); i++){
-    // cout << "number points in contour " << i << " is " << (joinedContours->at(i)).size()<<endl;
-    // }
+    
+    cout << h_tree->getSize() << " original contours" << endl;
+    naiveContourJoin(&contours, joinedContours, h_tree);
+
+    cout << "joined contours has size before: " << joinedContours->size() << endl;
+    //printContourSizes(joinedContours);
+
+    Mat* image = draw(joinedContours,"contourImages/joinedBeforeRemoval");
+    imwrite("contourImages/joinedcontourBefroeRemoval.png",*image);
+
+    //naiveDoubleRemoval(joinedContours, h_tree);
+    //cout << "joined contours now has size: " << joinedContours->size() << endl;
+    //printContourSizes(joinedContours);
+    
     createHeightMap(joinedContours, h_tree);
 
-    Mat* image = draw(joinedContours, &hierarchy);
-    Mat* original = draw(&contours,&hierarchy);
+    render_end = clock();
+    
+    image = draw(joinedContours,"contourImages/joinedAfterRemoval");
+    Mat* original = draw(&contours,"contourImages/original");
     imwrite("contourImages/contour.png", *original);
     imwrite("contourImages/joinedcontour.png",*image);
-    ofstream txt;
     h_tree->printTree();
-    txt.open("contourImages/info.txt");
-    txt << "Contours found: " << joinedContours->size() <<"\n";
   }
 
 }
@@ -706,5 +725,12 @@ void printContourAreas(vector<vector<Point> >* contours){
     vector<Point> thisContour = contours->at(i);
     double area = contourArea(thisContour,true);
     cout << "Contour " << i << " has area " << area << endl;
+  }
+}
+
+void printContourSizes(vector<vector<Point> >* contours){
+  for(int i = 0; i<contours->size() ; i++){
+    vector<Point> thisContour = contours->at(i);
+    cout << "Contour " << i << " has " << thisContour.size() << " points"<< endl;
   }
 }

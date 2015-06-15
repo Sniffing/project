@@ -43,7 +43,7 @@ int main(int argc,char **argv)
         if (readArguments (argc,argv)==false) return 0;
         //read from camera
 	//CAMERA INDEX
-        if (TheInputVideo=="live") TheVideoCapturer.open(0);
+        if (TheInputVideo=="live") TheVideoCapturer.open(1);
         else TheVideoCapturer.open(TheInputVideo);
         if (!TheVideoCapturer.isOpened())
         {
@@ -65,28 +65,37 @@ int main(int argc,char **argv)
 	
 	//undistort(TheInputImage,BASEFRAME, TheCameraParams.CameraMatrix, TheCameraParams.Distorsion);
 	BASEFRAME = TheInputImage;
+	cout << BASEFRAME.size() << endl;
 	cvtColor(BASEFRAME, BASEFRAME,CV_BGR2GRAY);
 	imwrite("contourImages/baseFrame.png",BASEFRAME);
 	POTENTIAL_NEW_BASEFRAME = BASEFRAME;
 
 	createLandscape();
 	
-	// if(TIME_FLAG){
-
-	//   double maptime = (height_map_end-height_map_start) / (double)(CLOCKS_PER_SEC / 1000);
-	//   double treetime = (tree_end-tree_start)/ (double)(CLOCKS_PER_SEC / 1000);
-	//   double bgtime = (bg_end-bg_start)/ (double)(CLOCKS_PER_SEC / 1000);
-	//   double landscapetime= (drawing_end-drawing_start)/ (double)(CLOCKS_PER_SEC / 1000);
-	//   double pptest =(singlepptest_end-singlepptest_start)/ (double)(CLOCKS_PER_SEC / 1000);
-	//   double containing = (containing_end-containing_start)/(double)(CLOCKS_PER_SEC/1000);
+	if(TIME_FLAG){
+	   double hmaptime = (height_map_end-height_map_start) / (double)(CLOCKS_PER_SEC / 1000);
+	   double treetime = (tree_end-tree_start)/ (double)(CLOCKS_PER_SEC / 1000);
+	   double explosiontime= (explosion_map_end-explosion_map_start)/ (double)(CLOCKS_PER_SEC / 1000);
+	   double finaltime= (final_map_end-final_map_start)/ (double)(CLOCKS_PER_SEC / 1000);
+	   double rendertime= (render_end-render_start)/ (double)(CLOCKS_PER_SEC / 1000);
+	   double blurtime = (blur_end-blur_start)/ (double)(CLOCKS_PER_SEC / 1000);
+    	   double pptest =(singlepptest_end-singlepptest_start)/ (double)(CLOCKS_PER_SEC / 1000);
  
-	//   printf("map time %2.5f ms" ,maptime); cout << endl;
-	//   printf("tree time %2.5f ms",treetime); cout << endl;
-	//   printf("background time %2.5f ms",bgtime); cout<< endl;
-	//   printf("landscape time: %2.5f ms", landscapetime); cout << endl;
-	//   printf("Polygon test time: %2.5f ms",pptest); cout << endl;
-	//   printf("Contatining test time: %2.5f ms",containing); cout << endl;
-	// }
+	   cout << "-------------------------------------------------------------------------" << endl;
+	   cout << "---------------------------------TIME STATS------------------------------" << endl;
+	   cout << "-------------------------------------------------------------------------" << endl;
+	   cout << endl;
+	   printf("map time %2.5f ms" ,hmaptime); cout << endl;
+	   printf("tree time %2.5f ms",treetime); cout << endl;
+	   printf("explosion time %2.5f ms",explosiontime); cout<< endl;
+	   printf("final time: %2.5f ms", finaltime); cout << endl;
+	   printf("render time: %2.5f ms", rendertime); cout << endl;
+	   printf("blur time: %2.5f ms", blurtime); cout << endl;
+	   printf("Polygon test time: %2.5f ms",pptest); cout << endl;
+	   cout << "-------------------------------------------------------------------------" << endl;
+	   cout << "-------------------------------------------------------------------------" << endl;
+	   cout << endl;
+	}
 
         glutInit(&argc, argv);
         glutInitWindowPosition( 0, 0);
@@ -226,26 +235,20 @@ void vDrawScene()
 	double newx = 0;//TheMarkerSize;//(tl.x*scaleMarker);
 	double newy = 0;//TheMarkerSize;//(tl.y*scaleMarker);
 
-        for(int i=0; i<WIN_HEIGHT; i++) {
-            for(int j=0; j<WIN_WIDTH; j++) {
+        for(int i=0; i<WIN_HEIGHT-1; i++) {
+            for(int j=0; j<WIN_WIDTH-1; j++) {
                 glBegin(GL_QUADS);        // Draw The Cube Using quads
                 glColor4f(0.0f,1.0f/finalHeightMap[i][j],0.0f,transparencyMap[i][j]);    // Color Blue
-                glVertex3f((WIN_HEIGHT-i)*iScale,(j)*jScale, finalHeightMap[i][j]*scaleMarker);
-                glVertex3f((WIN_HEIGHT-(i+1))*iScale,(j)*jScale, finalHeightMap[i+1][j]*scaleMarker);
-                glVertex3f((WIN_HEIGHT-(i+1))*iScale,(j+1)*jScale, finalHeightMap[i+1][j+1]*scaleMarker);
-                glVertex3f((WIN_HEIGHT-i)*iScale, (j+1)*jScale, finalHeightMap[i][j+1]*scaleMarker);
+                glVertex3f((WIN_HEIGHT-i)*iScale,(j)*jScale, finalHeightMap[i][j]*scaleMarker*5.0f);
+                glVertex3f((WIN_HEIGHT-(i+1))*iScale,(j)*jScale, finalHeightMap[i+1][j]*scaleMarker*5.0f);
+                glVertex3f((WIN_HEIGHT-(i+1))*iScale,(j+1)*jScale, finalHeightMap[i+1][j+1]*scaleMarker*5.0f);
+                glVertex3f((WIN_HEIGHT-i)*iScale, (j+1)*jScale, finalHeightMap[i][j+1]*scaleMarker*5.0f);
                 glEnd();
 	    }
         }
-
         glPopMatrix();
     }
 
-    
-    // glRasterPos2i(100, 120);
-    // glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-    // const char* string = "STUFF HAPPENING";
-    // glutBitmapString(GLUT_BITMAP_HELVETICA_18, (const unsigned char) *string);
     glutSwapBuffers();
 
 }

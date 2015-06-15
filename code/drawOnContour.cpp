@@ -19,20 +19,16 @@ void getBackgroundFromCamera(VideoCapture* cam){
   Mat grayFrame;
   *cam >> frame;
 
-  bg_start=clock();
-
   cvtColor(frame,grayFrame,CV_BGR2GRAY);
   checkForChange(&grayFrame);
  
   GLuint temp_texture = makeBackground(&frame);
   drawBackground(temp_texture);
-  
-  bg_end=clock();
+ 
 }
 
 void drawMap(void)
 {
-  drawing_start=clock();
   // clear the drawing buffer
   glClearColor(0.0f,0.0f,0.0f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -75,7 +71,6 @@ void drawMap(void)
   }
 
   glPopMatrix();
-  drawing_end = clock();
   glutSwapBuffers();
 }
  
@@ -125,23 +120,6 @@ int main(int argc, char** argv){
   //cvtColor(frame, BASEFRAME,CV_BGR2GRAY);
   POTENTIAL_NEW_BASEFRAME = BASEFRAME;
   createLandscape();
-
-
-  if(TIME_FLAG){
-    double maptime = (height_map_end-height_map_start) / (double)(CLOCKS_PER_SEC / 1000);
-    double treetime = (tree_end-tree_start)/ (double)(CLOCKS_PER_SEC / 1000);
-    double bgtime = (bg_end-bg_start)/ (double)(CLOCKS_PER_SEC / 1000);
-    double landscapetime= (drawing_end-drawing_start)/ (double)(CLOCKS_PER_SEC / 1000);
-    double pptest =(singlepptest_end-singlepptest_start)/ (double)(CLOCKS_PER_SEC / 1000);
-    double containing = (containing_end-containing_start)/(double)(CLOCKS_PER_SEC/1000);
- 
-    printf("map time %2.5f ms" ,maptime); cout << endl;
-    printf("tree time %2.5f ms",treetime); cout << endl;
-    printf("background time %2.5f ms",bgtime); cout<< endl;
-    printf("landscape time: %2.5f ms", landscapetime); cout << endl;
-    printf("Polygon test time: %2.5f ms",pptest); cout << endl;
-    printf("Contatining test time: %2.5f ms",containing); cout << endl;
-  }
 
   glutMouseFunc(mouseButton);
   glutMotionFunc(mouseMove);

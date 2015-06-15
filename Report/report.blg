@@ -3,50 +3,53 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: report.aux
 The style file: plain.bst
 Database file #1: biblio.bib
-Warning--empty booktitle in AmonFuhrmann14
-Warning--empty year in Mackay
+I was expecting a `,' or a `}'---line 231 of file biblio.bib
+ :  
+ :  editor  = "",
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--empty year in Ferrari
 Warning--empty year in Maini
-Warning--empty year in Radke04
 Warning--empty year in Rosin
-You've used 14 entries,
+You've used 17 entries,
             2118 wiz_defined-function locations,
-            588 strings with 6468 characters,
-and the built_in function-call counts, 4162 in all, are:
-= -- 401
-> -- 222
-< -- 3
-+ -- 91
-- -- 74
-* -- 297
-:= -- 751
-add.period$ -- 44
-call.type$ -- 14
-change.case$ -- 84
+            612 strings with 6973 characters,
+and the built_in function-call counts, 5388 in all, are:
+= -- 517
+> -- 269
+< -- 2
++ -- 110
+- -- 89
+* -- 384
+:= -- 936
+add.period$ -- 53
+call.type$ -- 17
+change.case$ -- 99
 chr.to.int$ -- 0
-cite$ -- 19
-duplicate$ -- 141
-empty$ -- 291
-format.name$ -- 74
-if$ -- 837
+cite$ -- 20
+duplicate$ -- 191
+empty$ -- 409
+format.name$ -- 89
+if$ -- 1115
 int.to.chr$ -- 0
-int.to.str$ -- 14
-missing$ -- 7
-newline$ -- 73
-num.names$ -- 28
-pop$ -- 70
+int.to.str$ -- 17
+missing$ -- 11
+newline$ -- 88
+num.names$ -- 36
+pop$ -- 90
 preamble$ -- 1
-purify$ -- 65
+purify$ -- 78
 quote$ -- 0
-skip$ -- 94
+skip$ -- 130
 stack$ -- 0
-substring$ -- 183
-swap$ -- 17
-text.length$ -- 3
+substring$ -- 281
+swap$ -- 31
+text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 56
-warning$ -- 5
-while$ -- 35
-width$ -- 16
-write$ -- 152
-(There were 5 warnings)
+type$ -- 68
+warning$ -- 3
+while$ -- 47
+width$ -- 19
+write$ -- 186
+(There was 1 error message)
