@@ -502,7 +502,8 @@ void calculateFinalMap(vector<int>* array){
 	if(explosionMap[i][j] == 0){
 	  height = (float)base;
 	} else {
-	  height = (float)base + (- ((float)explosionMap[i][j] / (array->at(base)-1.0f)) );
+	  float extra = (array->at(base) != 0) ? ((float)explosionMap[i][j] / (array->at(base))) : 0.0f;
+	  height = (float)base + extra;
 	}
 	finalHeightMap[i][j] = height;
 	transparencyMap[i][j] = 1;
