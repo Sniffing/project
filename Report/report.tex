@@ -2927,7 +2927,160 @@ scene!
 In this section, I assess the outcomes of this project, trying to 
 give numerical representation to its overall successes and failures.
 
-\subsection{~DO~ Test Measures}
+\subsection{User Testing}
+Being a creative, Augmented Reality environment for people to bring their 
+landscape creations to life, to assess its worth, there has to be feedback
+from the users. I chose an assortment of people from the Imperial College
+Computing Department to help test my application. In addition I also asked
+my friends from outside Computing and even their younger siblings
+to lend a hand as well for a bit of variety. \\
+\\
+I asked 11 people to help me draw out landscape maps. From these 11 people
+I gathered the resulting rendered image when the maps passed to the
+program. In the Table \ref{usertestingtable}, I display these
+landscape maps and the corresponding rendered scene. In addition, I timed
+the run time of these program to create the scene in milliseconds and have
+rounded them to the one decimal point. I measured the results with
+multithreading and single threading in order to compare their performance.
+I have also included the contour counts for each landscape map with
+the corresponding number of contours detected by OpenCV and the program.
+The tests were conducted 5 times each and an average for contour
+detection and run time were calculated from the results\\
+\\
+I have also have a collection of feedback from these users, the more
+interesting ones which highlight specific points with the program have 
+been listed below.
+\begin{itemize}
+	\item[-] \textbf{"Why doesn't it work?"}\\
+			This was a question from users 1, 7 and 8. In these
+			tests, we can see that the 3D scene is not rendered properly.
+			The common factor here is the thickness of pen used, there 
+			were two biros and a fine nib pen to draaw these maps. The
+			conditions (illumination, camera angle) were such that
+			a near perfect contour detection could be obtained. To 
+			try and correct this, more time should be invested into 
+			determining good thresholds for edge detection, as well as 
+			testing it in various environment conditions.
+	\item[-] \textbf{"The 3D representation could be better aligned"}\\
+			The generated landscapes aren't perfectly aligned over the
+			landscape maps they are generated from. This is a point
+			to look to correct as an immediate extension. A better alignment
+			with the ArUco marker could provide this functionality. In addition
+			it would be good to have the points anchor to the landscape map. At
+			the moment, when the camera moves, there is slight drift of the 3D 
+			scene and the generated image does not stay in place in the rendered
+			image coordinate space.		
+	\item[-] \textbf{"It takes a really long time"}\\
+			For particularly large maps, such as the ones made by
+			users 10 and 11, it took around 2 minutes for the map to be rendered
+			in a single threaded environment. Behaviour was much faster
+			in a multithreaded environment, however, 5 seconds is still a long
+			Augmented Reality. The speed is determined on the area of contours and
+			also ratio of areas between different levels of contours, especially in 
+			the multithreaded environment. The bottleneck will be the contour with
+			the largest space, the time it takes for the explosion method to compute
+			that will determine the run time of the rendering algorithm 
+			with multiple threads. An extension to this project would be to go back and
+			try to come up with a more efficient algorithm to interpolate heights in 
+			the 3D scene.
+	\item[-] \textbf{"Its great bar the colours used"}\\
+			Some people thought it did a reasonable job, this response
+			came, mainly, from Computing students. The visual output was 
+			sufficient enough for them except for the colours used. A smoother
+			colour transition or using a texture could be used to fix this point.
+	\item[-] \textbf{"Why is the square made as well"}\\
+			This comment was a "side note" from the majority (9) of the users, meaning
+			that it is strange to them that the marker should be generated into a
+			contour as well. This is a point I have brought up before in 
+			this report as well as mentioning
+			it in Section \ref{chapter:extensions}. The generation of a landscape object 
+			from the ArUco marker should be avoided as it is not something the
+			user intended to be within the scene. It came as a unintended extra to them.
+			Individually they state that it does not matter much, however, when the 
+			majority of tested users mention it, it means it definitely is something they
+			didn't originally think should be in the scene.
+	\item[-] \textbf{"Why is it not always consistent?"}\\
+			The point made here is about when there is a change introduced into the scene,
+			sometimes other areas of the 3D scene are changed as well, into something that
+			was different from before. This is caused by a large variety of reasons,
+			it could be from tilting of the landscape map causing an angle to the 
+			camera that some contours are no longer detected, or not detected as well. This
+			issue was not considered too much during development as it did not happen 
+			as much at the time. However, through this user testing, it is something I
+			wish I had known earlier so I could try and find solutions to it. When extending
+			this project, this point will be one to look into and correct.
+\end{itemize} 
+
+\newpage
+\begin{landscape}
+\centering
+\begin{longtable}{p{0.1\textwidth}| p{0.45\textwidth}| p{0.45\textwidth} | p{0.15\textwidth} |p{0.15\textwidth}}
+\hline
+User Landscape 		& Landscape Map 			& Generated 	& Run time(s) (Multithread : single) & Contours (actual : found)\\
+\hline
+1. Student (Other) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/1.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/1render.png}\end{center} 
+							& (2.3 : 3.6)
+							& (9 : 25.2)\\
+\hline
+2. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/2.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/2render.png}\end{center} 
+							& (3.1 : 4.4)
+							& (14 : 33.5)\\
+\hline
+3. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/3.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/3render.png}\end{center} 
+							& (2.3 : 3.1)
+							& (7 : 16.8)\\
+\hline
+4. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/4.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/4render.png}\end{center} 
+							& (3.1 : 2.7)
+							& (11 : 31)\\
+\hline
+5. Student (Other) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/5.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/5render.png}\end{center} 
+							& (2.9 : 4.8)
+							& (7 : 19.5)\\
+\hline
+6. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/6.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/6render.png}\end{center} 
+							& (4.7 : 7.4)
+							& (3 : 11.2)\\
+\hline
+7. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/7.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/7render.png}\end{center} 
+							& (6.2 :7.4)
+							& (8 : 24.8)\\
+\hline	
+8. Child (11y.o) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/8.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/8render.png}\end{center} 
+							& (1.2 : 1.8)
+							& (6 : 9)\\
+\hline
+9. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/9.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/9render.png}\end{center} 
+							& (3.1 : 3.9)
+							& (6 : 18.2)\\
+\hline
+10. Student (Other) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/10.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/10render.png}\end{center} 
+							& (3.2 : 5.0)
+							& (10 : 26.4)\\
+\hline
+11. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/11.png}\end{center} 
+							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/11render.png}\end{center} 
+							& (2.9 : 11.2)
+							& (8 : 23)\\
+\hline
+\caption{User Testing Results}
+\label{usertestingtable}
+\end{longtable}
+\end{landscape}
+\newpage
+
+
+\subsection{Test Measures}
 In Table \ref{fig:TestMeasureTable} below, I have compiled the various 
 test measures I look into in an attempt to gain a representation of how 
 well this project has turned out. For each, there is an associated 
@@ -2937,15 +3090,20 @@ minimum result to be considered a success in that trait.
 
 \newpage
 \begin{landscape}
-\begin{longtable}{p{.2\textwidth}|p{.2\textwidth}|p{.4\textwidth}|p{.25\textwidth}|p{.25\textwidth}}
+\begin{longtable}{p{.2\textwidth}|p{.2\textwidth}|p{.35\textwidth}|p{.2\textwidth}|p{.3\textwidth}}
 \hline \hline
-Trait to measure & Unit of Measurement & Reason & Expected Result & Actual Result \\
+Trait & Unit of Measurement & Reason & Expected Result & Actual Result \\
 \hline \hline
-Contour Detection &  Number of contours & A successful program will be able to 
+Contour Detection &  Number of contours compared to the actual amount
+									   & A successful program will be able to 
 										distinguish close to the real amount of 
 										contours in order to accurately represent the	
 										landscape map the user 
-													has made      & Equal to drawing&  			  \\
+													has made      & Equal to drawing
+										& $62.7\%$ extra contours detected.\newline
+										  $25.4\%$ extra contours with double detection considered.\newline
+										  $61.6\%$ extra contours detected on avg.\newline
+										  $29.0\%$ extra contours detected on avg. with double detection considered.\\
 \hline
 Landscape Generation
 	Accuracy     & By observation	   & Since the accuracy of the generation both
@@ -2955,95 +3113,29 @@ Landscape Generation
 										 judged from a user's viewing perspective
 										        & Quite Smooth landscape,
 										          all with heights as described by
-										          the landscape map &  			  \\
+										          the landscape map 
+										& Scene has some areas or smooth gradient, other
+										  areas are more step-like and not so smooth. The 
+										  heights are as expected from the landscape map if
+										  a good detection occurs, landscape map may miss
+										  contours if detection for the instance was bad. \\
 \hline
 Program Responsiveness &  Seconds      & Being real-time is a key part of Augmented
 									  	 reality and so the response time between 
 									  	 when the user has drawn the scene and when it
 									  	 renders should be sufficeintly low to 
 									  	 provide a real-time response
-									  	        &    $<$ 2 seconds       &  			  \\
+									  	        &    $<$ 2 seconds  
+								       &  			  \\
 \hline
 Base Frame 
    Stabilisation & By Observation	   & We want the program to re-render the scene
    										 only when an adequate amount of change has 
    										 occured and only when the scene has 
-   										 stabilised. & Responds to an average contour    &  			  \\
-              
-                 &                     &        &                 &  			  \\
-                 &                     &        &                 &  			  \\
-                 &                     &        &                 &  			  \\                                                                                                     
-                 &                     &        &                 & 
+   										 stabilised. & Responds to an average contour   
+   									   &  			  \\              
+\hline 
 \label{fig:TestMeasureTable}
-\end{longtable}
-\end{landscape}
-\newpage
-
-\subsection{~DO~ User Testing}
-%Being a creative, Augmented Reality environment for people to bring their 
-%landscape creations to life, to assess its worth, there has to be feedback
-%from the users. I chose an assortment of people from the Imperial College
-%Computing Department to help test my application. In addition, I also
-%got the younger siblings of my friends and peers to lend a hand as well! 
-%I also looked to get feedback from those who are in the arts field,
-%getting feedback from a handful of graphic designers and artists.
-
-Below I have compiled some of the responses from the users who took part in
-trying out this program. As well as their landscape maps and generated
-3D landscapes.
-
-\newpage
-\begin{landscape}
-\begin{longtable}{p{0.1\textwidth}| p{0.5\textwidth}| p{0.5\textwidth} | p{0.1\textwidth} |p{0.1\textwidth}}
-\hline
-User Landscape 		& Landscape Map 			& Generated 	& Run time(s) & Contours found vs actual\\
-\hline
-1. Student (Other)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/1.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-2. Student (Computing)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/2.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-3. Student (Computing)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/3.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-4. Student (Computing)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/4.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-5. Student (Other)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/5.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-6. Student (Computing)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/6.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-7. Student (Computing)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/7.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-8. Student (Computing)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/8.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-9. Student (Computing)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/9.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-10. Student (Computing)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/10.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-11. Student (Computing)
-	no artistic background & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/11.png}\end{center} 
-							& \begin{center}\end{center} & \\
-\hline
-\caption{A table arranging  images}
-\label{tab:gt}
 \end{longtable}
 \end{landscape}
 \newpage
@@ -3881,6 +3973,9 @@ After implenting my algorithm and testing its run time,
 the computation does take a while and it is
 to my regret I did not have the time to go back and try this method and
 compare run times between the two algorithms.
+
+\subsubsection{Run times of algorithms}
+
 
 \section{FINAL CHECK - Extensions}
 \label{chapter:extensions}

@@ -1,0 +1,22 @@
+MultiThread: no
+61 original contours
+joined contours has size before: 34
+blur done
+could not fully render heights, some inconsistencies
+explosion done
+final map done
+done
+-------------------------------------------------------------------------
+---------------------------------TIME STATS------------------------------
+-------------------------------------------------------------------------
+
+map time 2769.42900 ms
+tree time 0.00000 ms
+explosion time 707.78800 ms
+final time: 5.96900 ms
+render time: 3816.43200 ms
+blur time: 13.10400 ms
+Polygon test time: -327.22000 ms
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+

@@ -65,7 +65,6 @@ int main(int argc,char **argv)
 	
 	//undistort(TheInputImage,BASEFRAME, TheCameraParams.CameraMatrix, TheCameraParams.Distorsion);
 	BASEFRAME = TheInputImage;
-	cout << BASEFRAME.size() << endl;
 	cvtColor(BASEFRAME, BASEFRAME,CV_BGR2GRAY);
 	imwrite("contourImages/baseFrame.png",BASEFRAME);
 	POTENTIAL_NEW_BASEFRAME = BASEFRAME;
@@ -214,7 +213,7 @@ void vDrawScene()
         glLoadIdentity();
         glLoadMatrixd(modelview_matrix);
 
-	axis(TheMarkerSize);
+	//axis(TheMarkerSize);
 
         cv::Point2f tl = TheMarkers[m][0];
         cv::Point2f tr = TheMarkers[m][1];
@@ -225,12 +224,11 @@ void vDrawScene()
 	float verShift = fabs(tr.y-0) * scaleMarker;
 	float horShift = fabs(WIN_HEIGHT - tr.x) * scaleMarker;
 
-        //glTranslatef(-(realZeroX+TheMarkerSize/2),-(realZeroY+TheMarkerSize/2),0);
         glTranslatef(-horShift, -verShift,0);
 	glPushMatrix();
 	
-	double jScale = scaleMarker;//*(TheGlWindowSize.width);// * scaleMarker);
-	double iScale = scaleMarker;//*(TheGlWindowSize.height);// * scaleMarker);
+	double jScale = scaleMarker*0.75f;//*(TheGlWindowSize.width);// * scaleMarker);
+	double iScale = scaleMarker*0.75f;//*(TheGlWindowSize.height);// * scaleMarker);
 
 	double newx = 0;//TheMarkerSize;//(tl.x*scaleMarker);
 	double newy = 0;//TheMarkerSize;//(tl.y*scaleMarker);

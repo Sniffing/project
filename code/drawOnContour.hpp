@@ -28,7 +28,7 @@
 #define NEW_BASE_THRESHOLD 200
 #define STABILISATION_REQUIREMENT 30
 
-#define TIME_FLAG false
+#define TIME_FLAG true
 
 using namespace cv;
 using namespace std;
@@ -36,7 +36,7 @@ using namespace aruco;
 
 Size TheGlWindowSize;
 
-bool MULTITHREAD = true;
+bool MULTITHREAD = false;
 int upperthresh = 2000;
 int lowerthresh = 900;
 int NEIGHBOURHOOD = 5;
@@ -373,43 +373,59 @@ void setFoundNeighbours(int i, int j, int height, int width, int level){
 
   indexI = max(0,i-1);
   indexJ = max(0,j-1);
-  int TL = hmap[indexI][indexJ];
-  assess(TL, level, indexI, indexJ);
-
+  if(!foundMap[indexI][indexJ]){
+    int TL = hmap[indexI][indexJ];
+    assess(TL, level, indexI, indexJ);
+  }
+    
   indexI = max(0,i-1);
   indexJ = j;
-  int L = hmap[max(0,i-1)][j];
-  assess(L,level,indexI, indexJ);
+  if(!tempFoundMap[indexI][indexJ]){
+    int L = hmap[max(0,i-1)][j];
+    assess(L,level,indexI, indexJ);
+  }
 
   indexI = max(0,i-1);
   indexJ = min(width-1,j+1);
-  int BL = hmap[max(0,i-1)][min(j+1,width-1)];
-  assess(BL,level,indexI,indexJ);
-  
+  if(!foundMap[indexI][indexJ]){
+    int BL = hmap[max(0,i-1)][min(j+1,width-1)];
+    assess(BL,level,indexI,indexJ);
+  }
+
   indexI = min(height-1,i+1);
   indexJ = max(0,j-1);
-  int TR = hmap[min(height-1,i+1)][max(0,j-1)];
-  assess(TR, level,indexI,indexJ);
+  if(!foundMap[indexI][indexJ]){
+    int TR = hmap[min(height-1,i+1)][max(0,j-1)];
+    assess(TR, level,indexI,indexJ);
+  }
 
   indexI = min(height,i+1);
   indexJ = j;
-  int R = hmap[min(height,i+1)][j];
-  assess(R,level,indexI,indexJ);
+  if(!foundMap[indexI][indexJ]){
+    int R = hmap[min(height,i+1)][j];
+    assess(R,level,indexI,indexJ);
+  }
 
   indexI = min(height-1,i+1);
   indexJ = min(width-1,j+1);
-  int BR = hmap[min(height-1,i+1)][min(j+1,width-1)];
-  assess(BR,level,indexI,indexJ);
+  if(!foundMap[indexI][indexJ]){  
+    int BR = hmap[min(height-1,i+1)][min(j+1,width-1)];
+    assess(BR,level,indexI,indexJ);
+  }
 
   indexI = max(0,i-1);
   indexJ = j;
-  int T =  hmap[max(i-1,0)][j];
-  assess(T,level,indexI,indexJ);
+  if(!foundMap[indexI][indexJ]){
+    int T =  hmap[max(i-1,0)][j];
+    assess(T,level,indexI,indexJ);
+  }
 
   indexI = min(height-1,i+1);
   indexJ = j;
-  int B = hmap[min(height-1,i+1)][j];  
-  assess(B,level,indexI,indexJ);
+  if(!foundMap[indexI][indexJ]){
+    int B = hmap[min(height-1,i+1)][j];  
+    assess(B,level,indexI,indexJ);
+  }
 }
 
 
@@ -486,48 +502,67 @@ void explode(vector<int>* array, bool multithread){
     } 
   } else {
     bool tempFoundMapMulti[WIN_HEIGHT][WIN_WIDTH] = { {false} };
-    //#pragma omp parallel private(iteration, tempFoundMapMulti, noChange, lastSize) num_threads(8)
-    {
-#pragma omp parallel for private (iteration,tempFoundMapMulti,noChange,lastSize) num_threads(8)
-      for (int level = 0; level < array->size(); level++){
-	while(!foundLevel(level) && noChange > STOP_THRESHOLD){
-	  //Copies foundMap to tempFound
-	  for(int i = 0; i<WIN_HEIGHT; i++){
-	    for(int j = 0; j<WIN_WIDTH; j++){
-	      tempFoundMapMulti[i][j] = foundMap[i][j] & true;
-	    }
-	  }
+    int** explosionMapMulti = new int*[WIN_WIDTH];
+
+    // for (int i = 0; i < WIN_HEIGHT; i++){
+    //   for(int j = 0; j< WIN_WIDTH; j++){
+    // 	explosionMapMulti[i][j] = explosionMap[i][j];
+    //   }
+    // }
     
-	  for(int i = 0; i < WIN_HEIGHT; i++){
-	    for(int j = 0; j < WIN_WIDTH; j++){
-	      if((hmap[i][j] == level) && foundMap[i][j]){
-		setFoundNeighbours(i,j, WIN_HEIGHT, WIN_WIDTH,level);
-		explosionMap[i][j] += 1;
-	      }
-	    }
-	  }
+    //vector<int**>* explosionStore = new vector<int**>(array->size());
 
-	  //copies tempFoundMap to foundMap
-	  for(int i = 0; i<WIN_HEIGHT; i++){
-	    for(int j = 0; j<WIN_WIDTH; j++){
-	      foundMap[i][j] = tempFoundMapMulti[i][j];
-	    }
+#pragma omp parallel for private (iteration,tempFoundMapMulti,noChange,lastSize,explosionMapMulti) num_threads(8)
+    for (int level = 0; level < array->size(); level++){
+      while(!foundLevel(level) && noChange > STOP_THRESHOLD){
+	//Copies foundMap to tempFound
+	for(int i = 0; i<WIN_HEIGHT; i++){
+	  for(int j = 0; j<WIN_WIDTH; j++){
+	    tempFoundMapMulti[i][j] = foundMap[i][j] & true;
 	  }
-      
-	  if(bitMap->size() == lastSize)
-	    noChange++;
-	  else{
-	    lastSize = bitMap->size();
-	    noChange = 0;
-	  }
-
 	}
-	array->at(level) = iteration;
-	iteration = 1;
+    
+	for(int i = 0; i < WIN_HEIGHT; i++){
+	  for(int j = 0; j < WIN_WIDTH; j++){
+	    if((hmap[i][j] == level) && foundMap[i][j]){
+	      setFoundNeighbours(i,j, WIN_HEIGHT, WIN_WIDTH,level);
+	      explosionMap[i][j] += 1;
+	      cout << "stuff happening" << endl;
+	    }
+	  }
+	}
+
+	//copies tempFoundMap to foundMap
+	for(int i = 0; i<WIN_HEIGHT; i++){
+	  for(int j = 0; j<WIN_WIDTH; j++){
+	    foundMap[i][j] = tempFoundMapMulti[i][j];
+	  }
+	}
+      
+	if(bitMap->size() == lastSize)
+	  noChange++;
+	else{
+	  lastSize = bitMap->size();
+	  noChange = 0;
+	}
+
       }
-    }  
+     
+      //explosionStore->push_back(explosionMapMulti);
+      array->at(level) = iteration;
+      iteration = 1;
+    }
+    
+    // for(int k = 0; k < explosionStore->size(); k++){
+    //   for(int i = 0; i < WIN_HEIGHT; i++){
+    // 	for(int j = 0; j<WIN_WIDTH; j++){
+    // 	  explosionMap[i][j] += *((explosionStore[k])[i][j]);
+    // 	}
+    //   }
+    // }
   }
 }
+
 
 void calculateFinalMap(vector<int>* array){
 #pragma omp parallel for num_threads(8)
@@ -587,9 +622,8 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy) {
       //If the point is on the contou we are currently within, we've reached the boundary
       bool isEmpty = nodeStack->empty();
       //Stack not empty and we're on a contour
-      singlepptest_start=clock();
+
       if (!isEmpty && pointPolygonTest(contours->at(nodeStack->top()->getID()),p,false) == 0){
-	singlepptest_end=clock();
 	contourNode = nodeStack->top();
 	nodeStack->pop();
 	contourEndFound = true;	
@@ -607,7 +641,9 @@ void createHeightMap(vector<vector<Point> >* contours, Tree* hierarchy) {
 	//POST: Top of stack has the current contour we are on
 	while(examining) { //For all contours on this level
 	  //If on contour
+	  singlepptest_start=clock();
 	  if(pointPolygonTest(contours->at(examining->getID()),p,false) == 0){
+	    singlepptest_end=clock();
 	    nodeStack->push(examining);  //make current Node this one
 	    
 	    //Must check the next pixels along, incase they are part of the current 
@@ -711,6 +747,8 @@ Mat* draw(vector<vector<Point> >*contours, string prefix){
 void createLandscape(){
   render_start = clock();
 
+  string mult = (MULTITHREAD) ? "yes" : "no" ;
+  cout << "MultiThread: " << mult << endl;
   //Morphological closing
   //erosion then dilation since we want the darker (pen) regions to close
   erode(POTENTIAL_NEW_BASEFRAME,erodedImage,element);
@@ -753,7 +791,6 @@ void createLandscape(){
     Mat* original = draw(&contours,"contourImages/original");
     imwrite("contourImages/contour.png", *original);
     imwrite("contourImages/joinedcontour.png",*image);
-    h_tree->printTree();
   }
 
 }
