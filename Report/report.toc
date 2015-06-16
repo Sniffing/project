@@ -1,106 +1,110 @@
-\contentsline {section}{\numberline {1}FINAL CHECK - Introduction}{7}{section.1}
-\contentsline {subsection}{\numberline {1.1}Motivation}{8}{subsection.1.1}
-\contentsline {subsection}{\numberline {1.2}Project Goals}{9}{subsection.1.2}
-\contentsline {subsection}{\numberline {1.3}Report Structure}{10}{subsection.1.3}
-\contentsline {section}{\numberline {2}FINAL CHECK - Background}{11}{section.2}
-\contentsline {subsection}{\numberline {2.1}FINAL CHECK - Augmented Reality}{11}{subsection.2.1}
-\contentsline {subsubsection}{\numberline {2.1.1}Augment the User}{11}{subsubsection.2.1.1}
-\contentsline {subsubsection}{\numberline {2.1.2}Augment Devices}{12}{subsubsection.2.1.2}
-\contentsline {subsubsection}{\numberline {2.1.3}Augment the Environment}{12}{subsubsection.2.1.3}
-\contentsline {subsection}{\numberline {2.2}FINAL CHECK - How Augmented Reality works}{13}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}Augmented Reality with Fiducial Markers}{13}{subsubsection.2.2.1}
-\contentsline {subsubsection}{\numberline {2.2.2}Markerless Augmented Reality}{15}{subsubsection.2.2.2}
-\contentsline {subsection}{\numberline {2.3}FINAL CHECK - Construction of Augmented Reality scenes}{16}{subsection.2.3}
-\contentsline {subsection}{\numberline {2.4}FINAL CHECK - Computer Vision and Image Processing}{16}{subsection.2.4}
-\contentsline {subsection}{\numberline {2.5}FINAL CHECK - Image Manipulation/Processing}{17}{subsection.2.5}
-\contentsline {subsubsection}{\numberline {2.5.1}An Image in the computer}{17}{subsubsection.2.5.1}
-\contentsline {subsubsection}{\numberline {2.5.2}Image masks and operating on an Image}{18}{subsubsection.2.5.2}
-\contentsline {subsection}{\numberline {2.6}FINAL CHECK - Feature Recognition and Extraction}{18}{subsection.2.6}
-\contentsline {subsubsection}{\numberline {2.6.1}Edge Detection}{20}{subsubsection.2.6.1}
-\contentsline {subsubsection}{\numberline {2.6.2}Gradient-based detectors}{21}{subsubsection.2.6.2}
-\contentsline {subsubsection}{\numberline {2.6.3}Laplacian (of Gaussian)-based detectors}{21}{subsubsection.2.6.3}
-\contentsline {subsubsection}{\numberline {2.6.4}Corner Detection}{22}{subsubsection.2.6.4}
-\contentsline {subsubsection}{\numberline {2.6.5}Object Detection}{25}{subsubsection.2.6.5}
-\contentsline {subsection}{\numberline {2.7}FINAL CHECK - Contours and Ordnance Survey Maps}{26}{subsection.2.7}
-\contentsline {subsection}{\numberline {2.8}\nobreakspace {}DO\nobreakspace {} Computer Graphics and Rendering AR Scenes}{27}{subsection.2.8}
-\contentsline {subsubsection}{\numberline {2.8.1}Real World Coordinates}{28}{subsubsection.2.8.1}
-\contentsline {subsection}{\numberline {2.9}FINAL CHECK - Existing Augmented Reality Projects}{28}{subsection.2.9}
-\contentsline {subsubsection}{\numberline {2.9.1}LandscapAugmented Reality}{28}{subsubsection.2.9.1}
-\contentsline {subsubsection}{\numberline {2.9.2}The Augmented Reality Sandbox}{30}{subsubsection.2.9.2}
-\contentsline {section}{\numberline {3}FINAL CHECK - Hardware Investigation}{31}{section.3}
-\contentsline {subsection}{\numberline {3.1}Microsoft Kinect V2}{31}{subsection.3.1}
-\contentsline {subsubsection}{\numberline {3.1.1}Background \& History}{31}{subsubsection.3.1.1}
-\contentsline {subsubsection}{\numberline {3.1.2}How it works}{32}{subsubsection.3.1.2}
-\contentsline {subsubsection}{\numberline {3.1.3}My investigations}{33}{subsubsection.3.1.3}
-\contentsline {subsubsection}{\numberline {3.1.4}Limitations and pitfalls}{34}{subsubsection.3.1.4}
-\contentsline {section}{\numberline {4}Implementation}{35}{section.4}
-\contentsline {subsection}{\numberline {4.1}FINAL CHECK - Assumptions and Restrictions of the User}{35}{subsection.4.1}
-\contentsline {subsubsection}{\numberline {4.1.1}Restrictions}{35}{subsubsection.4.1.1}
-\contentsline {subsubsection}{\numberline {4.1.2}Assumptions}{36}{subsubsection.4.1.2}
-\contentsline {subsection}{\numberline {4.2}FINAL CHECK - Computer Vision and Image Processing}{37}{subsection.4.2}
-\contentsline {subsubsection}{\numberline {4.2.1}Canny Edge Detector}{37}{subsubsection.4.2.1}
-\contentsline {subsubsection}{\numberline {4.2.2}Open and Closed contours}{38}{subsubsection.4.2.2}
-\contentsline {subsubsection}{\numberline {4.2.3}Mathematical Morphology}{39}{subsubsection.4.2.3}
-\contentsline {subsubsection}{\numberline {4.2.4}Erosion}{40}{subsubsection.4.2.4}
-\contentsline {subsubsection}{\numberline {4.2.5}Dilation}{41}{subsubsection.4.2.5}
-\contentsline {subsubsection}{\numberline {4.2.6}Morphological Closing}{42}{subsubsection.4.2.6}
-\contentsline {subsubsection}{\numberline {4.2.7}Image Differencing}{43}{subsubsection.4.2.7}
-\contentsline {subsubsection}{\numberline {4.2.8}Simple Intensity Differencing}{43}{subsubsection.4.2.8}
-\contentsline {subsubsection}{\numberline {4.2.9}Image Ratioing}{45}{subsubsection.4.2.9}
-\contentsline {subsubsection}{\numberline {4.2.10}Camera distortion}{46}{subsubsection.4.2.10}
-\contentsline {subsection}{\numberline {4.3}FINAL CHECK - Setting up the Camera and Environment}{48}{subsection.4.3}
-\contentsline {subsubsection}{\numberline {4.3.1}Camera Calibration and Setup}{48}{subsubsection.4.3.1}
-\contentsline {subsubsection}{\numberline {4.3.2}Choosing C++}{50}{subsubsection.4.3.2}
-\contentsline {subsubsection}{\numberline {4.3.3}OpenCV}{51}{subsubsection.4.3.3}
-\contentsline {subsubsection}{\numberline {4.3.4}OpenGL}{51}{subsubsection.4.3.4}
-\contentsline {subsubsection}{\numberline {4.3.5}ArUco}{52}{subsubsection.4.3.5}
-\contentsline {subsection}{\numberline {4.4}Capturing the Landscape map}{53}{subsection.4.4}
-\contentsline {subsubsection}{\numberline {4.4.1}Drawing the map}{53}{subsubsection.4.4.1}
-\contentsline {subsubsection}{\numberline {4.4.2}Detecting Contours}{56}{subsubsection.4.4.2}
-\contentsline {subsubsection}{\numberline {4.4.3}Generating the Hierarchy Tree}{57}{subsubsection.4.4.3}
-\contentsline {subsubsection}{\numberline {4.4.4}\nobreakspace {}DO\nobreakspace {} Joining Contours}{59}{subsubsection.4.4.4}
-\contentsline {subsection}{\numberline {4.5}Generating the 3D scene}{60}{subsection.4.5}
-\contentsline {subsubsection}{\numberline {4.5.1}\nobreakspace {}DO\nobreakspace {} View Point alignment}{60}{subsubsection.4.5.1}
-\contentsline {subsubsection}{\numberline {4.5.2}\nobreakspace {}DO\nobreakspace {} From Hierarchy Tree to Height Map}{61}{subsubsection.4.5.2}
-\contentsline {subsubsection}{\numberline {4.5.3}\nobreakspace {}DO\nobreakspace {} Landscape Generation}{63}{subsubsection.4.5.3}
-\contentsline {subsection}{\numberline {4.6}Detecting change in the scene}{65}{subsection.4.6}
-\contentsline {subsubsection}{\numberline {4.6.1}Generating the Base image}{65}{subsubsection.4.6.1}
-\contentsline {subsubsection}{\numberline {4.6.2}\nobreakspace {}DO\nobreakspace {} Introducing change}{66}{subsubsection.4.6.2}
-\contentsline {subsubsection}{\numberline {4.6.3}Determining Stabilisation}{66}{subsubsection.4.6.3}
-\contentsline {subsubsection}{\numberline {4.6.4}Generating a Difference Image}{67}{subsubsection.4.6.4}
-\contentsline {subsubsection}{\numberline {4.6.5}Tracking the Fiducial Marker}{68}{subsubsection.4.6.5}
-\contentsline {subsubsection}{\numberline {4.6.6}Detecting Stabilisation}{69}{subsubsection.4.6.6}
-\contentsline {subsection}{\numberline {4.7}Restructure and regenerating the 3D scene}{70}{subsection.4.7}
-\contentsline {section}{\numberline {5}Evaluation}{70}{section.5}
-\contentsline {subsection}{\numberline {5.1}User Testing}{70}{subsection.5.1}
-\contentsline {subsection}{\numberline {5.2}Test Measures}{77}{subsection.5.2}
-\contentsline {subsubsection}{\numberline {5.2.1}\nobreakspace {}DO\nobreakspace {} Responsiveness}{80}{subsubsection.5.2.1}
-\contentsline {subsubsection}{\numberline {5.2.2}Aesthetics}{81}{subsubsection.5.2.2}
-\contentsline {subsection}{\numberline {5.3}Process Evaluation}{82}{subsection.5.3}
-\contentsline {subsubsection}{\numberline {5.3.1}OpenCV}{82}{subsubsection.5.3.1}
-\contentsline {subsubsection}{\numberline {5.3.2}Contour Detection}{83}{subsubsection.5.3.2}
-\contentsline {subsubsection}{\numberline {5.3.3}Contour Joining}{86}{subsubsection.5.3.3}
-\contentsline {subsubsection}{\numberline {5.3.4}Contour Elimination}{87}{subsubsection.5.3.4}
-\contentsline {subsubsection}{\numberline {5.3.5}Determining Thresholds}{91}{subsubsection.5.3.5}
-\contentsline {subsubsection}{\numberline {5.3.6}Height Map Creation}{93}{subsubsection.5.3.6}
-\contentsline {section}{\numberline {6}FINAL CHECK - Extensions}{96}{section.6}
-\contentsline {subsection}{\numberline {6.1}Immediate Extensions}{96}{subsection.6.1}
-\contentsline {subsubsection}{\numberline {6.1.1}Developing a GUI/visual feedback}{97}{subsubsection.6.1.1}
-\contentsline {subsubsection}{\numberline {6.1.2}Coloured Contours}{97}{subsubsection.6.1.2}
-\contentsline {subsubsection}{\numberline {6.1.3}Removal of the Calibration Marker Points}{98}{subsubsection.6.1.3}
-\contentsline {subsubsection}{\numberline {6.1.4}Other implicit markers}{98}{subsubsection.6.1.4}
-\contentsline {subsubsection}{\numberline {6.1.5}Photorealistic lighting environment}{99}{subsubsection.6.1.5}
-\contentsline {subsubsection}{\numberline {6.1.6}Texture Mapping}{100}{subsubsection.6.1.6}
-\contentsline {subsection}{\numberline {6.2}Future Extensions}{100}{subsection.6.2}
-\contentsline {subsubsection}{\numberline {6.2.1}The Leap Motion}{101}{subsubsection.6.2.1}
-\contentsline {subsubsection}{\numberline {6.2.2}No Calibration Marker}{102}{subsubsection.6.2.2}
-\contentsline {subsection}{\numberline {6.3}Continued testing and experimentation}{103}{subsection.6.3}
-\contentsline {subsubsection}{\numberline {6.3.1}Contour joining, closing and detection}{103}{subsubsection.6.3.1}
-\contentsline {subsubsection}{\numberline {6.3.2}Thresholding}{104}{subsubsection.6.3.2}
-\contentsline {subsubsection}{\numberline {6.3.3}Stabilisation of background}{105}{subsubsection.6.3.3}
-\contentsline {section}{\numberline {7}\nobreakspace {}DO\nobreakspace {} Conclusions}{105}{section.7}
-\contentsline {section}{\numberline {8}FINAL CHECK (NEEDS MORE PICS) - User Guide}{106}{section.8}
-\contentsline {subsection}{\numberline {8.1}Obtaining the Code}{107}{subsection.8.1}
-\contentsline {subsection}{\numberline {8.2}Generating your ArUco marker}{108}{subsection.8.2}
-\contentsline {subsection}{\numberline {8.3}Calibrating your camera}{109}{subsection.8.3}
-\contentsline {subsection}{\numberline {8.4}Using the program}{110}{subsection.8.4}
+\contentsline {section}{\numberline {1}FINAL CHECK - Introduction}{8}{section.1}
+\contentsline {subsection}{\numberline {1.1}Motivation}{9}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Project Goals}{10}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}Report Structure}{11}{subsection.1.3}
+\contentsline {section}{\numberline {2}FINAL CHECK - Background}{12}{section.2}
+\contentsline {subsection}{\numberline {2.1}FINAL CHECK - Augmented Reality}{12}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Augment the User}{12}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Augment Devices}{13}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.3}Augment the Environment}{13}{subsubsection.2.1.3}
+\contentsline {subsection}{\numberline {2.2}FINAL CHECK - How Augmented Reality works}{14}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Augmented Reality with Fiducial Markers}{14}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Markerless Augmented Reality}{16}{subsubsection.2.2.2}
+\contentsline {subsection}{\numberline {2.3}FINAL CHECK - Construction of Augmented Reality scenes}{17}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}FINAL CHECK - Computer Vision and Image Processing}{17}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}FINAL CHECK - Image Manipulation/Processing}{18}{subsection.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}An Image in the computer}{18}{subsubsection.2.5.1}
+\contentsline {subsubsection}{\numberline {2.5.2}Image masks and operating on an Image}{19}{subsubsection.2.5.2}
+\contentsline {subsection}{\numberline {2.6}FINAL CHECK - Feature Recognition and Extraction}{19}{subsection.2.6}
+\contentsline {subsubsection}{\numberline {2.6.1}Edge Detection}{21}{subsubsection.2.6.1}
+\contentsline {subsubsection}{\numberline {2.6.2}Gradient-based detectors}{22}{subsubsection.2.6.2}
+\contentsline {subsubsection}{\numberline {2.6.3}Laplacian (of Gaussian)-based detectors}{22}{subsubsection.2.6.3}
+\contentsline {subsubsection}{\numberline {2.6.4}Corner Detection}{23}{subsubsection.2.6.4}
+\contentsline {subsubsection}{\numberline {2.6.5}Object Detection}{26}{subsubsection.2.6.5}
+\contentsline {subsection}{\numberline {2.7}FINAL CHECK - Contours and Ordnance Survey Maps}{27}{subsection.2.7}
+\contentsline {subsection}{\numberline {2.8}\nobreakspace {}DO\nobreakspace {} Computer Graphics and Rendering AR Scenes}{28}{subsection.2.8}
+\contentsline {subsubsection}{\numberline {2.8.1}Real World Coordinates}{29}{subsubsection.2.8.1}
+\contentsline {subsection}{\numberline {2.9}FINAL CHECK - Existing Augmented Reality Projects}{29}{subsection.2.9}
+\contentsline {subsubsection}{\numberline {2.9.1}LandscapAugmented Reality}{29}{subsubsection.2.9.1}
+\contentsline {subsubsection}{\numberline {2.9.2}The Augmented Reality Sandbox}{31}{subsubsection.2.9.2}
+\contentsline {section}{\numberline {3}FINAL CHECK - Hardware Investigation}{32}{section.3}
+\contentsline {subsection}{\numberline {3.1}Microsoft Kinect V2}{32}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}Background \& History}{32}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.2}How it works}{33}{subsubsection.3.1.2}
+\contentsline {subsubsection}{\numberline {3.1.3}My investigations}{34}{subsubsection.3.1.3}
+\contentsline {subsubsection}{\numberline {3.1.4}Limitations and pitfalls}{35}{subsubsection.3.1.4}
+\contentsline {section}{\numberline {4}Implementation}{36}{section.4}
+\contentsline {subsection}{\numberline {4.1}FINAL CHECK - Assumptions and Restrictions of the User}{36}{subsection.4.1}
+\contentsline {subsubsection}{\numberline {4.1.1}Restrictions}{36}{subsubsection.4.1.1}
+\contentsline {subsubsection}{\numberline {4.1.2}Assumptions}{37}{subsubsection.4.1.2}
+\contentsline {subsection}{\numberline {4.2}FINAL CHECK - Computer Vision and Image Processing}{38}{subsection.4.2}
+\contentsline {subsubsection}{\numberline {4.2.1}Canny Edge Detector}{38}{subsubsection.4.2.1}
+\contentsline {subsubsection}{\numberline {4.2.2}Open and Closed contours}{39}{subsubsection.4.2.2}
+\contentsline {subsubsection}{\numberline {4.2.3}Mathematical Morphology}{40}{subsubsection.4.2.3}
+\contentsline {subsubsection}{\numberline {4.2.4}Erosion}{41}{subsubsection.4.2.4}
+\contentsline {subsubsection}{\numberline {4.2.5}Dilation}{42}{subsubsection.4.2.5}
+\contentsline {subsubsection}{\numberline {4.2.6}Morphological Closing}{43}{subsubsection.4.2.6}
+\contentsline {subsubsection}{\numberline {4.2.7}Image Differencing}{44}{subsubsection.4.2.7}
+\contentsline {subsubsection}{\numberline {4.2.8}Simple Intensity Differencing}{44}{subsubsection.4.2.8}
+\contentsline {subsubsection}{\numberline {4.2.9}Image Ratioing}{46}{subsubsection.4.2.9}
+\contentsline {subsubsection}{\numberline {4.2.10}Camera distortion}{47}{subsubsection.4.2.10}
+\contentsline {subsection}{\numberline {4.3}FINAL CHECK - Setting up the Camera and Environment}{49}{subsection.4.3}
+\contentsline {subsubsection}{\numberline {4.3.1}Camera Calibration and Setup}{49}{subsubsection.4.3.1}
+\contentsline {subsubsection}{\numberline {4.3.2}Choosing C++}{51}{subsubsection.4.3.2}
+\contentsline {subsubsection}{\numberline {4.3.3}OpenCV}{52}{subsubsection.4.3.3}
+\contentsline {subsubsection}{\numberline {4.3.4}OpenGL}{52}{subsubsection.4.3.4}
+\contentsline {subsubsection}{\numberline {4.3.5}ArUco}{53}{subsubsection.4.3.5}
+\contentsline {subsection}{\numberline {4.4}Capturing the Landscape map}{54}{subsection.4.4}
+\contentsline {subsubsection}{\numberline {4.4.1}Drawing the map}{54}{subsubsection.4.4.1}
+\contentsline {subsubsection}{\numberline {4.4.2}Detecting Contours}{57}{subsubsection.4.4.2}
+\contentsline {subsubsection}{\numberline {4.4.3}Generating the Hierarchy Tree}{58}{subsubsection.4.4.3}
+\contentsline {subsubsection}{\numberline {4.4.4}\nobreakspace {}DO\nobreakspace {} Joining Contours}{60}{subsubsection.4.4.4}
+\contentsline {subsection}{\numberline {4.5}Generating the 3D scene}{61}{subsection.4.5}
+\contentsline {subsubsection}{\numberline {4.5.1}\nobreakspace {}DO\nobreakspace {} View Point alignment}{61}{subsubsection.4.5.1}
+\contentsline {subsubsection}{\numberline {4.5.2}\nobreakspace {}DO\nobreakspace {} From Hierarchy Tree to Height Map}{62}{subsubsection.4.5.2}
+\contentsline {subsubsection}{\numberline {4.5.3}\nobreakspace {}DO\nobreakspace {} Landscape Generation}{64}{subsubsection.4.5.3}
+\contentsline {subsection}{\numberline {4.6}Detecting change in the scene}{66}{subsection.4.6}
+\contentsline {subsubsection}{\numberline {4.6.1}Generating the Base image}{66}{subsubsection.4.6.1}
+\contentsline {subsubsection}{\numberline {4.6.2}\nobreakspace {}DO\nobreakspace {} Introducing change}{67}{subsubsection.4.6.2}
+\contentsline {subsubsection}{\numberline {4.6.3}Determining Stabilisation}{67}{subsubsection.4.6.3}
+\contentsline {subsubsection}{\numberline {4.6.4}Generating a Difference Image}{68}{subsubsection.4.6.4}
+\contentsline {subsubsection}{\numberline {4.6.5}Tracking the Fiducial Marker}{69}{subsubsection.4.6.5}
+\contentsline {subsubsection}{\numberline {4.6.6}Detecting Stabilisation}{70}{subsubsection.4.6.6}
+\contentsline {subsection}{\numberline {4.7}Restructure and regenerating the 3D scene}{71}{subsection.4.7}
+\contentsline {section}{\numberline {5}Evaluation}{71}{section.5}
+\contentsline {subsection}{\numberline {5.1}User Testing}{71}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Test Measures}{78}{subsection.5.2}
+\contentsline {subsubsection}{\numberline {5.2.1}\nobreakspace {}DO\nobreakspace {} Responsiveness}{81}{subsubsection.5.2.1}
+\contentsline {subsubsection}{\numberline {5.2.2}Aesthetics}{82}{subsubsection.5.2.2}
+\contentsline {subsection}{\numberline {5.3}Process Evaluation}{83}{subsection.5.3}
+\contentsline {subsubsection}{\numberline {5.3.1}OpenCV}{83}{subsubsection.5.3.1}
+\contentsline {subsubsection}{\numberline {5.3.2}Contour Detection}{84}{subsubsection.5.3.2}
+\contentsline {subsubsection}{\numberline {5.3.3}Contour Joining}{87}{subsubsection.5.3.3}
+\contentsline {subsubsection}{\numberline {5.3.4}Contour Elimination}{88}{subsubsection.5.3.4}
+\contentsline {subsubsection}{\numberline {5.3.5}Determining Thresholds}{92}{subsubsection.5.3.5}
+\contentsline {subsubsection}{\numberline {5.3.6}Height Map Creation}{94}{subsubsection.5.3.6}
+\contentsline {subsubsection}{\numberline {5.3.7}Run times of algorithms}{97}{subsubsection.5.3.7}
+\contentsline {section}{\numberline {6}Conclusions}{98}{section.6}
+\contentsline {subsection}{\numberline {6.1}Original Objectives}{98}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Third Party Library usage}{99}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}Application Performance}{100}{subsection.6.3}
+\contentsline {section}{\numberline {7}FINAL CHECK - Extensions}{100}{section.7}
+\contentsline {subsection}{\numberline {7.1}Immediate Extensions}{101}{subsection.7.1}
+\contentsline {subsubsection}{\numberline {7.1.1}Developing a GUI/visual feedback}{101}{subsubsection.7.1.1}
+\contentsline {subsubsection}{\numberline {7.1.2}Coloured Contours}{101}{subsubsection.7.1.2}
+\contentsline {subsubsection}{\numberline {7.1.3}Removal of the Calibration Marker Points}{102}{subsubsection.7.1.3}
+\contentsline {subsubsection}{\numberline {7.1.4}Other implicit markers}{102}{subsubsection.7.1.4}
+\contentsline {subsubsection}{\numberline {7.1.5}Photorealistic lighting environment}{103}{subsubsection.7.1.5}
+\contentsline {subsubsection}{\numberline {7.1.6}Texture Mapping}{104}{subsubsection.7.1.6}
+\contentsline {subsection}{\numberline {7.2}Future Extensions}{104}{subsection.7.2}
+\contentsline {subsubsection}{\numberline {7.2.1}The Leap Motion}{105}{subsubsection.7.2.1}
+\contentsline {subsubsection}{\numberline {7.2.2}No Calibration Marker}{106}{subsubsection.7.2.2}
+\contentsline {subsection}{\numberline {7.3}Continued testing and experimentation}{107}{subsection.7.3}
+\contentsline {subsubsection}{\numberline {7.3.1}Contour joining, closing and detection}{107}{subsubsection.7.3.1}
+\contentsline {subsubsection}{\numberline {7.3.2}Thresholding}{108}{subsubsection.7.3.2}
+\contentsline {subsubsection}{\numberline {7.3.3}Stabilisation of background}{109}{subsubsection.7.3.3}
+\contentsline {section}{\numberline {8}FINAL CHECK (NEEDS MORE PICS) - User Guide}{110}{section.8}
+\contentsline {subsection}{\numberline {8.1}Obtaining the Code}{111}{subsection.8.1}
+\contentsline {subsection}{\numberline {8.2}Generating your ArUco marker}{112}{subsection.8.2}
+\contentsline {subsection}{\numberline {8.3}Calibrating your camera}{113}{subsection.8.3}
+\contentsline {subsection}{\numberline {8.4}Using the program}{114}{subsection.8.4}

@@ -17,6 +17,8 @@
 \usepackage{color}
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{pdflscape}
+\usepackage{siunitx}
+\usepackage{booktabs}
 
 \linespread{1.1} % Line spacing
 \usepackage[total={6in, 8in}]{geometry}
@@ -39,46 +41,59 @@
 \maketitle
 
 \newpage
-\section*{~DO~ Abstract}
-Motivation:
+\section*{Abstract}
+%Motivation:
 Augmented Reality is a field within Computer Science garnering much 
 interest, especially in the Game and Entertainment industry. However, 
 it also has many other practical uses. This project explores 
 creative/artistic Augmented Reality, aiming to provide an 
-environment for users to play within, without need to touch the computer.
-
-Problem Statement:
+environment for users to play within, without need to touch the computer
+nor a mouse.\\
+\\
+%Problem Statement:
 It is a common theme amongst Augmented Reality applications to use 
 fiducial markers onto which to overlay 3D objects, or data, in 
-order to augment reality. What this means is a restriction in 
+order to augment reality. This restricts 
 what and where a user can create their own Augmented Reality scenes. 
 This limits the creativity of those who wish to get into using 
-Augmented Reality, not only that, it also puts a limit onto 
-who can use these technologies. For example, those able to use a 
-computer, print a fiducial marker as well as use software to assign
-meaning to that marker. This more or less rules out children getting 
-involved with these applications. Another limiting factor in some 
+Augmented Reality, not only that, it also limits who can/will 
+use these technologies. Children are hardly able to create,
+configure and print their own fiducial marker as well as use software to assign
+meaning to that marker. Another limiting factor in some 
 Augmented Reality applications is the constant need for users to tell 
 the computer when to reconstruct the 3D scene, as the result of some 
 change or new markers being placed within. This project explores how 
-to remove this extra step.
-
-Approach:
+to remove this extra step.\\
+\\
+%Approach:
 Using various Computer Vision techniques and a range of custom 
 algorithms, this project utilises popular 3rd party libraries
 in order to try and solve the problems outlined above. In this 
 report I explain the approaches I take to try solve some of 
 the problems that arose during the course of this project, 
-discussing what worked, what ultimately did not work out and 
-the things that could use improvements. There were several points 
-in the project where an empirical approach had to be used which 
-can be improved on int he future.
-
-Results:
-The outcome of this project was
-
-Conclusions:
-
+including troubles with OpenCV, generating height maps and
+determining threshold points for various Computer Vision algorithms.\\
+\\
+%Results:
+As a result of this project, we present a basic environment for 
+creative designers to bring drawn landscapes to life. The application
+allows users to draw, in marker pen, their own vision in the form
+of contours and superimposes the 3D representation over the image.
+The system is self updating and requires almost no interference by the 
+user after it has start running. This project lays the base to
+which small additions
+can cause large improvements in visual aesthetics and performance.
+Multi and single threaded environments are assessed, 
+along with algorithm run times which may prompt the redesign of some
+internal algorithms for higher performance.\\
+\\
+%Conclusions:
+This project outlines several objectives it sets out to meet, to a certain degree,
+these were achieved by the project, though there are many ways to improve
+the application. There are many problems that come along with building
+a strong Computer Vision based application. In addition when adding
+Computer Graphics, there are more sets of problems that have to
+be overcome to produce a strong, competitive Augmented Reality application.
 
 \newpage
 \section*{FINAL CHECK - Acknowledgements}
@@ -2928,6 +2943,7 @@ In this section, I assess the outcomes of this project, trying to
 give numerical representation to its overall successes and failures.
 
 \subsection{User Testing}
+\label{sec:usertesting}
 Being a creative, Augmented Reality environment for people to bring their 
 landscape creations to life, to assess its worth, there has to be feedback
 from the users. I chose an assortment of people from the Imperial College
@@ -3020,12 +3036,12 @@ User Landscape 		& Landscape Map 			& Generated 	& Run time(s) (Multithread : si
 \hline
 1. Student (Other) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/1.png}\end{center} 
 							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/1render.png}\end{center} 
-							& (2.3 : 3.6)
+							& (2.7 : 3.6)
 							& (9 : 25.2)\\
 \hline
 2. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/2.png}\end{center} 
 							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/2render.png}\end{center} 
-							& (3.1 : 4.4)
+							& (3.1 : 4.2)
 							& (14 : 33.5)\\
 \hline
 3. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/3.png}\end{center} 
@@ -3035,17 +3051,17 @@ User Landscape 		& Landscape Map 			& Generated 	& Run time(s) (Multithread : si
 \hline
 4. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/4.png}\end{center} 
 							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/4render.png}\end{center} 
-							& (3.1 : 2.7)
+							& (2.4 : 3.3)
 							& (11 : 31)\\
 \hline
 5. Student (Other) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/5.png}\end{center} 
 							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/5render.png}\end{center} 
-							& (2.9 : 4.8)
+							& (2.3 : 3.6)
 							& (7 : 19.5)\\
 \hline
 6. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/6.png}\end{center} 
 							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/6render.png}\end{center} 
-							& (4.7 : 7.4)
+							& (4.0 : 6.4)
 							& (3 : 11.2)\\
 \hline
 7. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/7.png}\end{center} 
@@ -3060,7 +3076,7 @@ User Landscape 		& Landscape Map 			& Generated 	& Run time(s) (Multithread : si
 \hline
 9. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/9.png}\end{center} 
 							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/9render.png}\end{center} 
-							& (3.1 : 3.9)
+							& (3.2 : 3.9)
 							& (6 : 18.2)\\
 \hline
 10. Student (Other) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/10.png}\end{center} 
@@ -3070,7 +3086,7 @@ User Landscape 		& Landscape Map 			& Generated 	& Run time(s) (Multithread : si
 \hline
 11. Student (Computing) & \begin{center}\includegraphics[scale=0.5]{pics/usertesting/11.png}\end{center} 
 							& \begin{center}\includegraphics[scale=0.5]{pics/usertesting/11render.png}\end{center} 
-							& (2.9 : 11.2)
+							& (2.9 : 9.2)
 							& (8 : 23)\\
 \hline
 \caption{User Testing Results}
@@ -3078,7 +3094,6 @@ User Landscape 		& Landscape Map 			& Generated 	& Run time(s) (Multithread : si
 \end{longtable}
 \end{landscape}
 \newpage
-
 
 \subsection{Test Measures}
 In Table \ref{fig:TestMeasureTable} below, I have compiled the various 
@@ -3126,7 +3141,8 @@ Program Responsiveness &  Seconds      & Being real-time is a key part of Augmen
 									  	 renders should be sufficeintly low to 
 									  	 provide a real-time response
 									  	        &    $<$ 2 seconds  
-								       &  			  \\
+								       & $3.0 sec$ avg. for multithreaded application.\newline
+								       	 $4.7 sec$ avg. for single threaded application. \\
 \hline
 Base Frame 
    Stabilisation & By Observation	   & We want the program to re-render the scene
@@ -3975,7 +3991,161 @@ to my regret I did not have the time to go back and try this method and
 compare run times between the two algorithms.
 
 \subsubsection{Run times of algorithms}
+In order to further assess the efficiency of the algorithms I have been using
+throughout this project, I timed some of their individual runtimes. Timing
+has been done across single threaded and multithreaded environments.
+The only time to be affected by this, however, is the explosion
+time. Table \ref{statstable} shows the recorded times in the
+11 landscape maps drawn by users in Section \ref{sec:usertesting}
+The times I took measure of are: Total time to create the landscape,
+time to create the height map, time to create
+the hierarchy tree, time to complete the explosion algorithm, time it took
+to do Gaussian blurring and time to compute final heights. 
+Again, this was done 5 times and an
+average time for each landscape map produced.
 
+\begin{figure}[H]
+\centering
+\begin{tabular}{cccccc}
+\toprule
+User &  Height Map (\% of total) & Hierarchy Tree & Explosion(S - M) & Gaussian Blur & Final Height\\
+\midrule
+1 & 2933 (94.6\%)& 0 & (121 - 25) & 16 & 5\\
+2 & 2653 (87.8\%)& 0 & (732 - 44) & 14 & 6\\
+3 & 2102 (91.8\%)& 0 & (442 - 24) & 4 & 5\\
+4 & 1911 (88.7\%)& 0 & (351 - 29) & 10 & 5\\
+5 & 1730 (86.7\%)& 0 & (502 - 26) & 5 & 6\\
+6 & 2546 (78.1\%)& 0 & (1466 - 22) & 2 & 6\\
+7 & 5633 (84.9\%)& 0 & (1280 - 35) & 32&8\\
+8 & 1572 (92.3\%)& 0 & (322 - 10) & 11&5\\
+9 & 3302 (93.4\%)& 0 & (355 - 18) &7 &4\\
+10 & 2122 (70.0\%)& 0 & (1970 - 38) & 13& 7\\
+11 & 2604 (86.5\%)& 0 & (1944 - 31) & 23 &9\\
+\bottomrule
+\end{tabular}
+\caption{Algorithm run times in milliseconds (ms)}
+\label{statstable}
+\end{figure}
+
+As is apparent in Table \ref{statstable}, the current 
+bottleneck of the application is the generation of the 
+height map. The Explosion process may be parallelised to
+reduce its run time by a significant amount, sometimes 
+by over 90\%. After seeing the how much of the total
+landscape creation time is taken by height map generation,
+it is clear it would be wise to try and rework the
+corresponding algorithm. This can come as an 
+immediate extension, whereby several rows of a picture may
+be considered in parallel and provide the same functionality
+as the current, single threaded implementation. Since the
+algorithm is stack based, each thread need only hold
+their own stack and deal with the strip of the image
+they are assigned. This could bring the total run times
+of landscape generation downn to sub 2 seconds, and be
+acceptable as a real-time, interactive, Augmented Reality
+application. \\
+\\
+As seen in Table \ref{fig:TestMeasureTable}, the current state
+of the program is that it is unable to complete the 
+test of being under 2 seconds in terms of landscape creation.
+Looking into parallelising height map generation can help
+this application achieve this goal.
+
+\section{Conclusions}
+\subsection{Original Objectives}
+At the beginning of this report, I set out three main 
+objectives I had for this project and hoped to complete them
+by its termination. I list these objectives, below, once 
+again.
+
+\begin{enumerate}
+	\item Create a functioning Augmented Reality program which takes a
+		  video stream and overlays a 3D landscape over the feed. The
+		  landscape is a representation of a contour map created by
+		  the user.
+	\item Using a method of video and scene tracking/recognition, allow users
+		  to make changes to their contour map and have the landscape update 
+		  in real time. This will set the necessary requirements for a
+		  dynamically changing Augmented Reality landscape.
+	\item Perform an analysis on the performance and responsiveness 
+		  of the final product of this project. This will be done
+		  primarily through user testing and assessing how well the
+		  application behaves by typical Augmented Reality standards.
+\end{enumerate}
+
+The list below describes how the final product of this project
+achieves the objectives set out from the beginning.
+
+\begin{enumerate}
+	\item This project has seen the construction of a 
+		functioning landscape creator application. The 
+		application takes a user drawn landscape map and will
+		overlay a 3D graphical representation of the scene
+		on top of the captured image. This objective was fully
+		met and also allows the user to rotate and translate
+		the scene in the real world and have it reflect in
+		the shown Augmented Reality. 
+	\item By using various Computer Vision algorithms and
+		methods, such as edge detection, change detection, 
+		along with implementing video stabilisation and 
+		differencing, the program will react to a sufficient
+		enough change in the landscape map and reconstruct
+		the scene without need for input from the user. This
+		goal was also met, however, there can be more done
+		to guarantee high performance as part of this project's
+		possible extensions.
+	\item Through some user testing and various directions
+		of analysis, thi objective is also met, though at a
+		level that is still insuffficient if the aim of this
+		project is to have it commercially used. Section
+		\ref{chapter:evaluation} goes into thorough detail
+		about various aspects of the project and final 
+		product. To improve the project, more extensive
+		user testing will need to be done.
+\end{enumerate}
+
+Having complete all of the objectives laid out for this
+project in some form, I consider this project a success as
+it puts in the first step toward a commercially usable
+dynamic Augmented Reality environment for creative
+individuals, bringing creation back to pen and paper work.
+However, due to the broadness of this project, there are
+many ways this project can be improved and extended, as
+will be outlined in Section \ref{chapter:extensions}.
+
+\subsection{Third Party Library usage}
+OpenCV is still the most popular Computer Vision library
+out there. However, by using it in this project, it is
+evident there is still work to be done in this field. 
+Contour identification and adequate thresholding will 
+continue to be hot topics within the field. Unfortunately,
+the library does not always perform as one would like,
+so there are times that users of the library will have to
+adapt their own functions. However, OpenCV, along with
+ArUco are great libraries to use which remove a lot of
+the complexities behind image manipulation and fiducial
+marker tracking. 
+
+\subsection{Application Performance}
+Having undergone the application evaluation in Section
+\ref{chapter:evaluation}, the application performs to standard
+that is tolerable amongst developers. Commercial use is
+currently out of the question, the response time of the 
+program is still a bit too slow to offer a good user
+experience. In addition, the displayed graphics and
+rendered 3D scenes can use a lot of improvement to bring
+them up to the same level as games and movies today. To
+some degree, users feel entitled to a certain
+standard of computer graphics since everything else is
+sitting around that benchmark. As a result, to make this
+application attractive to use, it will also need to
+reach these benchmarks. There are also numerous smaller
+improvements that can be made to the application which
+will be highlighted in Section \ref{chapter:extensions}. 
+However, the logic and correctness of the program is
+shown to be good and it seems the graphics side is
+keeping the application sub-par with regards to
+other applications available.
 
 \section{FINAL CHECK - Extensions}
 \label{chapter:extensions}
@@ -4395,8 +4565,6 @@ drawing utensils, it may not perform well, if at all for others. Thus,
 allowing the user to choose their utensil and adapt the thresholding 
 level based on the choice is an extension I'd like to see completed. The
 writing utensil type then removes itself as a restriction on the user.
-
-\section{~DO~ Conclusions}
 
 \newpage
 \section{FINAL CHECK (NEEDS MORE PICS) - User Guide}
